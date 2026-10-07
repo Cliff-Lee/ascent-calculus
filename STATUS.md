@@ -336,3 +336,6 @@ holds the completed conjecture screen longer before switching to the transform v
 
 Version a15 hides the indeterminate progress bar while idle and restores it only
 while a bounded test runs, so the completed state reads as complete.
+
+Version a16 sizes the initial native window to the available desktop area and
+captures a 1280×800 laptop preview in CI to check the compact layout.

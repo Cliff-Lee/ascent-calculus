@@ -134,8 +134,11 @@ class DesktopWorkbench:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Ascent Engine")
-        self.root.geometry("1320x820")
-        self.root.minsize(1040, 680)
+        screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
+        window_width = min(1320, max(900, screen_width - 48))
+        window_height = min(820, max(640, screen_height - 96))
+        root.geometry(f"{window_width}x{window_height}")
+        root.minsize(min(1040, window_width), min(680, window_height))
         self.root.configure(bg=BG)
         self.drag_payload = None
         self.focused_side = "left"

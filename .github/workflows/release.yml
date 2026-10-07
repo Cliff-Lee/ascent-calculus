@@ -51,7 +51,7 @@ jobs:
       - name: Upload tested macOS app for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-macos-arm64-a15
+          name: AscentCalculus-macos-arm64-a16
           path: |
             dist/AscentCalculus-macos-arm64/*.dmg
             dist/AscentCalculus-macos-arm64/*.zip
@@ -100,7 +100,7 @@ jobs:
       - name: Upload tested Windows installer for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-windows-x64-a15
+          name: AscentCalculus-windows-x64-a16
           path: dist/AscentCalculus-windows-x64/*
           if-no-files-found: error
           retention-days: 14
@@ -158,10 +158,23 @@ jobs:
             import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-transform.png"
             wait "$app_pid"
           '
+      - name: Capture compact laptop workspace preview
+        run: |
+          xvfb-run -a -s '-screen 0 1280x800x24' dbus-run-session -- bash -c '
+            set -e
+            openbox >/tmp/ascent-compact-openbox.log 2>&1 &
+            wm_pid=$!
+            PYTHONPATH=/usr/lib/ascent-calculus /usr/bin/python3 scripts/desktop_preview.py &
+            app_pid=$!
+            trap "kill $app_pid $wm_pid 2>/dev/null || true" EXIT
+            sleep 4
+            import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-conjecture-compact.png"
+            wait "$app_pid"
+          '
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-ubuntu-amd64-a15
+          name: AscentCalculus-ubuntu-amd64-a16
           path: dist/AscentCalculus-ubuntu-24.04-amd64/*
           if-no-files-found: error
           retention-days: 14
