@@ -33,6 +33,7 @@ jobs:
           tests/test_gui1_viewmodel.py
           tests/test_gui3_experiments.py
           tests/test_gui3_transform_experiments.py
+          tests/test_research_state.py
           tests/test_e11_proof_extraction.py
           tests/test_e9_local_repair.py
 
