@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   import-source:
-    if: ${{ hashFiles('ascent-calculus-0.1.0a7-source.tar.gz') != '' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
