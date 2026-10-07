@@ -21,6 +21,11 @@ from typing import Any
 
 from ac.gui.experiments import FAMILY_LIMITS, STATISTICS, run_experiment
 from ac.gui.research_state import read_state, write_state
+from ac.core.word import ChainWord
+from ac.transform import (
+    complement, hat, inverse_hat, inverse_prefix_lift, prefix_lift, reverse,
+    restrict_positions, insert_position,
+)
 
 
 BG = "#f3f5f2"
@@ -81,8 +86,9 @@ class DropLane(tk.Frame):
     def __init__(self, master, app: "DesktopWorkbench", side: str):
         super().__init__(master, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         self.app, self.side = app, side
-        self.bind("<Enter>", lambda _e: self._highlight(True))
+        self.bind("<Enter>", lambda _e: (setattr(self.app, "focused_side", self.side), self._highlight(True)))
         self.bind("<Leave>", lambda _e: self._highlight(False))
+        self.bind("<Button-1>", lambda _e: setattr(self.app, "focused_side", self.side))
         self.columnconfigure(0, weight=1)
         self.family = ttk.Combobox(self, state="readonly", values=FAMILIES, width=15)
         self.family.set("modified")
@@ -125,10 +131,11 @@ class DesktopWorkbench:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Ascent Engine")
-        self.root.geometry("1420x900")
-        self.root.minsize(1120, 740)
+        self.root.geometry("1320x820")
+        self.root.minsize(1040, 680)
         self.root.configure(bg=BG)
         self.drag_payload = None
+        self.focused_side = "left"
         self.rules = {"left": [], "right": []}
         self.saved_result = None
         self._save_timer = None
@@ -171,9 +178,24 @@ class DesktopWorkbench:
         body.grid(row=1, column=0, sticky="nsew", padx=22, pady=18)
         body.columnconfigure(0, weight=0, minsize=238)
         body.columnconfigure(1, weight=1)
-        body.rowconfigure(0, weight=1)
-        self._build_palette(body)
-        self._build_workspace(body)
+        body.rowconfigure(0, weight=0)
+        body.rowconfigure(1, weight=1)
+        nav = tk.Frame(body, bg=BG)
+        nav.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 12))
+        self.nav_buttons = {}
+        for key, label in (("conjecture", "Conjecture engine"), ("transform", "Transform visualizer")):
+            button = tk.Button(nav, text=label, command=lambda k=key: self._show_view(k), relief="flat", bd=0, padx=14, pady=8, cursor="hand2", font=("TkDefaultFont", 9, "bold"))
+            button.pack(side="left", padx=(0, 6))
+            self.nav_buttons[key] = button
+        content = tk.Frame(body, bg=BG)
+        content.grid(row=1, column=0, columnspan=2, sticky="nsew")
+        content.columnconfigure(0, weight=0, minsize=238)
+        content.columnconfigure(1, weight=1)
+        content.rowconfigure(0, weight=1)
+        self.main_rail = self._build_palette(content)
+        self.main_work = self._build_workspace(content)
+        self.transform_view = self._build_transform_view(content)
+        self._show_view("conjecture")
 
     def _build_palette(self, parent):
         rail = tk.Frame(parent, bg=BG, width=238)
@@ -183,7 +205,7 @@ class DesktopWorkbench:
         card = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         card.pack(fill="x")
         tk.Label(card, text="PATTERN RULES", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).pack(anchor="w", padx=14, pady=(14, 4))
-        tk.Label(card, text="Drag a rule into either class.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), wraplength=195, justify="left").pack(anchor="w", padx=14, pady=(0, 9))
+        tk.Label(card, text="Drag a rule into a class. Double-click adds it to the last class you clicked.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), wraplength=195, justify="left").pack(anchor="w", padx=14, pady=(0, 9))
         for mode, caption, mode_bg, mode_fg in (("avoid", "Avoid", "#fff0e9", "#965233"), ("contain", "Contain", MINT, GREEN_DARK)):
             tk.Label(card, text=caption.upper(), bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).pack(anchor="w", padx=14, pady=(8, 4))
             for pattern in PATTERNS:
@@ -192,6 +214,7 @@ class DesktopWorkbench:
                 block.bind("<ButtonPress-1>", lambda e, m=mode, p=pattern: self._drag_start(e, m, p))
                 block.bind("<B1-Motion>", self._drag_motion)
                 block.bind("<ButtonRelease-1>", self._drag_end)
+                block.bind("<Double-Button-1>", lambda _e, m=mode, p=pattern: self._quick_add(m, p))
         saved = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         saved.pack(fill="both", expand=True, pady=(14, 0))
         top = tk.Frame(saved, bg=PANEL)
@@ -206,6 +229,7 @@ class DesktopWorkbench:
         actions.pack(fill="x", padx=10, pady=(0, 9))
         tk.Button(actions, text="Export", command=self.export_state, relief="flat", bg="#f0f4f1", fg=INK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 9), padx=9, pady=5).pack(side="left")
         tk.Button(actions, text="Import", command=self.import_state, relief="flat", bg="#f0f4f1", fg=INK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 9), padx=9, pady=5).pack(side="left", padx=6)
+        return rail
 
     def _build_workspace(self, parent):
         work = tk.Frame(parent, bg=BG)
@@ -278,6 +302,190 @@ class DesktopWorkbench:
         self.table.tag_configure("diverge", foreground=RED, background="#fff6f4")
         self.footer = tk.Label(results, text="Choose patterns from the left, then drop them into either class.", bg="#f8faf8", fg=MUTED, anchor="w", padx=14, pady=9, font=("TkDefaultFont", 9))
         self.footer.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 12))
+        return work
+
+    def _quick_add(self, mode, pattern):
+        """Accessible alternative to dragging: double-click adds to focused lane."""
+        side = getattr(self, "focused_side", "left")
+        self.add_rule(side, mode, pattern)
+
+    def _show_view(self, view):
+        if view == "conjecture":
+            self.transform_view.grid_remove()
+            self.main_rail.grid(row=0, column=0, sticky="nsew", padx=(0, 18))
+            self.main_work.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.main_rail.grid_remove()
+            self.main_work.grid_remove()
+            self.transform_view.grid(row=0, column=0, columnspan=2, sticky="nsew")
+        for key, button in self.nav_buttons.items():
+            selected = key == view
+            button.configure(bg=GREEN if selected else "#e8eeea", fg="white" if selected else INK, activebackground=GREEN if selected else MINT)
+
+    def _build_transform_view(self, parent):
+        view = tk.Frame(parent, bg=BG)
+        view.grid(row=0, column=0, columnspan=2, sticky="nsew")
+        view.columnconfigure(0, weight=1)
+        view.rowconfigure(2, weight=1)
+        intro = tk.Frame(view, bg=BG)
+        intro.grid(row=0, column=0, sticky="ew", pady=(0, 12))
+        tk.Label(intro, text="See what a transform does", bg=BG, fg=INK, font=("TkDefaultFont", 21, "bold")).pack(anchor="w")
+        tk.Label(intro, text="Apply one engine transformation to a word. Compare positions, values, and the exact mapping.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
+
+        controls = tk.Frame(view, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        controls.grid(row=1, column=0, sticky="ew", pady=(0, 12))
+        controls.columnconfigure(1, weight=1)
+        controls.columnconfigure(3, weight=1)
+        tk.Label(controls, text="SOURCE WORD", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=0, column=0, sticky="w", padx=(14, 6), pady=(12, 4))
+        self.transform_word_var = tk.StringVar(value="1 2 1 3 2")
+        ttk.Entry(controls, textvariable=self.transform_word_var, width=24).grid(row=0, column=1, sticky="ew", padx=(0, 14), pady=(12, 4))
+        tk.Label(controls, text="TRANSFORMATION", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=0, column=2, sticky="w", padx=(0, 6), pady=(12, 4))
+        self.transform_labels = {
+            "Reverse positions": "reverse", "Complement values": "complement",
+            "Hat map": "hat", "Inverse hat map": "inverse_hat",
+            "Prefix lift Lᵢ": "prefix_lift", "Inverse prefix lift Lᵢ": "inverse_prefix_lift",
+            "Insert position": "insert_position", "Delete position": "delete_position",
+        }
+        names = tuple(self.transform_labels)
+        self.transform_name_var = tk.StringVar(value="prefix_lift")
+        self.transform_name_var.set("Prefix lift Lᵢ")
+        self.transform_name_box = ttk.Combobox(controls, state="readonly", width=21, textvariable=self.transform_name_var, values=names)
+        self.transform_name_box.grid(row=0, column=3, sticky="w", padx=(0, 14), pady=(12, 4))
+        self.transform_name_box.bind("<<ComboboxSelected>>", lambda _e: self._transform_parameter_state())
+        self.transform_parameter_label = tk.Label(controls, text="POSITION", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold"))
+        self.transform_parameter_label.grid(row=1, column=0, sticky="w", padx=(14, 6), pady=(4, 11))
+        self.transform_parameter_var = tk.StringVar(value="3")
+        self.transform_parameter_entry = ttk.Entry(controls, textvariable=self.transform_parameter_var, width=6)
+        self.transform_parameter_entry.grid(row=1, column=1, sticky="w", padx=(0, 14), pady=(4, 11))
+        self.transform_value_label = tk.Label(controls, text="INSERT VALUE", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold"))
+        self.transform_value_label.grid(row=1, column=2, sticky="w", padx=(0, 6), pady=(4, 11))
+        self.transform_value_var = tk.StringVar(value="2")
+        self.transform_value_entry = ttk.Entry(controls, textvariable=self.transform_value_var, width=6)
+        self.transform_value_entry.grid(row=1, column=3, sticky="w", padx=(0, 14), pady=(4, 11))
+        tk.Button(controls, text="Apply transform", command=self.apply_transform, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=12, pady=7).grid(row=1, column=8, sticky="e", padx=(0, 14), pady=(3, 10))
+        self.transform_help = tk.Label(controls, text="Use spaces or commas between values. Positions and cuts are 1-based, except insertion cut 0 (before the first position).", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), anchor="w")
+        self.transform_help.grid(row=2, column=0, columnspan=9, sticky="ew", padx=14, pady=(0, 11))
+
+        stage = tk.Frame(view, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        stage.grid(row=2, column=0, sticky="nsew")
+        stage.columnconfigure(0, weight=1, uniform="stage")
+        stage.columnconfigure(1, weight=1, uniform="stage")
+        stage.rowconfigure(1, weight=1)
+        tk.Label(stage, text="BEFORE", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, sticky="w", padx=16, pady=(13, 3))
+        tk.Label(stage, text="AFTER", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=1, sticky="w", padx=16, pady=(13, 3))
+        self.before_canvas = tk.Canvas(stage, bg="#fbfcfb", height=250, highlightthickness=0)
+        self.before_canvas.grid(row=1, column=0, sticky="nsew", padx=(12, 6), pady=(0, 10))
+        self.after_canvas = tk.Canvas(stage, bg="#fbfcfb", height=250, highlightthickness=0)
+        self.after_canvas.grid(row=1, column=1, sticky="nsew", padx=(6, 12), pady=(0, 10))
+        self.transform_summary = tk.Label(stage, text="Choose a word and transform, then apply it to see the mapping.", bg=MINT, fg=GREEN_DARK, font=("TkDefaultFont", 10), anchor="w", justify="left", padx=14, pady=10, wraplength=1150)
+        self.transform_summary.grid(row=2, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 8))
+        self.transform_mapping = tk.Label(stage, text="", bg=PANEL, fg=INK, font=("TkFixedFont", 10), anchor="w", justify="left", padx=16, pady=8, wraplength=1150)
+        self.transform_mapping.grid(row=3, column=0, columnspan=2, sticky="ew", padx=8, pady=(0, 10))
+        view.bind("<Configure>", lambda _e: self._redraw_transform() if getattr(self, "_last_transform", None) else None)
+        self._transform_parameter_state()
+        return view
+
+    def _transform_parameter_state(self):
+        name = self.transform_labels.get(self.transform_name_var.get(), self.transform_name_var.get())
+        uses_param = name in {"prefix_lift", "inverse_prefix_lift", "insert_position", "delete_position"}
+        self.transform_parameter_label.configure(text="CUT" if name == "insert_position" else "POSITION")
+        self.transform_parameter_entry.configure(state="normal" if uses_param else "disabled")
+        self.transform_value_entry.configure(state="normal" if name == "insert_position" else "disabled")
+
+    def _parse_visual_word(self):
+        text = self.transform_word_var.get().strip()
+        if not text:
+            raise ValueError("Enter a nonempty word using positive values, such as 1 2 1 3.")
+        values = tuple(int(v) for v in text.replace(",", " ").replace(";", " ").split())
+        if any(v < 1 for v in values):
+            raise ValueError("Values must be positive integers.")
+        return ChainWord(values)
+
+    def apply_transform(self):
+        try:
+            source = self._parse_visual_word()
+            name = self.transform_labels.get(self.transform_name_var.get(), self.transform_name_var.get())
+            parameter = int(self.transform_parameter_var.get()) if name in {"prefix_lift", "inverse_prefix_lift", "insert_position", "delete_position"} else None
+            if name == "reverse":
+                result = reverse(source); detail = "Reverse the order of positions."
+            elif name == "complement":
+                result = complement(source); detail = f"Replace each value v by height + 1 − v (height {source.height})."
+            elif name == "hat":
+                output = hat(source); result = None; detail = "Apply the ordered prefix lifts at the source word’s ascent-top positions."
+            elif name == "inverse_hat":
+                output = inverse_hat(source); result = None; detail = "Undo the hat map using the preserved ascent-top positions; this is partial."
+            elif name == "prefix_lift":
+                result = prefix_lift(source, parameter); detail = f"At pivot {parameter}, raise earlier values at least the pivot value {source.at(parameter)}."
+            elif name == "inverse_prefix_lift":
+                result = inverse_prefix_lift(source, parameter); detail = f"At first-occurrence pivot {parameter}, lower earlier values above the pivot value {source.at(parameter)}."
+            elif name == "insert_position":
+                value = int(self.transform_value_var.get())
+                result = insert_position(source, parameter, value); detail = f"Insert value {value} after cut {parameter}; later positions shift right."
+            elif name == "delete_position":
+                if not 1 <= parameter <= len(source):
+                    raise ValueError("Position to delete must be within the word.")
+                result = restrict_positions(source, [i for i in range(1, len(source) + 1) if i != parameter]); detail = f"Delete position {parameter}; later positions shift left."
+            else:
+                raise ValueError("Choose a supported transform.")
+            if result is not None:
+                output, position_map, value_map, created = result.output, result.position_map, result.value_map, result.created_positions
+            else:
+                position_map, value_map, created = tuple(range(1, len(source) + 1)), None, ()
+            self._last_transform = (source, output, name, detail, position_map, value_map, created)
+            self._redraw_transform()
+        except (ValueError, IndexError, TypeError) as exc:
+            self.transform_summary.configure(text=f"Cannot apply transform: {exc}", bg="#fff0ed", fg=RED)
+
+    def _redraw_transform(self):
+        if not getattr(self, "_last_transform", None):
+            return
+        source, output, name, detail, pmap, vmap, created = self._last_transform
+        self._draw_sequence(self.before_canvas, source, set())
+        old_by_id = {pid: value for pid, value in zip(source.position_ids, source.values)}
+        changed_after = {i for i, (pid, value) in enumerate(zip(output.position_ids, output.values), start=1) if pid not in old_by_id or old_by_id[pid] != value}
+        self._draw_sequence(self.after_canvas, output, changed_after)
+        pmap_text = "position map: " + ", ".join(f"{i}→{j if j is not None else 'deleted'}" for i, j in enumerate(pmap, start=1))
+        if vmap is None and name in {"prefix_lift", "inverse_prefix_lift"}:
+            value_map_label = "position-dependent; inspect the before/after values"
+        elif vmap is None:
+            value_map_label = "not supplied by this transform"
+        else:
+            value_map_label = ", ".join(f"{i}→{j if j is not None else 'deleted'}" for i, j in enumerate(vmap, start=1))
+        vmap_text = "value map: " + value_map_label
+        self.transform_summary.configure(text=f"{name.replace('_', ' ').title()} · {detail}   Result: {list(output.values)} (length {len(output)}, height {output.height}). Amber marks changed or newly inserted entries.", bg=MINT, fg=GREEN_DARK)
+        self.transform_mapping.configure(text=f"{pmap_text}\n{vmap_text}" + (f"\nNew positions: {', '.join(map(str, created))}" if created else ""))
+
+    def _draw_sequence(self, canvas, word, created):
+        canvas.delete("all")
+        canvas.update_idletasks()
+        width = max(canvas.winfo_width(), 320)
+        height = max(canvas.winfo_height(), 210)
+        left, right, top, bottom = 42, width - 30, 24, height - 38
+        max_value = max(word.height, 1)
+        xstep = (right - left) / max(len(word) - 1, 1)
+        ystep = (bottom - top) / max(max_value - 1, 1)
+        points = []
+        for level in range(1, max_value + 1):
+            y = bottom - (level - 1) * ystep if max_value > 1 else (top + bottom) / 2
+            canvas.create_line(left - 10, y, right + 4, y, fill="#e8eeea", dash=(2, 4))
+            canvas.create_text(left - 17, y, text=str(level), anchor="e", fill=MUTED, font=("TkDefaultFont", 8))
+        for index, value in enumerate(word.values):
+            x = left + index * xstep if len(word) > 1 else (left + right) / 2
+            y = bottom - (value - 1) * ystep if max_value > 1 else (top + bottom) / 2
+            points.append((x, y))
+        for index in range(len(points) - 1):
+            x1, y1 = points[index]; x2, y2 = points[index + 1]
+            color = GREEN if word.values[index] < word.values[index + 1] else ("#bb7951" if word.values[index] > word.values[index + 1] else "#9aa69f")
+            canvas.create_line(x1, y1, x2, y2, fill=color, width=2, arrow="last", arrowshape=(7, 8, 3))
+        for index, ((x, y), value) in enumerate(zip(points, word.values), start=1):
+            fill = AMBER if index in created else GREEN
+            canvas.create_oval(x - 14, y - 14, x + 14, y + 14, fill=fill, outline="white", width=2)
+            canvas.create_text(x, y, text=str(value), fill="white", font=("TkDefaultFont", 10, "bold"))
+            canvas.create_text(x, bottom + 23, text=f"{index}", fill=MUTED, font=("TkDefaultFont", 9))
+        if not word.values:
+            canvas.create_text(width / 2, height / 2, text="empty word", fill=MUTED, font=("TkDefaultFont", 10, "italic"))
+        canvas.create_text(12, 13, text="value level ↑", anchor="w", fill=MUTED, font=("TkDefaultFont", 8))
+        canvas.create_text(width - 12, bottom + 23, text="position", anchor="e", fill=MUTED, font=("TkDefaultFont", 8))
 
     def _drag_start(self, event, mode, pattern):
         self.drag_payload = {"mode": mode, "pattern": pattern}
