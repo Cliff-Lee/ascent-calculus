@@ -339,3 +339,6 @@ while a bounded test runs, so the completed state reads as complete.
 
 Version a16 sizes the initial native window to the available desktop area and
 captures a 1280×800 laptop preview in CI to check the compact layout.
+
+Version a17 gives compact displays more of their available height and tightens
+the pattern preset grid so the results and saved-test areas retain usable space.

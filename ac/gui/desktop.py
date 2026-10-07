@@ -136,7 +136,7 @@ class DesktopWorkbench:
         self.root.title("Ascent Engine")
         screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
         window_width = min(1320, max(900, screen_width - 48))
-        window_height = min(820, max(640, screen_height - 96))
+        window_height = min(820, max(640, screen_height - 40))
         root.geometry(f"{window_width}x{window_height}")
         root.minsize(min(1040, window_width), min(680, window_height))
         self.root.configure(bg=BG)
@@ -219,8 +219,8 @@ class DesktopWorkbench:
             tk.Label(card, text=caption.upper(), bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=first_row, column=0, columnspan=2, sticky="w", padx=12, pady=(6, 3))
             for index, pattern in enumerate(PATTERNS):
                 row, column = first_row + 1 + index // 2, index % 2
-                block = tk.Label(card, text=f"⟨{pattern}⟩", bg=mode_bg, fg=mode_fg, font=("TkDefaultFont", 9, "bold"), padx=5, pady=5, cursor="hand2", anchor="center")
-                block.grid(row=row, column=column, sticky="ew", padx=4, pady=2)
+                block = tk.Label(card, text=f"⟨{pattern}⟩", bg=mode_bg, fg=mode_fg, font=("TkDefaultFont", 9, "bold"), padx=5, pady=3, cursor="hand2", anchor="center")
+                block.grid(row=row, column=column, sticky="ew", padx=4, pady=1)
                 block.bind("<ButtonPress-1>", lambda e, m=mode, p=pattern: self._drag_start(e, m, p))
                 block.bind("<B1-Motion>", self._drag_motion)
                 block.bind("<ButtonRelease-1>", self._drag_end)
