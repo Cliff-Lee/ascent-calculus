@@ -348,3 +348,6 @@ slightly denser result rows, preserving more of the experiment table in laptop m
 
 Version a19 extends the packaged window smoke check to exercise preset dragging,
 Class B hover feedback, rule placement, and the double-click quick-add path.
+
+
+Version a20 adds example-led hover explanations to every workbench dropdown choice, including statistic refinements, transformation options, family and pattern rules, and object-browser filters. The native tooltip also appears on keyboard focus; transformation parameter guidance now includes concrete input/output examples.

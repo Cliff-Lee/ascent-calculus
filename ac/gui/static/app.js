@@ -1,15 +1,224 @@
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
+
+// Short, example-led explanations for every choice in the workbench. Native
+// option titles provide a fallback; the shared tooltip also works with native
+// selects whose option hover UI is controlled by the operating system.
+const STAT_HELP = {
+  none: 'Do not compare a word statistic. Compare only how many words are in each class.',
+  ascents: 'Count adjacent rises xᵢ < xᵢ₊₁. Example: 1,2,1,3,2 has 2 ascents (1→2 and 1→3).',
+  ascent_runs: 'Count the engine-defined ascent runs. Example: 1,2,1,3,2 has 3 runs, starting at positions 1, 3, and 5.',
+  run_start_positions: 'List positions where an ascent run starts. Example: 1,2,1,3,2 → [1,3,5].',
+  run_lengths: 'List the lengths of consecutive ascent-run blocks. Example: 1,2 | 1,3 | 2 gives [2,2,1].',
+  maximum: 'Return the largest value in the word. Example: max(1,2,1,3,2) = 3.',
+  distinct_values: 'Count different values in the word. Example: {1,2,3} gives 3.',
+  multiplicity_partition: 'Sort value frequencies from largest to smallest. Example: 1,2,1,3,2 has frequencies 2,2,1, so [2,2,1].',
+  first_occurrence_positions: 'List positions where each distinct value first appears. Example: 1,2,1,3,2 → [1,2,4].',
+  last_occurrence_positions: 'List positions that are the final occurrence of a value, sorted left to right. Example: 1,2,1,3,2 → [3,4,5].'
+};
+const OPTION_HELP = {
+  'inspect-sample': {
+    '133122': 'A modified-sequence example. Inspect its value fibres and position roles: 1,3,3,1,2,2.',
+    '12321432': 'A source word used to illustrate the earlier one-step repair trace: 1,2,3,2,1,4,3,2.',
+    '12143232': 'A counterexample showing a defect in the raw gap-swap rule: 1,2,1,4,3,2,3,2.',
+    '14323312': 'A guardrail example: a locally plausible repair can fail the required target condition.'
+  },
+  'trace-sample': {
+    '12321432': 'Successful one-step repair example. Build the trace to follow each occurrence through the move.',
+    '14323312': 'Provenance guardrail example. Shows why the historical one-pass repair is not a general proof.'
+  },
+  'experiment-question': {
+    compare: 'Build classes A and B, then compare their counts degree by degree. Example: Modified avoiding 2122 versus Modified avoiding 2212.',
+    count: 'Build only class A and report its count at each degree. Use this when there is no second class to compare.'
+  },
+  'experiment-left-family': {
+    ordinary: 'Ordinary ascent sequences: start with 1; each later xᵢ satisfies 1 ≤ xᵢ ≤ 2 + asc(x₁…xᵢ₋₁). Example: 1,2,1.',
+    modified: 'Cayley words where each value first appears as an ascent top. Example: 1,3,3,1,2,2.',
+    revised: 'Cayley words where each value first appears as an ascent bottom. Example: 2,1,2.'
+  },
+  'experiment-right-family': {
+    ordinary: 'Ordinary ascent sequences: start with 1; each later xᵢ satisfies 1 ≤ xᵢ ≤ 2 + asc(x₁…xᵢ₋₁). Example: 1,2,1.',
+    modified: 'Cayley words where each value first appears as an ascent top. Example: 1,3,3,1,2,2.',
+    revised: 'Cayley words where each value first appears as an ascent bottom. Example: 2,1,2.'
+  },
+  'tx-source-family': {
+    ordinary: 'Ordinary ascent sequences: start with 1 and each later value is at most 2 plus the earlier ascent count.',
+    modified: 'Cayley words where every value first appears at the top of an ascent. Example: 1,3,3,1,2,2.',
+    revised: 'Cayley words where every value first appears at the bottom of an ascent. Example: 2,1,2.'
+  },
+  'tx-target-family': {
+    ordinary: 'Require each transformed output to be an ordinary ascent sequence.',
+    modified: 'Require each transformed output to be a modified ascent sequence: a Cayley word with first occurrences at ascent tops.',
+    revised: 'Require each transformed output to be a revised ascent sequence: a Cayley word with first occurrences at ascent bottoms.'
+  },
+  'experiment-left-mode': {
+    avoid: 'Keep words with no occurrence of any listed pattern. Example: Avoid 2122 means no subsequence has relative-order pattern 2,1,2,2.',
+    contain: 'Keep words with an occurrence of every listed pattern. With patterns 2122 and 2212, a word must contain both.',
+    none: 'Ignore the pattern list; only the selected sequence family and structural filter apply.'
+  },
+  'experiment-right-mode': {
+    avoid: 'Keep words with no occurrence of any listed pattern. Example: Avoid 2122 means no subsequence has relative-order pattern 2,1,2,2.',
+    contain: 'Keep words with an occurrence of every listed pattern. With patterns 2122 and 2212, a word must contain both.',
+    none: 'Ignore the pattern list; only the selected sequence family and structural filter apply.'
+  },
+  'tx-source-mode': {
+    none: 'Use the whole selected source family.',
+    avoid: 'Only transform source words that avoid the listed source pattern. Example: enter 2122 to filter out those containing it.',
+    contain: 'Only transform source words containing the listed source pattern.'
+  },
+  'tx-target-mode': {
+    none: 'Do not impose a pattern restriction on outputs; still check membership in the target family.',
+    avoid: 'Require each output to avoid the listed target pattern. Example: 2212 filters outputs containing that pattern.',
+    contain: 'Require each output to contain the listed target pattern.'
+  },
+  'experiment-statistic': STAT_HELP,
+  'tx-statistic': STAT_HELP,
+  'experiment-condition-stat': {
+    none: 'Apply no additional statistic-based filter to either class.',
+    ascents: 'Filter by the number of adjacent rises xᵢ < xᵢ₊₁. Example: 1,2,1 has 1 ascent.',
+    maximum: 'Filter by the largest value. Example: max(1,2,1,3,2) = 3.',
+    distinct_values: 'Filter by the number of different values. Example: 1,2,1,3,2 has 3.'
+  },
+  'experiment-condition-op': {
+    eq: 'Keep words whose selected statistic equals the value exactly. Example: ascent count exactly 2.',
+    ge: 'Keep words whose selected statistic is at least the value. Example: maximum at least 3.',
+    le: 'Keep words whose selected statistic is at most the value. Example: distinct values at most 4.'
+  },
+  'tx-name': {
+    hat: 'Hat map: compose prefix lifts at ascent-top positions. Example: 1,2,1,2 maps to 1,3,1,2.',
+    inverse_hat: 'Partial inverse of the hat map. It recovers a source only when the input is in the hat map’s image.',
+    prefix_lift: 'At pivot i, raise each earlier entry ≥ xᵢ by 1. Example: 2,1,2 with pivot 2 becomes 3,1,2.',
+    inverse_prefix_lift: 'Undo a prefix lift when pivot i is a first occurrence. Example: 3,1,2 with pivot 2 returns to 2,1,2.',
+    insert_position: 'Insert a copy of an existing value after a chosen cut. Example: 1,2,1, cut 1, value 2 → 1,2,2,1.',
+    delete_position: 'Remove one chosen position while keeping ambient value levels. Example: 1,2,2,1, delete position 3, value 2 → 1,2,1.',
+    reverse: 'Reverse the order of entries. Example: 1,2,3,1 → 1,3,2,1.',
+    complement: 'Replace each value v by h+1−v, where h is the ambient height. Example at height 3: 1,2,3 → 3,2,1.'
+  },
+  'browser-stat': {
+    '': 'Show all words, regardless of statistic.',
+    ascents: STAT_HELP.ascents,
+    ascent_runs: STAT_HELP.ascent_runs,
+    run_lengths: STAT_HELP.run_lengths,
+    maximum: STAT_HELP.maximum,
+    distinct_values: STAT_HELP.distinct_values,
+    multiplicity_partition: STAT_HELP.multiplicity_partition,
+    first_occurrence_positions: STAT_HELP.first_occurrence_positions,
+    last_occurrence_positions: STAT_HELP.last_occurrence_positions,
+    run_start_positions: STAT_HELP.run_start_positions
+  },
+  'browser-pattern-mode': {
+    none: 'Do not filter by pattern; keep every generated word.',
+    contain: 'Keep words containing the pattern as an order-isomorphic subsequence. Example: 2122 occurs in 3,1,3,3.',
+    avoid: 'Keep words with no order-isomorphic subsequence matching the pattern.'
+  },
+  'lab-source': {
+    m2122: 'Modified ascent sequences that avoid 2122.',
+    m2212: 'Modified ascent sequences that avoid 2212.',
+    modified: 'All modified ascent sequences, with no pattern restriction.'
+  },
+  'lab-transform': {
+    repair21: 'Historical one-pass GapSwapRepair(2,1); retained to reproduce earlier experiments.',
+    gap21: 'Historical ExtremeGapSwap(2,1) candidate; inspect its bounded counterexamples before drawing conclusions.',
+    repair12: 'Historical one-pass GapSwapRepair(1,2), with the pattern roles exchanged.',
+    gap12: 'Historical ExtremeGapSwap(1,2) candidate, with the pattern roles exchanged.',
+    reverse: 'Read each source word backward.',
+    identity: 'Leave every source word unchanged; useful as a baseline check.'
+  },
+  'lab-target': {
+    m2122: 'Require outputs to be modified ascent sequences avoiding 2122.',
+    m2212: 'Require outputs to be modified ascent sequences avoiding 2212.',
+    modified: 'Require outputs to be modified ascent sequences with no pattern restriction.'
+  },
+  'lab-maxn': {
+    '6': 'Check degrees 1 through 6. Smaller ranges run faster; larger ranges test more cases.',
+    '7': 'Check degrees 1 through 7.', '8': 'Check degrees 1 through 8.',
+    '9': 'Check degrees 1 through 9.', '10': 'Check degrees 1 through 10; this can take longer.'
+  }
+};
+const OPTION_TIP_ID = 'option-help-tooltip';
+const optionTip = document.createElement('div');
+optionTip.id = OPTION_TIP_ID;
+optionTip.className = 'option-help-tooltip';
+optionTip.setAttribute('role', 'tooltip');
+optionTip.hidden = true;
+document.body.append(optionTip);
+function optionDescription(select, option=select.selectedOptions?.[0]) {
+  if (!option) return '';
+  const map = OPTION_HELP[select.id] || {};
+  return map[option.value] || option.title || '';
+}
+function describeSelect(select, show=false) {
+  if (!select || select.tagName !== 'SELECT') return;
+  for (const option of select.options) {
+    const description = optionDescription(select, option);
+    if (description) option.title = description;
+  }
+  const description = optionDescription(select);
+  if (description) {
+    select.title = description;
+    const describedBy = new Set((select.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+    describedBy.add(OPTION_TIP_ID);
+    select.setAttribute('aria-describedby', [...describedBy].join(' '));
+  }
+  if (show && description) showOptionTip(select, description);
+}
+function showOptionTip(select, description=optionDescription(select)) {
+  if (!description) return;
+  optionTip.textContent = description;
+  optionTip.hidden = false;
+  const rect = select.getBoundingClientRect();
+  const width = Math.min(320, window.innerWidth - 24);
+  const left = Math.max(12, Math.min(rect.left, window.innerWidth - width - 12));
+  optionTip.style.width = `${width}px`;
+  optionTip.style.left = `${left}px`;
+  const below = rect.bottom + 8;
+  const top = below + optionTip.offsetHeight <= window.innerHeight - 12 ? below : Math.max(12, rect.top - optionTip.offsetHeight - 8);
+  optionTip.style.top = `${top}px`;
+}
+function hideOptionTip() { optionTip.hidden = true; }
+$$('select').forEach(select => describeSelect(select));
+document.addEventListener('pointerover', event => {
+  const select = event.target.closest?.('select');
+  if (select) { describeSelect(select, true); }
+});
+document.addEventListener('pointerout', event => {
+  if (event.target.matches?.('select') && !event.target.contains(event.relatedTarget)) hideOptionTip();
+});
+document.addEventListener('focusin', event => {
+  if (event.target.matches?.('select')) describeSelect(event.target, true);
+});
+document.addEventListener('focusout', event => {
+  if (event.target.matches?.('select')) hideOptionTip();
+});
+document.addEventListener('change', event => {
+  if (event.target.matches?.('select')) describeSelect(event.target, document.activeElement === event.target);
+});
+window.addEventListener('scroll', hideOptionTip, {passive:true});
+window.addEventListener('resize', hideOptionTip, {passive:true});
+$$('[data-family-chip]').forEach(button => { button.title = OPTION_HELP['experiment-left-family'][button.dataset.familyChip] || 'Drag this sequence family onto class A or B, or click to add it to the last focused class.'; });
+$$('[data-mode-chip]').forEach(button => { button.title = OPTION_HELP['experiment-left-mode'][button.dataset.modeChip] || 'Drag this pattern rule onto class A or B, or click to apply it to the last focused class.'; });
+$$('[data-pattern-chip]').forEach(button => { button.title = `Drag pattern ${button.dataset.patternChip} onto a class card to add it to that class’s rule list.`; });
+$$('[data-experiment-preset]').forEach(button => {
+  button.title = button.dataset.experimentPreset === 'modified-pattern-pair'
+    ? 'Load a worked example comparing modified ascent sequences that avoid 2122 and 2212.'
+    : 'Load a worked example comparing revised sequences avoiding 3121 with ordinary sequences avoiding 221.';
+});
 let traceData = null;
 let traceFrames = [];
 let traceIndex = 0;
 let activeExperiment = null;
 let objectBrowserState = null;
+let lastFocusSide = 'left';
+let researchStateReady = false;
+let researchStateTimer = null;
+let researchStateWrite = Promise.resolve();
+let persistentSavedExperiments = null;
 
 function setTab(name) {
   const previous = $('.panel.active');
+  const selectedTool = name === 'learn' ? 'lab' : name;
   $$('.tab').forEach(b => {
-    const active = b.dataset.tab === name;
+    const active = b.dataset.tab === selectedTool;
     b.classList.toggle('active', active);
     b.setAttribute('aria-selected', String(active));
     b.tabIndex = active ? 0 : -1;
@@ -19,11 +228,13 @@ function setTab(name) {
     p.classList.toggle('active', active);
     p.setAttribute('aria-hidden', String(!active));
   });
+  if (name === 'inspector' && !$('#word-strip').dataset.loaded) runInspect();
+  if (name === 'trace' && !$('#trace-stage').dataset.loaded) runTrace();
   if (previous && previous.id !== `panel-${name}`) window.scrollTo({top:0, behavior:'smooth'});
 }
 const tablist = $('.sidebar-nav');
 function syncTabOrientation() {
-  tablist.setAttribute('aria-orientation', matchMedia('(max-width: 760px)').matches ? 'horizontal' : 'vertical');
+  tablist.setAttribute('aria-orientation', 'horizontal');
 }
 syncTabOrientation();
 window.addEventListener('resize', syncTabOrientation, {passive:true});
@@ -93,6 +304,7 @@ function tokenHtml(p, mini=false, classes='') {
 
 function renderInspection(data, rootPrefix='') {
   if (!rootPrefix) {
+    $('#word-strip').dataset.loaded = 'true';
     $('#inspect-summary').innerHTML = [
       metric('length', data.length), metric('height', data.height), metric('modified', data.is_modified ? 'yes' : 'no'),
       metric('avoid 2122', data.avoids_2122 ? 'yes' : 'no'), metric('avoid 2212', data.avoids_2212 ? 'yes' : 'no'),
@@ -112,6 +324,7 @@ function explainPosition(data, pos, el) {
   $('#position-explanation').innerHTML = `<div class="summary-row">${metric('position',p.position)}${metric('value',p.value)}${metric('occurrence',p.occurrence_rank)}${metric('stable id',p.position_id)}</div><ul class="reason-list">${p.reasons.map(r=>`<li>${r}</li>`).join('')}</ul>`;
 }
 async function runInspect() {
+  $('#word-strip').dataset.loaded = '';
   $('#word-strip').innerHTML='<div class="loading">Asking AC-Engine…</div>';
   try { renderInspection(await api('/api/inspect',{word:$('#inspect-word').value})); }
   catch(e){ $('#word-strip').innerHTML=`<div class="error-box">${e.message}</div>`; }
@@ -199,10 +412,12 @@ function renderTraceFrame() {
   } else $('#trace-details').innerHTML='';
 }
 async function runTrace() {
+  $('#trace-stage').dataset.loaded = '';
   $('#trace-stage').innerHTML='<div class="loading">Building trace from AC-Engine…</div>';
   try {
     traceData=await api('/api/trace',{word:$('#trace-word').value,left_repeats:2,right_repeats:1});
     traceFrames=buildTraceFrames(traceData); traceIndex=0; renderTraceFrame();
+    $('#trace-stage').dataset.loaded = 'true';
   } catch(e) { $('#trace-stage').innerHTML=`<div class="error-box">${e.message}</div>`; }
 }
 $('#trace-run').addEventListener('click',runTrace);
@@ -280,6 +495,47 @@ function sideSpecification(side) {
     rules:mode==='none'?[]:patternLines(side).map(pattern=>({mode,pattern}))
   };
 }
+const draftFieldIds=['experiment-question','experiment-start','experiment-stop','experiment-left-family','experiment-left-mode','experiment-left-patterns','experiment-left-offset','experiment-right-family','experiment-right-mode','experiment-right-patterns','experiment-right-offset','experiment-statistic','experiment-condition-stat','experiment-condition-op','experiment-condition-value'];
+const draftStorageKey='ascent-engine.experiment-draft.v1';
+const savedStorageKey='ascent-engine.saved-experiments.v1';
+function persistDraft() {
+  try {
+    const draft=Object.fromEntries(draftFieldIds.map(id=>[id,$(`#${id}`).value]));
+    localStorage.setItem(draftStorageKey,JSON.stringify(draft));
+    if (researchStateReady) scheduleResearchStateSave(draft);
+  } catch(_) { /* Local persistence is an aid; the engine run remains usable without it. */ }
+}
+function restoreDraft() {
+  try {
+    const draft=JSON.parse(localStorage.getItem(draftStorageKey)||'null');
+    if (!draft || typeof draft!=='object') return;
+    draftFieldIds.forEach(id=>{if (typeof draft[id]==='string') $(`#${id}`).value=draft[id];});
+  } catch(_) { /* Ignore an old or unavailable local draft. */ }
+}
+function scheduleResearchStateSave(draft=null) {
+  clearTimeout(researchStateTimer);
+  researchStateTimer=setTimeout(()=>{
+    const current=draft||Object.fromEntries(draftFieldIds.map(id=>[id,$(`#${id}`).value]));
+    const payload={draft:current,saved:savedExperiments()};
+    researchStateWrite=researchStateWrite.catch(()=>{}).then(()=>api('/api/research-state',payload)).catch(()=>{});
+  },350);
+}
+function restoreResearchState(state) {
+  if (state?.draft && typeof state.draft==='object') {
+    draftFieldIds.forEach(id=>{if (typeof state.draft[id]==='string') $(`#${id}`).value=state.draft[id];});
+    try { localStorage.setItem(draftStorageKey,JSON.stringify(state.draft)); } catch(_) {}
+  }
+  if (Array.isArray(state?.saved)) {
+    persistentSavedExperiments=state.saved;
+    try { localStorage.setItem(savedStorageKey,JSON.stringify(state.saved)); } catch(_) {}
+  }
+  renderPatternLane('left'); renderPatternLane('right');
+  renderSavedExperiments();
+  validateExperimentSide('left'); validateExperimentSide('right');
+  researchStateReady=true;
+  updateExperimentValidity();
+  scheduleResearchStateSave();
+}
 function isSandwichPattern(values) {
   if (values.length<3 || values[0]!==values[values.length-1]) return false;
   const pivot=values[0]; let left=0, right=0;
@@ -343,6 +599,7 @@ function updateExperimentValidity() {
   $('#experiment-condition-op').disabled=!hasCondition;
   $('#experiment-condition-value').disabled=!hasCondition;
   updateExperimentSentence();
+  persistDraft();
 }
 function applyExperimentPreset(name) {
   $('#experiment-question').value='compare';
@@ -358,6 +615,7 @@ function applyExperimentPreset(name) {
     $('#experiment-left-family').value='modified'; $('#experiment-left-mode').value='avoid'; $('#experiment-left-patterns').value='2122'; $('#experiment-left-offset').value='0';
     $('#experiment-right-family').value='modified'; $('#experiment-right-mode').value='avoid'; $('#experiment-right-patterns').value='2212'; $('#experiment-right-offset').value='0'; $('#experiment-stop').value='11';
   }
+  renderPatternLane('left'); renderPatternLane('right');
   validateExperimentSide('left'); validateExperimentSide('right'); updateExperimentValidity();
 }
 $('#experiment-question').addEventListener('change',updateExperimentValidity);
@@ -371,8 +629,242 @@ for (const id of ['experiment-start','experiment-stop','experiment-left-family',
     else updateExperimentValidity();
   });
 }
-for (const side of ['left','right']) $(experimentControls[side].patterns).addEventListener('input',()=>validateExperimentSide(side));
+for (const side of ['left','right']) $(experimentControls[side].patterns).addEventListener('input',()=>{
+  renderPatternLane(side);
+  validateExperimentSide(side);
+  persistDraft();
+});
+$$('.experiment-side').forEach(card=>{
+  const side=card.id.includes('left')?'left':'right';
+  card.addEventListener('pointerenter',()=>{lastFocusSide=side;});
+  card.addEventListener('focusin',()=>{lastFocusSide=side;});
+});
 $$('[data-experiment-preset]').forEach(b=>b.addEventListener('click',()=>applyExperimentPreset(b.dataset.experimentPreset)));
+
+function renderPatternLane(side, hint='Drop a pattern or text file · × removes') {
+  const zone=document.querySelector(`[data-pattern-drop="${side}"]`);
+  if (!zone) return;
+  const patterns=$(experimentControls[side].patterns).value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const chips=patterns.map((pattern,index)=>`<span class="rule-chip" role="listitem" draggable="true" data-rule-index="${index}"><code>${escapeHtml(pattern)}</code><button type="button" data-remove-pattern="${index}" aria-label="Remove pattern ${escapeHtml(pattern)}">×</button></span>`).join('');
+  zone.innerHTML=`${chips}<span class="drop-hint">${escapeHtml(hint)}</span>`;
+  zone.querySelectorAll('.rule-chip').forEach(chip=>chip.addEventListener('dragstart',event=>{
+    const index=Number(chip.dataset.ruleIndex), pattern=patterns[index];
+    event.dataTransfer.setData('application/x-ascent-piece',JSON.stringify({kind:'pattern',value:pattern,source:side,index}));
+    event.dataTransfer.setData('text/plain',pattern);
+  }));
+  zone.querySelectorAll('[data-remove-pattern]').forEach(button=>button.addEventListener('click',()=>{
+    const next=patterns.filter((_,index)=>index!==Number(button.dataset.removePattern));
+    const input=$(experimentControls[side].patterns); input.value=next.join('\n');
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+  }));
+}
+function addPatterns(side, rawPatterns) {
+  const input = $(experimentControls[side].patterns);
+  const existing = input.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const merged = [...existing];
+  rawPatterns.map(String).map(x=>x.trim()).filter(Boolean).forEach(pattern=>{
+    if (!merged.includes(pattern)) merged.push(pattern);
+  });
+  input.value = merged.join('\n');
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function dragPiece(button, payload) {
+  button.addEventListener('dragstart',event=>{
+    event.dataTransfer.setData('application/x-ascent-piece',JSON.stringify(payload));
+    event.dataTransfer.setData('text/plain',String(payload.value));
+    event.dataTransfer.effectAllowed='copy';
+  });
+}
+$$('[data-pattern-chip]').forEach(button=>{
+  dragPiece(button,{kind:'pattern',value:button.dataset.patternChip});
+  button.addEventListener('click',()=>addPatterns(lastFocusSide,[button.dataset.patternChip]));
+});
+$$('[data-family-chip]').forEach(button=>{
+  const family=button.dataset.familyChip;
+  dragPiece(button,{kind:'family',value:family});
+  button.addEventListener('click',()=>{
+    $(`#experiment-${lastFocusSide}-family`).value=family;
+    updateExperimentValidity(); persistDraft();
+  });
+});
+$$('[data-mode-chip]').forEach(button=>{
+  const mode=button.dataset.modeChip;
+  dragPiece(button,{kind:'mode',value:mode});
+  button.addEventListener('click',()=>{
+    $(`#experiment-${lastFocusSide}-mode`).value=mode;
+    validateExperimentSide(lastFocusSide); updateExperimentValidity(); persistDraft();
+  });
+});
+function readPiece(event) {
+  const encoded=event.dataTransfer.getData('application/x-ascent-piece');
+  if (encoded) return JSON.parse(encoded);
+  const text=(event.dataTransfer.getData('text/plain')||'').trim();
+  if (/^[1-9]+$/.test(text)) return {kind:'pattern',value:text};
+  return null;
+}
+$$('[data-family-drop]').forEach(zone=>{
+  const side=zone.dataset.familyDrop;
+  zone.addEventListener('dragover',event=>{event.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',event=>{
+    event.preventDefault(); zone.classList.remove('drag-over');
+    try {
+      const piece=readPiece(event);
+      if (piece?.kind!=='family') throw new Error('Drop an Ordinary, Modified, or Revised family here.');
+      $(`#experiment-${side}-family`).value=piece.value;
+      zone.textContent=`${familyLabels[piece.value]} family selected`;
+      setTimeout(()=>{zone.textContent='Drop a family here';},1500);
+      updateExperimentValidity(); persistDraft();
+    } catch(error) { zone.textContent=error.message; setTimeout(()=>{zone.textContent='Drop a family here';},1800); }
+  });
+});
+$$('[data-mode-drop]').forEach(zone=>{
+  const side=zone.dataset.modeDrop;
+  zone.addEventListener('dragover',event=>{event.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',event=>{
+    event.preventDefault(); zone.classList.remove('drag-over');
+    try {
+      const piece=readPiece(event);
+      if (piece?.kind!=='mode') throw new Error('Drop Avoid or Contain here.');
+      $(`#experiment-${side}-mode`).value=piece.value;
+      zone.textContent=`Rule set to ${piece.value}`;
+      setTimeout(()=>{zone.textContent='Drop Avoid or Contain here';},1500);
+      validateExperimentSide(side); updateExperimentValidity(); persistDraft();
+    } catch(error) { zone.textContent=error.message; setTimeout(()=>{zone.textContent='Drop Avoid or Contain here';},1800); }
+  });
+});
+$$('[data-pattern-drop]').forEach(zone=>{
+  const side=zone.dataset.patternDrop;
+  zone.addEventListener('dragover',event=>{event.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',async event=>{
+    event.preventDefault(); zone.classList.remove('drag-over');
+    try {
+      let raw=[];
+      if (event.dataTransfer.files.length) {
+        const file=event.dataTransfer.files[0];
+        if (!/\.(txt|csv|json)$/i.test(file.name)) throw new Error('Drop a .txt, .csv, or .json file of patterns.');
+        const text=await file.text();
+        if (/\.json$/i.test(file.name)) {
+          const parsed=JSON.parse(text);
+          raw=Array.isArray(parsed)?parsed:(parsed.patterns||[]);
+        } else raw=text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+      } else {
+        const piece=readPiece(event);
+        if (piece?.kind==='pattern') raw=[piece.value];
+        else raw=(event.dataTransfer.getData('text/plain')||'').split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+      }
+      if (!raw.length) throw new Error('No patterns found. Use one pattern per line.');
+      const patterns=raw.map(value=>Array.isArray(value)?value.join(','):String(value).trim());
+      await Promise.all(patterns.map(pattern=>api('/api/experiment/validate-pattern',{pattern})));
+      addPatterns(side,patterns);
+      renderPatternLane(side,`Added ${patterns.length} pattern${patterns.length===1?'':'s'}`);
+      setTimeout(()=>renderPatternLane(side),1800);
+    } catch(error) {
+      zone.querySelector('.drop-hint').textContent=error.message;
+      zone.classList.add('drop-error');
+      setTimeout(()=>{renderPatternLane(side);zone.classList.remove('drop-error');},2600);
+    }
+  });
+});
+for (const side of ['left','right']) renderPatternLane(side);
+
+function applyExperimentSpecification(raw) {
+  const spec=raw?.specification || raw?.result?.specification || raw;
+  if (!spec || !['count','compare'].includes(spec.question) || !spec.left) throw new Error('This JSON does not contain an Ascent Engine experiment specification.');
+  const loadSide=(sideName,side)=>{
+    if (!side) return;
+    const rules=side.rules||[];
+    const modes=[...new Set(rules.map(rule=>rule.mode))];
+    if (modes.length>1) throw new Error('The compact editor can load one rule mode per family. This file mixes Avoid and Contain rules.');
+    if (!familyLabels[side.family] || rules.some(rule=>!['avoid','contain'].includes(rule.mode))) throw new Error(`The ${sideName==='left'?'first':'second'} class has an unsupported family or rule.`);
+    $(`#experiment-${sideName}-family`).value=side.family;
+    $(`#experiment-${sideName}-mode`).value=rules.length?modes[0]:'none';
+    $(`#experiment-${sideName}-patterns`).value=rules.map(rule=>Array.isArray(rule.pattern)?rule.pattern.join(','):String(rule.pattern)).join('\n');
+    $(`#experiment-${sideName}-offset`).value=String(side.degree_offset||0);
+  };
+  $('#experiment-question').value=spec.question;
+  $('#experiment-start').value=String(spec.start||1);
+  $('#experiment-stop').value=String(spec.stop||6);
+  $('#experiment-statistic').value=spec.statistic||'none';
+  $('#experiment-condition-stat').value=spec.condition?.statistic||'none';
+  $('#experiment-condition-op').value=spec.condition?.operator||'eq';
+  $('#experiment-condition-value').value=String(spec.condition?.value??2);
+  loadSide('left',spec.left);
+  loadSide('right',spec.right||{family:'modified',degree_offset:0,rules:[]});
+  renderPatternLane('left'); renderPatternLane('right');
+  validateExperimentSide('left'); validateExperimentSide('right'); updateExperimentValidity();
+  setTab('lab');
+}
+
+function currentExperimentRequest() {
+  const conditionStat=$('#experiment-condition-stat').value;
+  const condition=conditionStat==='none'?null:{statistic:conditionStat,operator:$('#experiment-condition-op').value,value:Number($('#experiment-condition-value').value||0)};
+  const question=$('#experiment-question').value;
+  return {question,start:Number($('#experiment-start').value),stop:Number($('#experiment-stop').value),statistic:$('#experiment-statistic').value,condition,left:sideSpecification('left'),right:question==='compare'?sideSpecification('right'):null};
+}
+async function runExperiment(request=currentExperimentRequest()) {
+  $('#experiment-result').innerHTML='<div class="loading card">Running the bounded experiment against AC-Engine…</div>';
+  $('#experiment-run').disabled=true;
+  try { renderExperiment(await api('/api/experiment/run',request)); }
+  catch(e) { $('#experiment-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  finally { updateExperimentValidity(); }
+}
+
+function savedExperiments() {
+  if (Array.isArray(persistentSavedExperiments)) return persistentSavedExperiments;
+  try { const value=JSON.parse(localStorage.getItem(savedStorageKey)||'[]'); return Array.isArray(value)?value:[]; }
+  catch(_) { return []; }
+}
+function savedLabel(spec) {
+  const side=s=>`${familyLabels[s.family]} ${s.rules?.length?s.rules.map(r=>`${r.mode} ${Array.isArray(r.pattern)?r.pattern.join(''):r.pattern}`).join(' + '):'unrestricted'}`;
+  return spec.question==='count'?side(spec.left):`${side(spec.left)}  ↔  ${side(spec.right)}`;
+}
+function renderSavedExperiments() {
+  const items=savedExperiments();
+  $('#saved-experiment-count').textContent=String(items.length);
+  const root=$('#saved-experiment-list');
+  root.innerHTML=items.length?items.map(item=>`<div class="saved-experiment-row"><div><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.summary||'Saved')} · ${escapeHtml(new Date(item.saved_at).toLocaleString())}</small></div><div class="saved-actions"><button type="button" class="secondary" data-run-saved="${escapeHtml(item.id)}">Load and run</button><button type="button" class="text-button" data-delete-saved="${escapeHtml(item.id)}">Remove</button></div></div>`).join(''):'<p class="small muted">No saved tests yet. Save a result to keep its specification here.</p>';
+  root.querySelectorAll('[data-run-saved]').forEach(button=>button.addEventListener('click',async()=>{
+    const item=savedExperiments().find(x=>x.id===button.dataset.runSaved); if (!item) return;
+    try { applyExperimentSpecification(item.specification); await runExperiment(item.specification); }
+    catch(error) { root.insertAdjacentHTML('afterbegin',`<div class="error-box">${escapeHtml(error.message)}</div>`); }
+  }));
+  root.querySelectorAll('[data-delete-saved]').forEach(button=>button.addEventListener('click',()=>{
+    persistentSavedExperiments=savedExperiments().filter(x=>x.id!==button.dataset.deleteSaved);
+    try { localStorage.setItem(savedStorageKey,JSON.stringify(persistentSavedExperiments)); } catch(_) {}
+    renderSavedExperiments();
+    scheduleResearchStateSave();
+  }));
+}
+function saveCurrentExperiment() {
+  if (!activeExperiment) return;
+  const items=savedExperiments(), spec=activeExperiment.specification, key=JSON.stringify(spec);
+  const same=items.find(item=>JSON.stringify(item.specification)===key);
+  const record={id:same?.id||`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,label:savedLabel(spec),saved_at:new Date().toISOString(),specification:spec,summary:activeExperiment.headline,first_divergence:activeExperiment.first_divergence,rows:activeExperiment.rows.map(row=>({n:row.n,left:row.left_count,right:row.right_count,difference:row.difference}))};
+  const next=[record,...items.filter(item=>JSON.stringify(item.specification)!==key)].slice(0,30);
+  persistentSavedExperiments=next;
+  try { localStorage.setItem(savedStorageKey,JSON.stringify(next)); } catch(_) {}
+  renderSavedExperiments(); scheduleResearchStateSave();
+  $('#saved-experiments-feedback').textContent='Saved on this device.';
+}
+function exportExperiment() {
+  if (!activeExperiment) return;
+  const blob=new Blob([JSON.stringify({format:'ascent-engine-experiment-v1',exported_at:new Date().toISOString(),result:activeExperiment},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob), link=document.createElement('a');
+  link.href=url; link.download='ascent-engine-experiment.json'; link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('#save-experiment').addEventListener('click',saveCurrentExperiment);
+$('#export-experiment').addEventListener('click',exportExperiment);
+$('#import-experiment').addEventListener('change',async event=>{
+  const file=event.target.files?.[0]; if (!file) return;
+  try { applyExperimentSpecification(JSON.parse(await file.text())); $('#saved-experiments-feedback').textContent=`Loaded ${file.name}. Run it to check the result.`; }
+  catch(error) { $('#saved-experiments-feedback').textContent=error.message; }
+  finally { event.target.value=''; }
+});
+renderSavedExperiments();
 function formatCount(value) { return Number(value).toLocaleString(); }
 function distributionDetails(row, statisticLabel) {
   const left=new Map((row.left_distribution||[]).map(item=>[JSON.stringify(item.value),item.count]));
@@ -397,6 +889,8 @@ function formatExperimentSide(side) {
 }
 function renderExperiment(result) {
   activeExperiment = result;
+  $('#save-experiment').disabled=false;
+  $('#export-experiment').disabled=false;
   objectBrowserState = null;
   const spec=result.specification, comparison=spec.question==='compare';
   const leftTitle=formatExperimentSide(spec.left), rightTitle=spec.right?formatExperimentSide(spec.right):'';
@@ -507,17 +1001,7 @@ function inspectExperimentWord(word) {
   setTab('inspector');
   runInspect();
 }
-$('#experiment-run').addEventListener('click',async()=>{
-  const conditionStat=$('#experiment-condition-stat').value;
-  const condition=conditionStat==='none'?null:{statistic:conditionStat,operator:$('#experiment-condition-op').value,value:Number($('#experiment-condition-value').value||0)};
-  const question=$('#experiment-question').value;
-  const request={question,start:Number($('#experiment-start').value),stop:Number($('#experiment-stop').value),statistic:$('#experiment-statistic').value,condition,left:sideSpecification('left'),right:question==='compare'?sideSpecification('right'):null};
-  $('#experiment-result').innerHTML='<div class="loading card">Running the bounded experiment against AC-Engine…</div>';
-  $('#experiment-run').disabled=true;
-  try { renderExperiment(await api('/api/experiment/run',request)); }
-  catch(e) { $('#experiment-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
-  finally { updateExperimentValidity(); }
-});
+$('#experiment-run').addEventListener('click',()=>runExperiment());
 
 function txSide(which) {
   const mode=$(`#tx-${which}-mode`).value;
@@ -568,20 +1052,10 @@ function updateTransformParameter() {
   $('#tx-value-wrap').hidden=!valued;
   $('#tx-parameter-label').textContent=name==='insert_position'?'Insertion cut after 0-based position':name==='delete_position'?'Deleted position (1-based)':'Pivot position';
   $('#tx-parameter').min=name==='insert_position'?'0':'1';
-  $('#tx-parameter-help').textContent=name==='insert_position'?'Cut 0 inserts before the first entry; cut n appends after the last.':name==='delete_position'?'Positions start at 1; the omitted entry must match the selected value for inverse recovery.':'Positions start at 1. A position outside a word is reported as a failure witness.';
+  $('#tx-parameter-help').textContent=name==='insert_position'?'Cut 0 is before the first entry; cut 1 in 1,2,1 inserts between 1 and 2.':name==='delete_position'?'Positions start at 1; in 1,2,2,1, deleting position 3 removes the second 2.':'Positions start at 1; in 2,1,2, pivot 2 raises the earlier 2 to 3.';
   $('#tx-value-label').textContent=name==='delete_position'?'Expected value at deleted position':'Value level to insert';
-  $('#tx-value-help').textContent=name==='delete_position'?'The inverse inserts this value back at the deleted position; mismatches are shown as inverse failures.':'The inserted value must already occur in the source word’s ambient chain.';
-  const descriptions={
-    hat:'Apply prefix lifts at the ascent-top positions.',
-    inverse_hat:'Undo the hat map when the input lies in its image.',
-    prefix_lift:'At the chosen position, raise earlier entries at least as large as the pivot value.',
-    inverse_prefix_lift:'Undo a prefix lift when the pivot is a first occurrence; other words are reported as failures.',
-    insert_position:'Insert one copy of an existing value after a selected cut; target degree is n+1.',
-    delete_position:'Restrict to all positions except one, preserving ambient value levels; target degree is n−1.',
-    reverse:'Read each word backward.',
-    complement:'Reverse the ambient value scale.'
-  };
-  $('#tx-description').textContent=descriptions[name];
+  $('#tx-value-help').textContent=name==='delete_position'?'Choose the value at the removed position; position 3 in 1,2,2,1 has value 2.':'Choose an existing value; inserting value 2 into 1,2,1 after cut 1 gives 1,2,2,1.';
+  $('#tx-description').textContent=OPTION_HELP['tx-name'][name];
   $('#tx-degree-effect').textContent=name==='insert_position'?'Target degree is n+1. Use start-stop, such as 1-6; target generation is checked too.':name==='delete_position'?'Target degree is n−1; start at n=2 or above. Use start-stop, such as 2-6.':'Use start-stop, such as 1-6. This transformation check is capped at 10.';
 }
 $('#tx-name').addEventListener('change',updateTransformParameter);
@@ -599,6 +1073,8 @@ $('#tx-run').addEventListener('click',async()=>{
   catch(e) { $('#tx-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
   finally { $('#tx-run').disabled=false; }
 });
+restoreDraft();
+renderPatternLane('left'); renderPatternLane('right');
 validateExperimentSide('left'); validateExperimentSide('right'); updateExperimentValidity();
 
 function renderStatus(data) {
@@ -615,11 +1091,12 @@ function renderStatus(data) {
 async function boot() {
   try {
     const data=await api('/api/status'); renderStatus(data); $('#connection-state').textContent='Connected to AC-Engine';
-    await checkLearnWord();
-    await runInspect(); await runTrace();
+    try { restoreResearchState(await api('/api/research-state')); }
+    catch(_) { researchStateReady=true; updateExperimentValidity(); }
   } catch(e) {
     $('#connection-state').textContent='Engine unavailable';
-    $('#overall-detail').textContent='Start the local GUI-1 server to use the interactive prototype.';
+    $('#overall-detail').textContent='Start the local Ascent Engine service to run experiments.';
+    researchStateReady=true;
   }
 }
 boot();
