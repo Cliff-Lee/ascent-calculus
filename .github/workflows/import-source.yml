@@ -1,4 +1,4 @@
-name: One-shot GUI-3 source import
+name: One-shot GUI-3 delta import
 
 on:
   push:
@@ -16,30 +16,31 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct uploaded source archive
+      - name: Reconstruct GUI-3 delta
         shell: bash
         run: |
           set -euo pipefail
-          cat .source-import/chunk-* > /tmp/ascent-source.b64
-          base64 --decode /tmp/ascent-source.b64 > /tmp/ascent-source.tar.gz
-          echo "ad286e38f0cc71f9179cf4d253bca4fb9d89b466c76a59bcea53657f70c2ed24  /tmp/ascent-source.tar.gz" | sha256sum -c -
-          mkdir -p /tmp/ascent-source
-          tar -xzf /tmp/ascent-source.tar.gz -C /tmp/ascent-source
-          root="$(find /tmp/ascent-source -mindepth 1 -maxdepth 1 -type d | head -n1)"
-          test -n "$root"
-          rsync -a "$root"/ ./
+          cat .source-import/chunk-* > /tmp/ascent-delta.b64
+          base64 --decode /tmp/ascent-delta.b64 > /tmp/ascent-delta.tar.gz
+          echo "0895b111c38d624a5efa7b3837eda5f62664e7aa1b14f29df8f6e180c4e9db59  /tmp/ascent-delta.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/ascent-delta.tar.gz -C .
 
-      - name: Validate imported source
+      - name: Validate imported GUI-3 source
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-          python -m pytest -q             tests/test_gui1_viewmodel.py             tests/test_e11_proof_extraction.py             tests/test_e9_local_repair.py             tests/test_gui3_experiments.py             tests/test_gui3_transform_experiments.py
+          python -m pytest -q \
+            tests/test_gui1_viewmodel.py \
+            tests/test_e11_proof_extraction.py \
+            tests/test_e9_local_repair.py \
+            tests/test_gui3_experiments.py \
+            tests/test_gui3_transform_experiments.py
           python -m compileall -q ac
           git diff --check
 
-      - name: Commit exact GUI-3 source tree
+      - name: Commit GUI-3 delta
         shell: bash
         run: |
           set -euo pipefail
