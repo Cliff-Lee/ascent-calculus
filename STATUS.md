@@ -370,3 +370,9 @@ Version a25 adds a native “Find a differing word” action for same-family cou
 divergences. Exact witnesses open in a focused inspector and can be loaded into the
 transform visualizer. Editing a completed experiment now marks its displayed result as
 stale until the bounded test is run again.
+
+
+Version a26 explains each exact witness by showing the opposing class rule that rejects
+it. Forbidden-pattern explanations include the engine-reported 1-based occurrence
+positions; missing required patterns and failed structural conditions are described too.
+Restoring an unchanged experiment revalidates its previous result.

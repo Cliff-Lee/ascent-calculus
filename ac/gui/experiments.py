@@ -327,6 +327,42 @@ def _word_record(word: ChainWord, index: int) -> dict:
     }
 
 
+def _membership_failures(word: ChainWord, side: ExperimentSide, condition: StructuralCondition | None) -> list[dict]:
+    """Explain which exact class constraints reject a generated word."""
+    failures = []
+    for rule in side.rules:
+        occurrences = rule.pattern.compile().occurrences(word, limit=1)
+        found = bool(occurrences)
+        if rule.mode == "avoid" and found:
+            failures.append({
+                "kind": "forbidden_pattern_occurs",
+                "pattern": list(rule.pattern.values),
+                "positions": list(occurrences[0].positions),
+            })
+        elif rule.mode == "contain" and not found:
+            failures.append({
+                "kind": "required_pattern_missing",
+                "pattern": list(rule.pattern.values),
+                "positions": [],
+            })
+    if condition is not None:
+        actual = _statistic(word, condition.statistic)
+        satisfied = (
+            actual == condition.value if condition.operator == "eq"
+            else actual >= condition.value if condition.operator == "ge"
+            else actual <= condition.value
+        )
+        if not satisfied:
+            failures.append({
+                "kind": "structural_condition_failed",
+                "statistic": condition.statistic,
+                "operator": condition.operator,
+                "required": condition.value,
+                "actual": actual,
+            })
+    return failures
+
+
 def _parse_browser_filters(raw: dict | None, side: ExperimentSide, degree: int):
     if raw is None:
         raw = {}
@@ -465,8 +501,12 @@ def find_unmatched_objects(raw: dict, n: int) -> dict:
         in_right = _matches(word, spec.right.rules, spec.condition)
         if in_left and not in_right and left_only is None:
             left_only = _word_record(word, 0)
+            left_only["excluded_from"] = "right"
+            left_only["exclusion_reasons"] = _membership_failures(word, spec.right, spec.condition)
         elif in_right and not in_left and right_only is None:
             right_only = _word_record(word, 0)
+            right_only["excluded_from"] = "left"
+            right_only["exclusion_reasons"] = _membership_failures(word, spec.left, spec.condition)
         if left_only is not None and right_only is not None:
             break
     return {

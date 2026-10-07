@@ -120,6 +120,12 @@ def test_first_divergence_returns_exact_set_difference_witnesses():
     assert witness_result["exact"] is True
     assert witness_result["left_only"] is None
     assert witness_result["right_only"]["word"] == [1, 2]
+    assert witness_result["right_only"]["excluded_from"] == "left"
+    assert witness_result["right_only"]["exclusion_reasons"] == [{
+        "kind": "forbidden_pattern_occurs",
+        "pattern": [1, 2],
+        "positions": [1, 2],
+    }]
     assert witness_result["tested_objects"] == 2
 
 

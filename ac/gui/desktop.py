@@ -877,6 +877,8 @@ class DesktopWorkbench:
             self.result_headline.configure(text="Setup changed · rerun to test", fg=AMBER)
             self.result_subtitle.configure(text="The table shows the previous experiment.")
             self.footer.configure(text="Your conjecture changed. Run the test again to refresh these results.", fg=AMBER)
+        elif self.result_headline.cget("text").startswith("Setup changed"):
+            self._show_result(self.saved_result)
 
     def _spec(self):
         try:
@@ -978,10 +980,28 @@ class DesktopWorkbench:
                 tk.Label(card, text="  ".join(map(str, word)), bg=PANEL, fg=GREEN_DARK, font=("TkFixedFont", 16, "bold")).pack(anchor="w", padx=13, pady=(0, 5))
                 details = f"Ascents {witness['ascents']}  ·  max {witness['maximum']}  ·  multiplicities {', '.join(map(str, witness['multiplicity_partition']))}"
                 tk.Label(card, text=details, bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w", wraplength=300, justify="left").pack(fill="x", padx=13, pady=(0, 8))
+                opposing = "Class A" if witness.get("excluded_from") == "left" else "Class B"
+                reasons = [self._format_exclusion_reason(reason) for reason in witness.get("exclusion_reasons", [])]
+                reason_text = "\n".join(reasons) if reasons else f"This word does not satisfy the rules for {opposing}."
+                tk.Label(card, text=f"Why not {opposing}?  {reason_text}", bg="#fff7e8", fg="#795a2b", font=("TkDefaultFont", 8), anchor="w", wraplength=300, justify="left", padx=9, pady=7).pack(fill="x", padx=11, pady=(0, 8))
                 tk.Button(card, text="Graph this word", command=lambda w=word: self._load_witness(w), relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).pack(anchor="w", padx=13, pady=(0, 11))
             else:
                 tk.Label(card, text="No word in this direction. At this degree, every word in this class also belongs to the other class.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), wraplength=300, justify="left", anchor="w").pack(fill="x", padx=13, pady=(4, 16))
         tk.Label(dialog, text="A differing word refutes equality of these finite classes at this degree; it is not an all-degree proof.", bg=BG, fg=MUTED, font=("TkDefaultFont", 9), wraplength=670, justify="left").grid(row=3, column=0, sticky="w", padx=20, pady=(12, 17))
+
+    @staticmethod
+    def _format_exclusion_reason(reason):
+        pattern = "⟨" + ", ".join(map(str, reason.get("pattern", []))) + "⟩"
+        if reason["kind"] == "forbidden_pattern_occurs":
+            positions = ", ".join(map(str, reason["positions"]))
+            return f"Avoid {pattern} fails: it occurs at positions {positions}."
+        if reason["kind"] == "required_pattern_missing":
+            return f"Contain {pattern} fails: this word has no such occurrence."
+        if reason["kind"] == "structural_condition_failed":
+            statistic = STATISTICS.get(reason["statistic"], reason["statistic"])
+            operator = {"eq": "=", "ge": "≥", "le": "≤"}[reason["operator"]]
+            return f"{statistic} {operator} {reason['required']} fails; this word has {reason['actual']}."
+        return "This word fails a class condition."
 
     def _load_witness(self, word):
         self.transform_word_var.set(" ".join(map(str, word)))
@@ -1251,7 +1271,18 @@ def _window_smoke_check() -> None:
     if not app.witness_button.winfo_manager():
         root.destroy()
         raise RuntimeError("same-family count divergence did not offer exact witness search")
+    app.stop_var.set("2"); app.changed()
+    if app.witness_button.winfo_manager() or not app.result_headline.cget("text").startswith("Setup changed"):
+        root.destroy()
+        raise RuntimeError("editing a tested conjecture did not mark its results stale")
+    app.stop_var.set("3"); app.changed()
+    if not app.witness_button.winfo_manager():
+        root.destroy()
+        raise RuntimeError("restoring the exact tested conjecture did not restore its result")
     witnesses = find_unmatched_objects(divergence["specification"], divergence["first_divergence"]["n"])
+    if witnesses["right_only"].get("exclusion_reasons", [{}])[0].get("positions") != [1, 2]:
+        root.destroy()
+        raise RuntimeError("native witness result did not report the rejecting pattern positions")
     app._show_witnesses(witnesses)
     root.update()
     if not app.witness_window.winfo_exists():
