@@ -50,7 +50,7 @@ jobs:
       - name: Upload tested macOS app for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-macos-arm64-a10
+          name: AscentCalculus-macos-arm64-a11
           path: |
             dist/AscentCalculus-macos-arm64/*.dmg
             dist/AscentCalculus-macos-arm64/*.zip
@@ -88,20 +88,18 @@ jobs:
         shell: pwsh
         run: |
           $installer = (Get-ChildItem -Path "dist/AscentCalculus-windows-x64" -Filter "*-windows-x64-setup.exe").FullName
-          $install = Start-Process -FilePath $installer -ArgumentList @(
-            "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-"
-          ) -Wait -PassThru
+          $install = Start-Process -FilePath $installer -ArgumentList @("/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-") -Wait -PassThru
           if ($install.ExitCode -ne 0) { throw "Windows installer failed with exit code $($install.ExitCode)" }
           $installedExe = Join-Path $env:LOCALAPPDATA "Programs\Ascent Calculus\AscentCalculus.exe"
           if (-not (Test-Path $installedExe)) { throw "Installed app executable not found: $installedExe" }
           $smoke = Start-Process -FilePath $installedExe -ArgumentList "--startup-check" -Wait -PassThru
-          if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed with exit code $($smoke.ExitCode)" }
+          if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed: $($smoke.ExitCode)" }
           $windowSmoke = Start-Process -FilePath $installedExe -ArgumentList "--window-smoke-check" -Wait -PassThru
-          if ($windowSmoke.ExitCode -ne 0) { throw "Installed native-window check failed with exit code $($windowSmoke.ExitCode)" }
+          if ($windowSmoke.ExitCode -ne 0) { throw "Installed app window check failed: $($windowSmoke.ExitCode)" }
       - name: Upload tested Windows installer for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-windows-x64-a10
+          name: AscentCalculus-windows-x64-a11
           path: dist/AscentCalculus-windows-x64/*
           if-no-files-found: error
           retention-days: 14
@@ -129,11 +127,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install native webview dependencies
+      - name: Install Tk desktop build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip python3-gi python3-gi-cairo python3-cairo \
-            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev xvfb openbox dbus-x11
+          sudo apt-get install -y python3-pip python3-tk dpkg-dev xvfb openbox dbus-x11
       - name: Build Ubuntu package and Python wheel
         run: bash scripts/build_ubuntu.sh
       - name: Install and smoke-test the Ubuntu package
@@ -146,7 +143,7 @@ jobs:
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-ubuntu-amd64-a10
+          name: AscentCalculus-ubuntu-amd64-a11
           path: dist/AscentCalculus-ubuntu-24.04-amd64/*
           if-no-files-found: error
           retention-days: 14

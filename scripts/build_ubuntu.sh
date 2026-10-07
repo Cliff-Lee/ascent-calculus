@@ -13,20 +13,18 @@ SYSTEM_PYTHON=/usr/bin/python3
 OUT="$ROOT/dist/AscentCalculus-ubuntu-24.04-amd64"
 STAGE="$ROOT/build/deb-root"
 rm -rf "$STAGE" "$OUT"
-mkdir -p "$STAGE/DEBIAN" "$STAGE/usr/lib/ascent-calculus/vendor" \
+mkdir -p "$STAGE/DEBIAN" "$STAGE/usr/lib/ascent-calculus" \
   "$STAGE/usr/share/applications" "$STAGE/usr/bin" "$OUT"
 
 cp -R ac "$STAGE/usr/lib/ascent-calculus/ac"
-"$SYSTEM_PYTHON" -m pip install --break-system-packages \
-  --target "$STAGE/usr/lib/ascent-calculus/vendor" 'pywebview>=5.4'
 
 cat > "$STAGE/DEBIAN/control" <<'EOF'
 Package: ascent-calculus
-Version: 0.1.0a10
+Version: 0.1.0a11
 Section: science
 Priority: optional
 Architecture: amd64
-Depends: python3 (>= 3.11), python3-gi, python3-gi-cairo, python3-cairo, gir1.2-gtk-3.0, gir1.2-webkit2-4.1
+Depends: python3 (>= 3.11), python3-tk
 Maintainer: Cliff Lee
 Description: Alpha research workbench for ascent sequences
  Visual workbench and Python calculus for exploring ascent sequences,
@@ -35,8 +33,7 @@ EOF
 
 cat > "$STAGE/usr/bin/ascent-calculus" <<'EOF'
 #!/bin/sh
-export PYTHONPATH="/usr/lib/ascent-calculus/vendor:/usr/lib/ascent-calculus${PYTHONPATH:+:$PYTHONPATH}"
-export PYWEBVIEW_GUI=gtk
+export PYTHONPATH="/usr/lib/ascent-calculus${PYTHONPATH:+:$PYTHONPATH}"
 exec /usr/bin/python3 -m ac.gui.desktop "$@"
 EOF
 chmod 0755 "$STAGE/usr/bin/ascent-calculus"
@@ -51,6 +48,6 @@ Type=Application
 Categories=Science;Math;
 EOF
 
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a10_amd64.deb"
+dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a11_amd64.deb"
 python3 -m pip wheel --no-deps . --wheel-dir "$OUT"
 echo "Created release artifacts in $OUT"

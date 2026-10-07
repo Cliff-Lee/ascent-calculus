@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ascent-calculus"
-version = "0.1.0a10"
+version = "0.1.0a11"
 description = "Alpha research workbench and executable calculus for ascent sequences"
 requires-python = ">=3.11"
 dependencies = []
@@ -16,8 +16,8 @@ ac-workbench-desktop = "ac.gui.desktop:main"
 [project.optional-dependencies]
 dev = ["pytest>=8", "hypothesis>=6"]
 solver = ["z3-solver>=4.13"]
-desktop = ["pywebview>=5.4"]
-desktop-build = ["pywebview>=5.4", "pyinstaller>=6.11"]
+desktop = []
+desktop-build = ["pyinstaller>=6.11"]
 
 [tool.setuptools.package-data]
 "ac.gui.static" = ["*.html", "*.css", "*.js"]

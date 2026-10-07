@@ -255,3 +255,10 @@ insertion, arbitrary selected-position restrictions, compression/standardization
 user-defined transformation expressions remain for later work. Fourteen transformation-
 experiment tests pass under direct invocation. The `pytest` runner and live browser
 visual review remain unavailable in this environment.
+
+
+## Native desktop workbench (a11)
+
+The desktop launcher now uses native Tk controls and calls the engine in-process. Its focused conjecture workflow supports dragging Avoid/Contain pattern rules into two class lanes, checking the natural-language experiment statement, comparing degree counts and distributions, and retaining drafts and saved tests. The browser workbench remains available for specialist inspection.
+
+The a11 build runs a short engine startup check and a real-window smoke check on the packaged macOS, Windows, and Ubuntu apps. Push builds upload 14-day testing artifacts. The Mac window check should pass before the M1 device test; startup exceptions are written to the existing diagnostic log.

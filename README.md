@@ -59,25 +59,26 @@ finite verification is evidence, not a proof of a general theorem.
 - **Use the Python engine:** import the same definitions and transformations in Python
   scripts and experiments.
 
-The primary user experience is the installable desktop app. Its HTML/CSS interface is
-packaged inside a native app window, with the Python engine running alongside it; users
-launch the app from their operating system and do not open a browser page or start a
-server. The separate standalone HTML review page is only a curated clickable preview.
+The primary user experience is the installable desktop app. It uses native Tk controls
+and calls the Python engine directly in the application process. Researchers can drag
+Avoid/Contain pattern rules into two class lanes, check the conjecture wording, compare
+counts degree by degree, and save tests locally. The browser workbench remains available
+for sequence inspection and specialist views.
 
 ## Download an alpha app
 
 Installers and the importable Python wheel are attached to the GitHub
-[**Releases**](https://github.com/Cliff-Lee/ascent-calculus/releases) page. The app
-starts its private local API inside the desktop process. Windows and macOS packages
-bundle the Python runtime and AC engine. The Ubuntu `.deb` installs a menu-launchable app
-and engine code, using Ubuntu's Python and GTK/WebKit system components; users still do
-not need to manage a server.
+[**Releases**](https://github.com/Cliff-Lee/ascent-calculus/releases) page. The desktop
+app uses native Tk controls and runs the engine in-process. Push builds also upload
+short-lived device-testing artifacts to the repository's
+[Actions page](https://github.com/Cliff-Lee/ascent-calculus/actions) after the packaged
+window smoke check passes.
 
 | Platform | Release download | Notes |
 | --- | --- | --- |
 | macOS Apple silicon | `.dmg` or `.zip` | Unsigned and not notarized; macOS may show a security prompt. |
-| Windows 10/11, x64 | `*-windows-x64-setup.exe` | Requires the Microsoft Edge WebView2 Runtime. |
-| Ubuntu 24.04, x86_64 | `*_amd64.deb` | Install with `sudo apt install ./ascent-calculus_*.deb`; Ubuntu resolves GTK and WebKit dependencies. |
+| Windows 10/11, x64 | `*-windows-x64-setup.exe` | Native Tk desktop app. |
+| Ubuntu 24.04, x86_64 | `*_amd64.deb` | Install with `sudo apt install ./ascent-calculus_*.deb`; requires `python3-tk`. |
 
 The Windows installer is per-user and offers a Start menu shortcut. On Ubuntu, launch
 **Ascent Calculus** from the Applications menu after installing the `.deb`. These are alpha builds. The release workflow now installs and exercises the packaged
@@ -113,8 +114,8 @@ python -m pip install -e ".[desktop]"
 ac-workbench-desktop
 ```
 
-The desktop extra uses the platform's native webview. macOS builds use Cocoa; Linux
-may need the GTK or Qt system libraries required by pywebview.
+The desktop app uses Python's Tk toolkit and runs the engine in-process. Linux may need
+the system Tk package (for example, `python3-tk` on Ubuntu).
 
 ### Build a macOS installer
 
@@ -137,11 +138,9 @@ The Windows installer is built on Windows with PyInstaller and Inno Setup:
 .\scripts\build_windows.ps1
 ```
 
-It creates a per-user setup executable and Python wheel in `dist/`. Windows needs the
-WebView2 Runtime for the native app window.
+It creates a per-user setup executable and Python wheel in `dist/`.
 
-The Ubuntu `.deb` is built on Ubuntu 24.04 x86_64. Its dependencies use Ubuntu's GTK 3
-and WebKit2GTK 4.1 packages, while the installer vendors pywebview and the AC code:
+The Ubuntu `.deb` is built on Ubuntu 24.04 x86_64 and uses Ubuntu's Python and Tk packages:
 
 ```bash
 ./scripts/build_ubuntu.sh

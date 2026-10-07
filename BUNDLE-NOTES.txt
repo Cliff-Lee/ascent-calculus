@@ -1,9 +1,12 @@
-Ascent Calculus source bundle
+Ascent Calculus native desktop source bundle
 Generated: 2026-10-07
 
-This archive contains the current working source tree for the AC-Engine GUI-3
-research workbench, including the latest class-wide transformation experiments
-for prefix lifts, position insertion, and single-position deletion.
+This archive contains the AC-Engine native desktop workbench source tree. The
+desktop launcher uses native Tk controls and calls the ascent-sequence engine
+in-process. The conjecture screen has draggable Avoid/Contain pattern blocks,
+two class lanes, a live experiment statement, bounded degree comparisons,
+degree-by-degree results, saved tests, draft persistence, and JSON import/export.
+The separate browser workbench is still available through its own launcher.
 
 This is a source bundle, not an installer. Git metadata, Python caches, build
 outputs, and egg-info are excluded. The worktree changes are included whether or
