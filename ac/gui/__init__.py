@@ -12,6 +12,7 @@ from .viewmodel import (
     research_status,
     interface_contract,
 )
+from .experiments import parse_experiment, run_experiment, validate_pattern
 
 __all__ = [
     "parse_word",
@@ -20,4 +21,7 @@ __all__ = [
     "bounded_check",
     "research_status",
     "interface_contract",
+    "parse_experiment",
+    "run_experiment",
+    "validate_pattern",
 ]
