@@ -1,9 +1,8 @@
 name: macOS alpha release
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -27,11 +26,10 @@ jobs:
             tests/test_e9_local_repair.py
       - name: Build app, disk image, zip, and Python wheel
         run: ./scripts/build_macos.sh
-      - name: Publish GitHub release assets
+      - name: Attach app and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
+          gh release upload "$GITHUB_REF_NAME" \
             dist/AscentCalculus-macos-arm64/* \
-            --title "Ascent Calculus $GITHUB_REF_NAME" \
-            --generate-notes
+            --clobber
