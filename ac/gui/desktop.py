@@ -135,6 +135,7 @@ class DesktopWorkbench:
         self.root = root
         self.root.title("Ascent Engine")
         screen_width, screen_height = root.winfo_screenwidth(), root.winfo_screenheight()
+        self.compact_layout = screen_height < 850
         window_width = min(1320, max(900, screen_width - 48))
         window_height = min(820, max(640, screen_height - 40))
         root.geometry(f"{window_width}x{window_height}")
@@ -161,7 +162,7 @@ class DesktopWorkbench:
             pass
         style.configure("TCombobox", padding=6, fieldbackground=PANEL, background=PANEL, foreground=INK, bordercolor=LINE, arrowsize=12)
         style.map("TCombobox", fieldbackground=[("readonly", PANEL)], foreground=[("readonly", INK)])
-        style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=INK, rowheight=34, bordercolor=LINE, font=("TkDefaultFont", 10))
+        style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=INK, rowheight=28 if self.compact_layout else 34, bordercolor=LINE, font=("TkDefaultFont", 10))
         style.configure("Treeview.Heading", background="#f0f4f1", foreground=MUTED, relief="flat", font=("TkDefaultFont", 9, "bold"), padding=(8, 9))
         style.map("Treeview", background=[("selected", MINT)], foreground=[("selected", INK)])
         style.configure("Horizontal.TProgressbar", troughcolor="#e8eeea", background=GREEN, bordercolor="#e8eeea", lightcolor=GREEN, darkcolor=GREEN)
@@ -169,19 +170,19 @@ class DesktopWorkbench:
     def _build(self):
         self.root.rowconfigure(1, weight=1)
         self.root.columnconfigure(0, weight=1)
-        header = tk.Frame(self.root, bg=INK, height=76)
+        header = tk.Frame(self.root, bg=INK, height=64 if self.compact_layout else 76)
         header.grid(row=0, column=0, sticky="ew")
         header.grid_propagate(False)
-        tk.Label(header, text="A", bg=GREEN, fg="white", font=("TkDefaultFont", 15, "bold"), width=3, height=1).pack(side="left", padx=(24, 12), pady=18)
+        tk.Label(header, text="A", bg=GREEN, fg="white", font=("TkDefaultFont", 15, "bold"), width=3, height=1).pack(side="left", padx=(24, 12), pady=12 if self.compact_layout else 18)
         titlebox = tk.Frame(header, bg=INK)
-        titlebox.pack(side="left", pady=13)
+        titlebox.pack(side="left", pady=9 if self.compact_layout else 13)
         tk.Label(titlebox, text="Ascent Engine", bg=INK, fg="white", font=("TkDefaultFont", 17, "bold")).pack(anchor="w")
         tk.Label(titlebox, text="A workbench for sequence conjectures", bg=INK, fg="#b9cbc2", font=("TkDefaultFont", 9)).pack(anchor="w", pady=(2, 0))
         self.header_status = tk.Label(header, text="LOCAL · FINITE TESTS", bg=INK, fg="#b9cbc2", font=("TkDefaultFont", 9, "bold"))
         self.header_status.pack(side="right", padx=26)
 
         body = tk.Frame(self.root, bg=BG)
-        body.grid(row=1, column=0, sticky="nsew", padx=22, pady=18)
+        body.grid(row=1, column=0, sticky="nsew", padx=22, pady=14 if self.compact_layout else 18)
         body.columnconfigure(0, weight=0, minsize=238)
         body.columnconfigure(1, weight=1)
         body.rowconfigure(0, weight=0)
@@ -262,8 +263,9 @@ class DesktopWorkbench:
         work.rowconfigure(2, weight=1)
         intro = tk.Frame(work, bg=BG)
         intro.grid(row=0, column=0, sticky="ew", pady=(0, 14))
-        tk.Label(intro, text="Test a conjecture", bg=BG, fg=INK, font=("TkDefaultFont", 22, "bold")).pack(anchor="w")
-        tk.Label(intro, text="Build a class comparison, check a finite range, and follow the first divergence.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
+        tk.Label(intro, text="Test a conjecture", bg=BG, fg=INK, font=("TkDefaultFont", 20 if self.compact_layout else 22, "bold")).pack(anchor="w")
+        if not self.compact_layout:
+            tk.Label(intro, text="Build a class comparison, check a finite range, and follow the first divergence.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
 
         composer = tk.Frame(work, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         composer.grid(row=1, column=0, sticky="ew", pady=(0, 14))

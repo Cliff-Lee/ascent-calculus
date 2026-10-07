@@ -342,3 +342,6 @@ captures a 1280×800 laptop preview in CI to check the compact layout.
 
 Version a17 gives compact displays more of their available height and tightens
 the pattern preset grid so the results and saved-test areas retain usable space.
+
+Version a18 reduces header and intro chrome below 850 px screen height and uses
+slightly denser result rows, preserving more of the experiment table in laptop mode.
