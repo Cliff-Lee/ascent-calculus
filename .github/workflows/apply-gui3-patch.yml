@@ -1,0 +1,32 @@
+name: Apply exact GUI-3 patch
+
+on:
+  push:
+    branches: [gui3-publish]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gui3-publish
+      - name: Reassemble and verify patch
+        run: |
+          cat .gui3-patch/part-* | base64 -d > /tmp/gui3-patch.tar.gz
+          echo "91822d73ed4b53060545e6e0b71cd7f1de35aec0937fe2de0e37a973919fab2a  /tmp/gui3-patch.tar.gz" | sha256sum -c -
+      - name: Apply exact GUI-3 files
+        run: |
+          tar -xzf /tmp/gui3-patch.tar.gz -C .
+          rm -rf .gui3-patch .gui3-import
+          rm -f .github/workflows/apply-gui3-patch.yml
+      - name: Commit exact patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Publish exact GUI-3 research workbench files"
+          git push origin HEAD:gui3-publish
