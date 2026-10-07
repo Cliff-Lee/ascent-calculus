@@ -14,6 +14,7 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+VERSION="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
 python3 -m pip install --upgrade '.[desktop-build]'
 python3 -m PyInstaller \
   --noconfirm \
@@ -33,8 +34,8 @@ hdiutil create \
   -volname "Ascent Calculus Alpha" \
   -srcfolder dist/AscentCalculus.app \
   -ov -format UDZO \
-  "$OUT/AscentCalculus-0.1.0a6-macos-${ARCH}.dmg"
+  "$OUT/AscentCalculus-${VERSION}-macos-${ARCH}.dmg"
 ditto -c -k --sequesterRsrc --keepParent \
   dist/AscentCalculus.app \
-  "$OUT/AscentCalculus-0.1.0a6-macos-${ARCH}.zip"
+  "$OUT/AscentCalculus-${VERSION}-macos-${ARCH}.zip"
 echo "Created release artifacts in $OUT"
