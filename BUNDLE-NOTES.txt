@@ -1,0 +1,12 @@
+Ascent Calculus source bundle
+Generated: 2026-10-07
+
+This archive contains the current working source tree for the AC-Engine GUI-3
+research workbench, including the latest class-wide transformation experiments
+for prefix lifts, position insertion, and single-position deletion.
+
+This is a source bundle, not an installer. Git metadata, Python caches, build
+outputs, and egg-info are excluded. The worktree changes are included whether or
+not they have been committed.
+
+Finite computational results in the project are not proofs of all-degree claims.
