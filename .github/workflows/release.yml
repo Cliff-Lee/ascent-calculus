@@ -47,6 +47,11 @@ jobs:
           python-version: "3.12"
       - name: Build app, disk image, zip, and Python wheel
         run: bash scripts/build_macos.sh
+      - name: Print macOS launch diagnostics on failure
+        if: failure()
+        run: |
+          log="$HOME/Library/Logs/AscentCalculus/startup.log"
+          if [[ -f "$log" ]]; then cat "$log"; else echo "No startup log was created."; fi
       - name: Attach app and wheel to the published release
         if: github.event_name == 'release'
         env:
@@ -84,6 +89,12 @@ jobs:
           if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed with exit code $($smoke.ExitCode)" }
           $windowSmoke = Start-Process -FilePath $installedExe -ArgumentList "--window-smoke-check" -Wait -PassThru
           if ($windowSmoke.ExitCode -ne 0) { throw "Installed native-window check failed with exit code $($windowSmoke.ExitCode)" }
+      - name: Print Windows launch diagnostics on failure
+        if: failure()
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:USERPROFILE ".ascent-calculus\startup.log"
+          if (Test-Path $log) { Get-Content $log } else { Write-Host "No startup log was created." }
       - name: Attach installer and wheel to the published release
         if: github.event_name == 'release'
         env:
@@ -116,6 +127,11 @@ jobs:
           sudo dpkg -i "$package"
           ascent-calculus --startup-check
           xvfb-run -a ascent-calculus --window-smoke-check
+      - name: Print Ubuntu launch diagnostics on failure
+        if: failure()
+        run: |
+          log="$HOME/.ascent-calculus/startup.log"
+          if [[ -f "$log" ]]; then cat "$log"; else echo "No startup log was created."; fi
       - name: Attach installer and wheel to the published release
         if: github.event_name == 'release'
         env:
