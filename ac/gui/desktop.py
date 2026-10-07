@@ -317,6 +317,7 @@ class DesktopWorkbench:
         self.result_subtitle.grid(row=1, column=0, sticky="w", pady=(4, 0))
         self.progress = ttk.Progressbar(results, mode="indeterminate", style="Horizontal.TProgressbar")
         self.progress.grid(row=1, column=0, sticky="ew", padx=16, pady=(4, 9))
+        self.progress.grid_remove()
         columns = ("n", "left", "right", "difference", "status")
         table_frame = tk.Frame(results, bg=PANEL)
         table_frame.grid(row=2, column=0, sticky="nsew", padx=15, pady=(0, 8))
@@ -637,6 +638,7 @@ class DesktopWorkbench:
             return
         self.run_button.configure(state="disabled", text="Testing…")
         self.header_status.configure(text="COMPUTING LOCALLY")
+        self.progress.grid()
         self.progress.start(12)
         self.result_headline.configure(text="Enumerating sequences…")
         self.footer.configure(text="The exact engine is running in the background. You can keep the experiment window open.")
@@ -654,6 +656,7 @@ class DesktopWorkbench:
             while True:
                 kind, first, result = self._worker_messages.get_nowait()
                 self.progress.stop()
+                self.progress.grid_remove()
                 self.run_button.configure(state="normal", text="▶   Run bounded test")
                 self.header_status.configure(text="LOCAL · FINITE TESTS")
                 if kind == "error":

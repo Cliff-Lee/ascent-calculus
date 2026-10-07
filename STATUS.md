@@ -333,3 +333,6 @@ primary screens.
 Version a14 adds a visible scrollbar to the conjecture results table so every tested
 degree remains accessible in the compact desktop layout. The screenshot workflow
 holds the completed conjecture screen longer before switching to the transform view.
+
+Version a15 hides the indeterminate progress bar while idle and restores it only
+while a bounded test runs, so the completed state reads as complete.
