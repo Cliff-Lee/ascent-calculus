@@ -8,6 +8,7 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+VERSION="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
 
 SYSTEM_PYTHON=/usr/bin/python3
 OUT="$ROOT/dist/AscentCalculus-ubuntu-24.04-amd64"
@@ -20,9 +21,9 @@ cp -R ac "$STAGE/usr/lib/ascent-calculus/ac"
 "$SYSTEM_PYTHON" -m pip install --break-system-packages \
   --target "$STAGE/usr/lib/ascent-calculus/vendor" 'pywebview>=5.4'
 
-cat > "$STAGE/DEBIAN/control" <<'EOF'
+cat > "$STAGE/DEBIAN/control" <<EOF
 Package: ascent-calculus
-Version: 0.1.0a6
+Version: ${VERSION}
 Section: science
 Priority: optional
 Architecture: amd64
@@ -51,6 +52,6 @@ Type=Application
 Categories=Science;Math;
 EOF
 
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a6_amd64.deb"
+dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_${VERSION}_amd64.deb"
 python3 -m pip wheel --no-deps . --wheel-dir "$OUT"
 echo "Created release artifacts in $OUT"
