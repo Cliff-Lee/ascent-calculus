@@ -26,6 +26,7 @@ from ac.transform import (
     complement, hat, inverse_hat, inverse_prefix_lift, prefix_lift, reverse,
     restrict_positions, insert_position,
 )
+from ac.patterns.classical import ClassicalPattern
 
 
 BG = "#f3f5f2"
@@ -92,14 +93,16 @@ class DropLane(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.family = ttk.Combobox(self, state="readonly", values=FAMILIES, width=15)
         self.family.set("modified")
-        self.family.grid(row=0, column=0, sticky="w", padx=14, pady=(14, 8))
+        title = "CLASS A" if side == "left" else "CLASS B"
+        tk.Label(self, text=title, bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, sticky="w", padx=14, pady=(12, 2))
+        self.family.grid(row=1, column=0, sticky="w", padx=14, pady=(0, 9))
         self.family.bind("<<ComboboxSelected>>", lambda _e: self.app.changed())
         self.count = tk.Label(self, text="0 pattern rules", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9))
         self.count.grid(row=0, column=1, sticky="e", padx=14)
         self.chips = tk.Frame(self, bg=PANEL)
-        self.chips.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10)
+        self.chips.grid(row=2, column=0, columnspan=2, sticky="ew", padx=10)
         self.empty = tk.Label(self, text="Drop a pattern here  ·  e.g.  2122", bg="#f8faf8", fg="#87938d", font=("TkDefaultFont", 10), pady=14, highlightthickness=1, highlightbackground=LINE)
-        self.empty.grid(row=2, column=0, columnspan=2, sticky="ew", padx=12, pady=(4, 14))
+        self.empty.grid(row=3, column=0, columnspan=2, sticky="ew", padx=12, pady=(4, 12))
 
     def _highlight(self, on: bool):
         self.configure(highlightbackground=GREEN if on else LINE, highlightthickness=2 if on else 1)
@@ -204,17 +207,35 @@ class DesktopWorkbench:
         tk.Label(rail, text="BUILDING BLOCKS", bg=BG, fg=MUTED, font=("TkDefaultFont", 9, "bold")).pack(anchor="w", pady=(4, 10))
         card = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         card.pack(fill="x")
-        tk.Label(card, text="PATTERN RULES", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).pack(anchor="w", padx=14, pady=(14, 4))
-        tk.Label(card, text="Drag a rule into a class. Double-click adds it to the last class you clicked.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), wraplength=195, justify="left").pack(anchor="w", padx=14, pady=(0, 9))
-        for mode, caption, mode_bg, mode_fg in (("avoid", "Avoid", "#fff0e9", "#965233"), ("contain", "Contain", MINT, GREEN_DARK)):
-            tk.Label(card, text=caption.upper(), bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).pack(anchor="w", padx=14, pady=(8, 4))
-            for pattern in PATTERNS:
-                block = tk.Label(card, text=f"⟨{pattern}⟩", bg=mode_bg, fg=mode_fg, font=("TkDefaultFont", 10, "bold"), padx=10, pady=7, cursor="hand2", anchor="w")
-                block.pack(fill="x", padx=12, pady=3)
+        card.columnconfigure(0, weight=1, uniform="pattern-column")
+        card.columnconfigure(1, weight=1, uniform="pattern-column")
+        tk.Label(card, text="PATTERN RULES", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, columnspan=2, sticky="w", padx=12, pady=(12, 3))
+        tk.Label(card, text="Drag a preset into Class A or B. Double-click adds it to the lane you last hovered over.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), wraplength=205, justify="left").grid(row=1, column=0, columnspan=2, sticky="w", padx=12, pady=(0, 5))
+        for mode_index, (mode, caption, mode_bg, mode_fg) in enumerate((("avoid", "Avoid", "#fff0e9", "#965233"), ("contain", "Contain", MINT, GREEN_DARK))):
+            first_row = 2 + mode_index * 4
+            tk.Label(card, text=caption.upper(), bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=first_row, column=0, columnspan=2, sticky="w", padx=12, pady=(6, 3))
+            for index, pattern in enumerate(PATTERNS):
+                row, column = first_row + 1 + index // 2, index % 2
+                block = tk.Label(card, text=f"⟨{pattern}⟩", bg=mode_bg, fg=mode_fg, font=("TkDefaultFont", 9, "bold"), padx=5, pady=5, cursor="hand2", anchor="center")
+                block.grid(row=row, column=column, sticky="ew", padx=4, pady=2)
                 block.bind("<ButtonPress-1>", lambda e, m=mode, p=pattern: self._drag_start(e, m, p))
                 block.bind("<B1-Motion>", self._drag_motion)
                 block.bind("<ButtonRelease-1>", self._drag_end)
                 block.bind("<Double-Button-1>", lambda _e, m=mode, p=pattern: self._quick_add(m, p))
+        custom_row = 10
+        tk.Label(card, text="CUSTOM PATTERN", bg=PANEL, fg=INK, font=("TkDefaultFont", 8, "bold")).grid(row=custom_row, column=0, columnspan=2, sticky="w", padx=12, pady=(10, 3))
+        custom = tk.Frame(card, bg=PANEL)
+        custom.grid(row=custom_row + 1, column=0, columnspan=2, sticky="ew", padx=8, pady=(0, 3))
+        custom.columnconfigure(0, weight=1)
+        self.custom_pattern_var = tk.StringVar()
+        ttk.Entry(custom, textvariable=self.custom_pattern_var, width=12).grid(row=0, column=0, sticky="ew", padx=(0, 5))
+        self.custom_mode_var = tk.StringVar(value="avoid")
+        ttk.Combobox(custom, textvariable=self.custom_mode_var, state="readonly", values=("avoid", "contain"), width=8).grid(row=0, column=1, sticky="ew", padx=(0, 5), pady=(0, 4))
+        self.custom_target_var = tk.StringVar(value="Class A")
+        ttk.Combobox(custom, textvariable=self.custom_target_var, state="readonly", values=("Class A", "Class B"), width=8).grid(row=1, column=0, sticky="ew", padx=(0, 5))
+        tk.Button(custom, text="Add rule", command=self.add_custom_rule, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=7, pady=5).grid(row=1, column=1, sticky="ew")
+        self.custom_pattern_status = tk.Label(card, text="Example: 3,1,2,1 · use a standard pattern", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w")
+        self.custom_pattern_status.grid(row=12, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 10))
         saved = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         saved.pack(fill="both", expand=True, pady=(14, 0))
         top = tk.Frame(saved, bg=PANEL)
@@ -239,12 +260,13 @@ class DesktopWorkbench:
         intro = tk.Frame(work, bg=BG)
         intro.grid(row=0, column=0, sticky="ew", pady=(0, 14))
         tk.Label(intro, text="Test a conjecture", bg=BG, fg=INK, font=("TkDefaultFont", 22, "bold")).pack(anchor="w")
-        tk.Label(intro, text="Compose two classes, set a finite range, and inspect the first counterexample.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
+        tk.Label(intro, text="Build a class comparison, check a finite range, and follow the first divergence.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
 
         composer = tk.Frame(work, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         composer.grid(row=1, column=0, sticky="ew", pady=(0, 14))
         composer.columnconfigure(0, weight=1)
         tk.Label(composer, text="CONJECTURE COMPOSER", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, sticky="w", padx=16, pady=(13, 8))
+        tk.Button(composer, text="Load 2122 ↔ 2212 example", command=self.load_example, relief="flat", bg="#f0f4f1", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).grid(row=0, column=1, sticky="e", padx=12, pady=(8, 4))
         sides = tk.Frame(composer, bg=PANEL)
         sides.grid(row=1, column=0, sticky="ew", padx=12)
         sides.columnconfigure(0, weight=1, uniform="side")
@@ -518,6 +540,31 @@ class DesktopWorkbench:
             self.rules[side].append(rule)
             self.left_lane.render(); self.right_lane.render(); self.changed()
 
+    def add_custom_rule(self):
+        try:
+            pattern = ClassicalPattern(self.custom_pattern_var.get()).values
+        except (TypeError, ValueError) as exc:
+            self.custom_pattern_status.configure(text=f"Check pattern: {exc}", fg=RED)
+            return
+        side = "left" if self.custom_target_var.get() == "Class A" else "right"
+        mode = self.custom_mode_var.get()
+        self.add_rule(side, mode, pattern)
+        self.custom_pattern_status.configure(text=f"Added {mode} ⟨{', '.join(map(str, pattern))}⟩ to {self.custom_target_var.get()}.", fg=GREEN_DARK)
+        self.custom_pattern_var.set("")
+
+    def load_example(self):
+        self.left_lane.family.set("modified")
+        self.right_lane.family.set("modified")
+        self.rules["left"] = [{"mode": "avoid", "pattern": [2, 1, 2, 2]}]
+        self.rules["right"] = [{"mode": "avoid", "pattern": [2, 2, 1, 2]}]
+        self.start_var.set("1")
+        self.stop_var.set("9")
+        self.stat_var.set("none")
+        self.left_lane.render()
+        self.right_lane.render()
+        self.changed()
+        self.footer.configure(text="Example loaded: compare Modified 2122-avoiders with Modified 2212-avoiders through degree 9.", fg=GREEN_DARK)
+
     def remove_rule(self, side, index):
         del self.rules[side][index]
         self.left_lane.render(); self.right_lane.render(); self.changed()
@@ -737,11 +784,24 @@ def _startup_check() -> None:
 def _window_smoke_check() -> None:
     """Create and map the real desktop workbench, then close it automatically."""
     root = tk.Tk()
-    DesktopWorkbench(root)
+    app = DesktopWorkbench(root)
     root.update()
     if not root.winfo_ismapped():
         root.destroy()
         raise RuntimeError("native Tk window was not mapped")
+    app.custom_pattern_var.set("3121")
+    app.add_custom_rule()
+    if {"mode": "avoid", "pattern": [3, 1, 2, 1]} not in app.rules["left"]:
+        root.destroy()
+        raise RuntimeError("custom pattern rule did not reach Class A")
+    app.load_example()
+    app._show_view("transform")
+    app.apply_transform()
+    root.update()
+    if not app._last_transform or not app.before_canvas.find_all() or not app.after_canvas.find_all():
+        root.destroy()
+        raise RuntimeError("native transform visualizer did not render both sequences")
+    app._show_view("conjecture")
     _log("window_mapped", toolkit="tkinter")
     root.after(800, root.destroy)
     root.mainloop()

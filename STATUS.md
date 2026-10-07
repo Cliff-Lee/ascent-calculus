@@ -256,9 +256,69 @@ user-defined transformation expressions remain for later work. Fourteen transfor
 experiment tests pass under direct invocation. The `pytest` runner and live browser
 visual review remain unavailable in this environment.
 
+## GUI-3.4 — Engine-first conjecture screen
 
-## Native desktop workbench (a11)
+The app now opens directly in **Test a conjecture**. The previous learning dashboard and
+research-status banner no longer crowd the main workflow; definitions remain one click
+away, with inspector, trace, and evidence tools in a compact four-item tool bar. Heavy
+inspection and trace requests load only when those tools are opened.
 
-The desktop launcher now uses native Tk controls and calls the engine in-process. Its focused conjecture workflow supports dragging Avoid/Contain pattern rules into two class lanes, checking the natural-language experiment statement, comparing degree counts and distributions, and retaining drafts and saved tests. The browser workbench remains available for specialist inspection.
+- Added draggable Cayley-pattern chips and drop targets for either side of a comparison.
+- Drop targets accept validated pattern text or `.txt`, `.csv`, and `.json` files; JSON
+  supports a raw array or an object with a `patterns` array.
+- Kept family, restriction, range, refinement, object browsing, witness search, and
+  transformation audits connected to the existing Python engine. Advanced refinements
+  and historical checks remain collapsed by default.
+- Ran the default modified `2122`-avoider versus modified `2212`-avoider conjecture
+  through degree 11: counts match at every degree, including 1,248,595 on each side at
+  degree 11. The result is explicitly labelled finite computation, not proof.
+- JavaScript syntax, Python compilation, HTML IDs/tab links, and a full default engine
+  run pass. The repository's `pytest` dependency is unavailable here, and the local
+  server cannot bind a socket in this environment, so live browser review remains open.
 
-The a11 build runs a short engine startup check and a real-window smoke check on the packaged macOS, Windows, and Ubuntu apps. Push builds upload 14-day testing artifacts. The Mac window check should pass before the M1 device test; startup exceptions are written to the existing diagnostic log.
+## GUI-3.5 — Direct-manipulation research workflow
+
+The conjecture builder now behaves like a small research instrument rather than a form
+with a drag-and-drop garnish:
+
+- The palette contains Ordinary/Modified/Revised families, Avoid/Contain operators, and
+  common Cayley patterns. Each piece can be dragged to either class lane; clicking a
+  palette piece applies it to the last focused lane. Family and operator menus plus
+  direct pattern editing remain available for keyboard and touch users.
+- Pattern rules appear as removable chips in each lane. Patterns can be copied between
+  lanes by dragging, pasted as text, or loaded from a dropped text/CSV/JSON pattern list.
+- The natural-language interpretation remains visible before each run; advanced
+  refinements and specialist audits stay disclosed until needed. Results lead with the
+  answer and first divergence, then offer witnesses, object browsing, and refinement.
+- The layout applies recognition over recall (presets and a visible piece palette),
+  direct manipulation with immediate drop feedback, progressive disclosure for advanced
+  controls, and an explicit experiment sentence as an external check on the specification.
+  Removable rule chips support quick correction; exact result export supports repeatable
+  research.
+- Drafts autosave. Saved tests persist in the operating system's per-user app-data
+  folder across launches, can be loaded and rerun, and can be exported or imported as
+  exact JSON experiment records.
+- The persistent-state round-trip, rejection, and normalized-specification tests pass
+  **3/3**. (These GUI-3.5 notes describe the earlier browser-backed interface.)
+
+## Native desktop direction
+
+The desktop launcher now opens a Tk application with native controls and calls the
+engine in-process. The first screen is a deliberately narrow research loop: drag Avoid
+or Contain pattern blocks from a palette into two class lanes, inspect the generated
+conjecture statement, choose a degree interval and statistic, then read an answer-first
+degree table. It also retains autosaved drafts, named tests, JSON import/export, and a
+finite-evidence reminder. The browser workbench remains a separate optional launcher.
+
+Python compilation, persistent-state round trips, and an engine-backed modified
+`2122` versus `2212` comparison through degree 8 pass. Tk itself could not be visually
+exercised in the editing runtime because it has no display server. Version a11 adds
+packaged-window checks to the macOS, Windows, and Ubuntu build jobs; the Mac DMG/ZIP is
+uploaded as a 14-day Actions artifact after those checks pass.
+
+Version a12 tightens the first-use flow and researcher input: Class A/B lanes are
+named explicitly, common pattern presets use a compact two-column palette, arbitrary
+standard patterns can be added directly to either lane, and a one-click 2122 versus
+2212 starter comparison demonstrates the bounded test loop. The packaged window
+smoke check now adds a custom pattern, loads the example, switches to the transform
+visualizer, and verifies that both sequence diagrams render.
