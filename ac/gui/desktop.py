@@ -19,7 +19,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from typing import Any
 
-from ac.gui.experiments import FAMILY_LIMITS, STATISTICS, run_experiment
+from ac.gui.experiments import FAMILY_LIMITS, STATISTICS, find_unmatched_objects, run_experiment
 from ac.gui.research_state import read_state, write_state
 from ac.core.word import ChainWord
 from ac.transform import (
@@ -455,8 +455,12 @@ class DesktopWorkbench:
         result_top.columnconfigure(0, weight=1)
         self.result_headline = tk.Label(result_top, text="Ready when you are", bg=PANEL, fg=INK, font=("TkDefaultFont", 16, "bold"))
         self.result_headline.grid(row=0, column=0, sticky="w")
+        self.witness_button = tk.Button(result_top, text="Find a differing word", command=self._find_witnesses, relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=11, pady=8)
+        self.witness_button.grid(row=0, column=1, rowspan=2, sticky="e", padx=(8, 8))
+        self.witness_button.grid_remove()
+        HoverTip(self.witness_button, "Find exact sequence witnesses at the first degree where counts differ. Available when both classes use the same family and degree.")
         self.run_button = tk.Button(result_top, text="▶   Run bounded test", command=self.run, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 10, "bold"), padx=15, pady=10)
-        self.run_button.grid(row=0, column=1, rowspan=2, sticky="e")
+        self.run_button.grid(row=0, column=2, rowspan=2, sticky="e")
         self.result_subtitle = tk.Label(result_top, text="Matching finite counts are evidence through n, not a proof for all degrees.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9))
         self.result_subtitle.grid(row=1, column=0, sticky="w", pady=(4, 0))
         self.progress = ttk.Progressbar(results, mode="indeterminate", style="Horizontal.TProgressbar")
@@ -853,10 +857,26 @@ class DesktopWorkbench:
 
     def changed(self):
         if hasattr(self, "left_lane"):
+            self._mark_result_stale()
             self._refresh_conjecture()
             if self._save_timer:
                 self.root.after_cancel(self._save_timer)
             self._save_timer = self.root.after(500, self._autosave)
+
+    def _mark_result_stale(self):
+        if not self.saved_result or not hasattr(self, "witness_button"):
+            return
+        try:
+            current = self._spec()
+            previous = {key: value for key, value in self.saved_result["specification"].items() if key != "condition"}
+            stale = current != previous
+        except (ValueError, TypeError):
+            stale = True
+        if stale:
+            self.witness_button.grid_remove()
+            self.result_headline.configure(text="Setup changed · rerun to test", fg=AMBER)
+            self.result_subtitle.configure(text="The table shows the previous experiment.")
+            self.footer.configure(text="Your conjecture changed. Run the test again to refresh these results.", fg=AMBER)
 
     def _spec(self):
         try:
@@ -887,6 +907,7 @@ class DesktopWorkbench:
         self.progress.grid()
         self.progress.start(12)
         self.result_headline.configure(text="Enumerating sequences…")
+        self.witness_button.grid_remove()
         self.footer.configure(text="The exact engine is running in the background. You can keep the experiment window open.")
         threading.Thread(target=self._run_worker, args=(spec,), daemon=True).start()
 
@@ -897,6 +918,80 @@ class DesktopWorkbench:
         except Exception as exc:
             self._worker_messages.put(("error", str(exc), None))
 
+    def _find_witnesses(self):
+        result = self.saved_result
+        if not result or not result.get("first_divergence") or not self._witness_search_supported(result):
+            return
+        self.witness_button.configure(state="disabled", text="Searching…")
+        self.run_button.configure(state="disabled")
+        self.header_status.configure(text="SEARCHING FOR WITNESSES")
+        self.progress.grid()
+        self.progress.start(12)
+        spec = result["specification"]
+        degree = result["first_divergence"]["n"]
+        threading.Thread(target=self._witness_worker, args=(spec, degree), daemon=True).start()
+
+    @staticmethod
+    def _witness_search_supported(result):
+        spec = result.get("specification", {})
+        left, right = spec.get("left", {}), spec.get("right", {})
+        divergence = result.get("first_divergence")
+        return bool(
+            divergence
+            and left.get("family") == right.get("family")
+            and int(divergence["n"]) + int(left.get("degree_offset", 0))
+            == int(divergence["n"]) + int(right.get("degree_offset", 0))
+        )
+
+    def _witness_worker(self, spec, degree):
+        try:
+            result = find_unmatched_objects(spec, degree)
+            self._worker_messages.put(("witness_ok", spec, result))
+        except Exception as exc:
+            self._worker_messages.put(("witness_error", str(exc), None))
+
+    def _show_witnesses(self, result):
+        dialog = tk.Toplevel(self.root)
+        self.witness_window = dialog
+        dialog.title(f"Exact witnesses · degree {result['n']}")
+        dialog.transient(self.root)
+        dialog.configure(bg=BG)
+        dialog.resizable(True, False)
+        dialog.geometry("720x330")
+        dialog.columnconfigure(0, weight=1)
+        tk.Label(dialog, text=f"Words that separate the classes at n={result['n']}", bg=BG, fg=INK, font=("TkDefaultFont", 17, "bold")).grid(row=0, column=0, sticky="w", padx=20, pady=(18, 3))
+        tk.Label(dialog, text=f"Exact set-difference search · {result['tested_objects']:,} words checked · finite evidence", bg=BG, fg=MUTED, font=("TkDefaultFont", 9)).grid(row=1, column=0, sticky="w", padx=20, pady=(0, 13))
+        cards = tk.Frame(dialog, bg=BG)
+        cards.grid(row=2, column=0, sticky="ew", padx=14)
+        cards.columnconfigure(0, weight=1, uniform="witness")
+        cards.columnconfigure(1, weight=1, uniform="witness")
+        for column, label, key, side in (
+            (0, "CLASS A ONLY", "left_only", "left"),
+            (1, "CLASS B ONLY", "right_only", "right"),
+        ):
+            card = tk.Frame(cards, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+            card.grid(row=0, column=column, sticky="nsew", padx=6)
+            tk.Label(card, text=label, bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).pack(anchor="w", padx=13, pady=(11, 5))
+            witness = result.get(key)
+            if witness:
+                word = witness["word"]
+                tk.Label(card, text="  ".join(map(str, word)), bg=PANEL, fg=GREEN_DARK, font=("TkFixedFont", 16, "bold")).pack(anchor="w", padx=13, pady=(0, 5))
+                details = f"Ascents {witness['ascents']}  ·  max {witness['maximum']}  ·  multiplicities {', '.join(map(str, witness['multiplicity_partition']))}"
+                tk.Label(card, text=details, bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w", wraplength=300, justify="left").pack(fill="x", padx=13, pady=(0, 8))
+                tk.Button(card, text="Graph this word", command=lambda w=word: self._load_witness(w), relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).pack(anchor="w", padx=13, pady=(0, 11))
+            else:
+                tk.Label(card, text="No word in this direction. At this degree, every word in this class also belongs to the other class.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), wraplength=300, justify="left", anchor="w").pack(fill="x", padx=13, pady=(4, 16))
+        tk.Label(dialog, text="A differing word refutes equality of these finite classes at this degree; it is not an all-degree proof.", bg=BG, fg=MUTED, font=("TkDefaultFont", 9), wraplength=670, justify="left").grid(row=3, column=0, sticky="w", padx=20, pady=(12, 17))
+
+    def _load_witness(self, word):
+        self.transform_word_var.set(" ".join(map(str, word)))
+        self.transform_name_var.set("Reverse positions")
+        self._transform_parameter_state()
+        self.apply_transform()
+        if getattr(self, "witness_window", None) is not None and self.witness_window.winfo_exists():
+            self.witness_window.destroy()
+        self._show_view("transform")
+
     def _poll_worker(self):
         try:
             while True:
@@ -905,6 +1000,13 @@ class DesktopWorkbench:
                 self.progress.grid_remove()
                 self.run_button.configure(state="normal", text="▶   Run bounded test")
                 self.header_status.configure(text="LOCAL · FINITE TESTS")
+                if kind in {"witness_ok", "witness_error"}:
+                    self.witness_button.configure(state="normal", text="Find a differing word")
+                    if kind == "witness_error":
+                        self.footer.configure(text=first, fg=RED)
+                    else:
+                        self._show_witnesses(result)
+                    continue
                 if kind == "error":
                     self.result_headline.configure(text="Test could not run")
                     self.footer.configure(text=first)
@@ -917,6 +1019,7 @@ class DesktopWorkbench:
         self.root.after(120, self._poll_worker)
 
     def _show_result(self, result):
+        self.witness_button.grid_remove()
         for row in self.table.get_children():
             self.table.delete(row)
         for row in result["rows"]:
@@ -932,6 +1035,8 @@ class DesktopWorkbench:
         if result["first_divergence"]:
             n = result["first_divergence"]["n"]
             self.footer.configure(text=f"Counterexample degree: n={n}. This refutes equality of these finite counts at that degree.", fg=RED)
+            if self._witness_search_supported(result):
+                self.witness_button.grid()
         elif result["all_counts_match"]:
             self.footer.configure(text=f"Counts agree for every tested degree from {result['specification']['start']} to {result['specification']['stop']}. This is finite evidence, not an all-degree proof.", fg=GREEN_DARK)
         else:
@@ -1135,6 +1240,28 @@ def _window_smoke_check() -> None:
         root.destroy()
         raise RuntimeError("native transform visualizer did not select a pivot and render both sequences")
     app._show_view("conjecture")
+    app.left_lane.family.set("Ordinary"); app.right_lane.family.set("Ordinary")
+    app.rules["left"] = [{"mode": "avoid", "pattern": [1, 2]}]
+    app.rules["right"] = [{"mode": "avoid", "pattern": [2, 1]}]
+    app.left_lane.render(); app.right_lane.render()
+    app.start_var.set("1"); app.stop_var.set("3"); app.stat_var.set(STATISTICS["none"])
+    divergence = run_experiment(app._spec())
+    app.saved_result = divergence
+    app._show_result(divergence)
+    if not app.witness_button.winfo_manager():
+        root.destroy()
+        raise RuntimeError("same-family count divergence did not offer exact witness search")
+    witnesses = find_unmatched_objects(divergence["specification"], divergence["first_divergence"]["n"])
+    app._show_witnesses(witnesses)
+    root.update()
+    if not app.witness_window.winfo_exists():
+        root.destroy()
+        raise RuntimeError("exact witness results did not open the focused witness inspector")
+    app._load_witness(witnesses["right_only"]["word"])
+    root.update()
+    if app.transform_word_var.get() != "1 2" or app.transform_name_var.get() != "Reverse positions" or not app._last_transform:
+        root.destroy()
+        raise RuntimeError("witness did not load into the graphical transform visualizer")
     _log("window_mapped", toolkit="tkinter")
     root.after(800, root.destroy)
     root.mainloop()

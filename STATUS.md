@@ -364,3 +364,9 @@ drag existing rule chips between classes to copy a nearby case.
 
 Version a24 updates the custom-pattern instruction to match the selected-class click
 flow and renames the statistic control to the more direct “Compare by.”
+
+
+Version a25 adds a native “Find a differing word” action for same-family count
+divergences. Exact witnesses open in a focused inspector and can be loaded into the
+transform visualizer. Editing a completed experiment now marks its displayed result as
+stale until the bounded test is run again.
