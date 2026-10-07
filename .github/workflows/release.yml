@@ -45,7 +45,12 @@ jobs:
       - name: Attach app and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-macos-arm64/* --clobber
+        run: >-
+          gh release upload "$GITHUB_REF_NAME"
+          dist/AscentCalculus-macos-arm64/*.dmg
+          dist/AscentCalculus-macos-arm64/*.zip
+          dist/AscentCalculus-macos-arm64/*.whl
+          --clobber
 
   windows-x64:
     needs: test
@@ -63,7 +68,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
-        run: gh release upload $env:GITHUB_REF_NAME dist/AscentCalculus-windows-x64/* --clobber
+        run: |
+          $installer = (Get-ChildItem -Path "dist/AscentCalculus-windows-x64" -Filter "*-windows-x64-setup.exe").FullName
+          gh release upload $env:GITHUB_REF_NAME $installer --clobber
 
   ubuntu-amd64:
     needs: test
@@ -84,4 +91,4 @@ jobs:
       - name: Attach installer and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-ubuntu-24.04-amd64/* --clobber
+        run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-ubuntu-24.04-amd64/*.deb --clobber
