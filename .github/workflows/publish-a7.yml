@@ -1,14 +1,15 @@
 name: Publish Ascent Calculus 0.1.0a7
 
 on:
-  push:
-    branches: [main]
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
 
 jobs:
   test:
+    if: github.event.issue.title == 'Publish Ascent Calculus 0.1.0a7'
     name: Focused regression (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
