@@ -222,6 +222,12 @@ class DropLane(tk.Frame):
             chip = tk.Frame(self.chips, bg=color, highlightthickness=1, highlightbackground="#eadbd1" if mode == "avoid" else "#c9e2d5")
             chip.grid(row=index // 3, column=index % 3, sticky="w", padx=3, pady=3)
             tk.Label(chip, text=f"{mode.title()}  ⟨{', '.join(map(str, rule['pattern']))}⟩", bg=color, fg=fg, font=("TkDefaultFont", 9, "bold"), padx=8, pady=6).pack(side="left")
+            chip_label = chip.winfo_children()[0]
+            chip_label.configure(cursor="hand2")
+            chip_label.bind("<ButtonPress-1>", lambda e, s=self.side, i=index: self.app._drag_start_rule(e, s, i))
+            chip_label.bind("<B1-Motion>", self.app._drag_motion)
+            chip_label.bind("<ButtonRelease-1>", self.app._drag_end)
+            HoverTip(chip_label, "Drag this rule to the other class to copy it and compare a nearby case.")
             tk.Button(chip, text="×", command=lambda i=index, s=self.side: self.app.remove_rule(s, i), relief="flat", borderwidth=0, bg=color, fg=fg, activebackground=color, font=("TkDefaultFont", 11), padx=7, cursor="hand2").pack(side="left")
 
 
@@ -237,6 +243,7 @@ class DesktopWorkbench:
         root.minsize(min(1040, window_width), min(680, window_height))
         self.root.configure(bg=BG)
         self.drag_payload = None
+        self.drag_moved = False
         self.focused_side = "left"
         self.rules = {"left": [], "right": []}
         self.saved_result = None
@@ -303,30 +310,38 @@ class DesktopWorkbench:
         rail = tk.Frame(parent, bg=BG, width=238)
         rail.grid(row=0, column=0, sticky="nsew", padx=(0, 18))
         rail.grid_propagate(False)
-        tk.Label(rail, text="DRAG INTO A CLASS", bg=BG, fg=MUTED, font=("TkDefaultFont", 9, "bold")).pack(anchor="w", pady=(4, 10))
+        tk.Label(rail, text="BUILD CLASSES", bg=BG, fg=MUTED, font=("TkDefaultFont", 9, "bold")).pack(anchor="w", pady=(4, 10))
         card = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         card.pack(fill="x")
         card.columnconfigure(0, weight=1, uniform="pattern-column")
         card.columnconfigure(1, weight=1, uniform="pattern-column")
         tk.Label(card, text="Families", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, columnspan=2, sticky="w", padx=12, pady=(11, 2))
-        tk.Label(card, text="Drag one to change a class.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8)).grid(row=1, column=0, columnspan=2, sticky="w", padx=12, pady=(0, 4))
+        tk.Label(card, text="Drag onto A/B · click adds to:", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8)).grid(row=1, column=0, columnspan=2, sticky="w", padx=12, pady=(0, 2))
+        self.palette_target_var = tk.StringVar(value="left")
+        target_row = tk.Frame(card, bg="#eef3ef", padx=2, pady=2)
+        target_row.grid(row=2, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 6))
+        self.target_buttons = {}
+        for side, label in (("left", "Class A"), ("right", "Class B")):
+            button = tk.Button(target_row, text=label, command=lambda s=side: self._set_palette_target(s), relief="flat", bd=0, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=7, pady=4)
+            button.pack(side="left", fill="x", expand=True)
+            self.target_buttons[side] = button
+            HoverTip(button, f"Single-click palette pieces and add custom patterns to {label}. You can also drag any piece directly to a class.")
         self.family_blocks = {}
         for column, (family, label) in enumerate(FAMILY_CHOICES.items()):
             block = tk.Label(card, text=label, bg="#eef3ef", fg=GREEN_DARK, font=("TkDefaultFont", 8, "bold"), padx=4, pady=5, cursor="hand2", anchor="center")
-            block.grid(row=2, column=column % 2, columnspan=1, sticky="ew", padx=4, pady=2)
+            block.grid(row=3, column=column % 2, columnspan=1, sticky="ew", padx=4, pady=2)
             if column == 2:
-                block.grid_configure(row=3, column=0, columnspan=2)
+                block.grid_configure(row=4, column=0, columnspan=2)
             self.family_blocks[family] = block
-            HoverTip(block, FAMILY_DESCRIPTIONS[family] + " Drag this family onto Class A or B.")
+            HoverTip(block, FAMILY_DESCRIPTIONS[family] + " Click to set the selected class, or drag directly onto Class A or B.")
             block.bind("<ButtonPress-1>", lambda e, f=family: self._drag_start_family(e, f))
             block.bind("<B1-Motion>", self._drag_motion)
             block.bind("<ButtonRelease-1>", self._drag_end)
-            block.bind("<Double-Button-1>", lambda _e, f=family: self._quick_family(f))
 
         self.palette_mode_var = tk.StringVar(value="avoid")
-        tk.Label(card, text="Pattern rule", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=4, column=0, columnspan=2, sticky="w", padx=12, pady=(9, 2))
+        tk.Label(card, text="Pattern rule", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=5, column=0, columnspan=2, sticky="w", padx=12, pady=(9, 2))
         mode_row = tk.Frame(card, bg="#eef3ef", padx=2, pady=2)
-        mode_row.grid(row=5, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 4))
+        mode_row.grid(row=6, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 4))
         self.mode_buttons = {}
         for mode in ("avoid", "contain"):
             button = tk.Button(mode_row, text=mode.title(), command=lambda m=mode: self._set_palette_mode(m), relief="flat", bd=0, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=8, pady=4)
@@ -335,18 +350,18 @@ class DesktopWorkbench:
             HoverTip(button, "Keep words with no occurrence of each dropped pattern." if mode == "avoid" else "Keep words that contain each dropped pattern.")
         self.pattern_blocks = {}
         for index, pattern in enumerate(PATTERNS):
-            row, column = 6 + index // 2, index % 2
+            row, column = 7 + index // 2, index % 2
             block = tk.Label(card, text=f"⟨{pattern}⟩", bg="#fff0e9", fg="#965233", font=("TkDefaultFont", 9, "bold"), padx=5, pady=5, cursor="hand2", anchor="center")
             block.grid(row=row, column=column, sticky="ew", padx=4, pady=2)
             self.pattern_blocks[("avoid", pattern)] = block
             self.pattern_blocks[("contain", pattern)] = block
-            HoverTip(block, lambda p=pattern: f"Drag to a class to {self.palette_mode_var.get()} pattern {p}. A pattern occurs when a subsequence has the same relative order. Double-click to add to the last focused class.")
+            HoverTip(block, lambda p=pattern: f"{self.palette_mode_var.get().title()} pattern {p}: a subsequence with the same relative order. Click to add to the selected class, or drag to Class A/B.")
             block.bind("<ButtonPress-1>", lambda e, p=pattern: self._drag_start(e, self.palette_mode_var.get(), p))
             block.bind("<B1-Motion>", self._drag_motion)
             block.bind("<ButtonRelease-1>", self._drag_end)
-            block.bind("<Double-Button-1>", lambda _e, p=pattern: self._quick_add(self.palette_mode_var.get(), p))
         self._set_palette_mode("avoid")
-        custom_row = 10
+        self._set_palette_target("left")
+        custom_row = 11
         tk.Label(card, text="CUSTOM PATTERN", bg=PANEL, fg=INK, font=("TkDefaultFont", 8, "bold")).grid(row=custom_row, column=0, columnspan=2, sticky="w", padx=12, pady=(10, 3))
         custom = tk.Frame(card, bg=PANEL)
         custom.grid(row=custom_row + 1, column=0, columnspan=2, sticky="ew", padx=8, pady=(0, 3))
@@ -355,13 +370,9 @@ class DesktopWorkbench:
         pattern_entry = ttk.Entry(custom, textvariable=self.custom_pattern_var, width=12)
         pattern_entry.grid(row=0, column=0, columnspan=2, sticky="ew", padx=(0, 5), pady=(0, 4))
         HoverTip(pattern_entry, "Enter a standard pattern using digits, such as 3121. The selected Avoid/Contain rule will be used.")
-        self.custom_target_var = tk.StringVar(value="Class A")
-        self.custom_target_box = ttk.Combobox(custom, textvariable=self.custom_target_var, state="readonly", values=("Class A", "Class B"), width=8)
-        self.custom_target_box.grid(row=1, column=0, sticky="ew", padx=(0, 5))
-        HoverTip(self.custom_target_box, "Choose which class receives the custom pattern rule.")
-        tk.Button(custom, text="Add rule", command=self.add_custom_rule, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=7, pady=5).grid(row=1, column=1, sticky="ew")
+        tk.Button(custom, text="Add to selected class", command=self.add_custom_rule, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=7, pady=5).grid(row=1, column=0, columnspan=2, sticky="ew")
         self.custom_pattern_status = tk.Label(card, text="e.g. 3121  ·  double-click to add", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w")
-        self.custom_pattern_status.grid(row=12, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 10))
+        self.custom_pattern_status.grid(row=13, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 10))
         saved = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         saved.pack(fill="x", pady=(10, 0))
         top = tk.Frame(saved, bg=PANEL)
@@ -466,14 +477,20 @@ class DesktopWorkbench:
         self.table.configure(yscrollcommand=table_scrollbar.set)
         self.table.tag_configure("match", foreground=GREEN_DARK)
         self.table.tag_configure("diverge", foreground=RED, background="#fff6f4")
-        self.footer = tk.Label(results, text="Choose patterns from the left, then drop them into either class.", bg="#f8faf8", fg=MUTED, anchor="w", padx=14, pady=9, font=("TkDefaultFont", 9))
+        self.footer = tk.Label(results, text="Drag a rule to copy it to the other class. Click × to remove it.", bg="#f8faf8", fg=MUTED, anchor="w", padx=14, pady=9, font=("TkDefaultFont", 9))
         self.footer.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 12))
         return work
 
     def _quick_add(self, mode, pattern):
-        """Accessible alternative to dragging: double-click adds to focused lane."""
-        side = getattr(self, "focused_side", "left")
+        """Accessible, explicit-target alternative to dragging."""
+        side = self.palette_target_var.get()
         self.add_rule(side, mode, pattern)
+
+    def _set_palette_target(self, side):
+        self.palette_target_var.set(side)
+        for key, button in self.target_buttons.items():
+            active = key == side
+            button.configure(bg=GREEN if active else "#eef3ef", fg="white" if active else INK, activebackground=GREEN if active else MINT)
 
     def _set_palette_mode(self, mode):
         self.palette_mode_var.set(mode)
@@ -486,7 +503,7 @@ class DesktopWorkbench:
             block.configure(bg=color, fg=foreground)
 
     def _quick_family(self, family):
-        side = getattr(self, "focused_side", "left")
+        side = self.palette_target_var.get()
         self.set_family(side, family)
 
     def set_family(self, side, family):
@@ -717,15 +734,24 @@ class DesktopWorkbench:
 
     def _drag_start(self, event, mode, pattern):
         self.drag_payload = {"kind": "pattern", "mode": mode, "pattern": pattern}
+        self.drag_moved = False
         event.widget.configure(relief="sunken")
 
     def _drag_start_family(self, event, family):
         self.drag_payload = {"kind": "family", "family": family}
+        self.drag_moved = False
+        event.widget.configure(relief="sunken")
+
+    def _drag_start_rule(self, event, source_side, index):
+        rule = self.rules[source_side][index]
+        self.drag_payload = {"kind": "pattern", "mode": rule["mode"], "pattern": "".join(map(str, rule["pattern"])), "source": source_side}
+        self.drag_moved = False
         event.widget.configure(relief="sunken")
 
     def _drag_motion(self, event):
         if not self.drag_payload:
             return
+        self.drag_moved = True
         x, y = self.root.winfo_pointerx(), self.root.winfo_pointery()
         target = self.root.winfo_containing(x, y)
         for side, lane in (("left", self.left_lane), ("right", self.right_lane)):
@@ -733,18 +759,36 @@ class DesktopWorkbench:
 
     def _drag_end(self, event):
         if self.drag_payload:
-            x, y = self.root.winfo_pointerx(), self.root.winfo_pointery()
-            target = self.root.winfo_containing(x, y)
-            for side, lane in (("left", self.left_lane), ("right", self.right_lane)):
-                lane._highlight(False)
-                if lane._contains(target):
-                    if self.drag_payload["kind"] == "family":
-                        self.set_family(side, self.drag_payload["family"])
-                    else:
-                        self.add_rule(side, self.drag_payload["mode"], self.drag_payload["pattern"])
-                    break
-        event.widget.configure(relief="flat")
+            side = None
+            if self.drag_moved:
+                x, y = self.root.winfo_pointerx(), self.root.winfo_pointery()
+                target = self.root.winfo_containing(x, y)
+                for candidate, lane in (("left", self.left_lane), ("right", self.right_lane)):
+                    lane._highlight(False)
+                    if lane._contains(target):
+                        side = candidate
+                        break
+            elif self.drag_payload.get("source"):
+                # Existing rule chips are draggable copies; clicking one alone
+                # must not unexpectedly add a duplicate to the palette target.
+                side = None
+            elif self.drag_payload["kind"] == "family":
+                side = self.palette_target_var.get()
+            else:
+                side = self.palette_target_var.get()
+            if side is not None:
+                if self.drag_payload["kind"] == "family":
+                    self.set_family(side, self.drag_payload["family"])
+                else:
+                    self.add_rule(side, self.drag_payload["mode"], self.drag_payload["pattern"])
+                    if self.drag_payload.get("source") and self.drag_payload["source"] != side:
+                        self.footer.configure(text=f"Copied {self.drag_payload['mode']} ⟨{', '.join(self.drag_payload['pattern'])}⟩ to Class {'A' if side == 'left' else 'B'}.", fg=GREEN_DARK)
+        try:
+            event.widget.configure(relief="flat")
+        except tk.TclError:
+            pass
         self.drag_payload = None
+        self.drag_moved = False
 
     def add_rule(self, side, mode, pattern):
         values = [int(x) for x in pattern]
@@ -759,10 +803,10 @@ class DesktopWorkbench:
         except (TypeError, ValueError) as exc:
             self.custom_pattern_status.configure(text=f"Check pattern: {exc}", fg=RED)
             return
-        side = "left" if self.custom_target_var.get() == "Class A" else "right"
+        side = self.palette_target_var.get()
         mode = self.palette_mode_var.get()
         self.add_rule(side, mode, pattern)
-        self.custom_pattern_status.configure(text=f"Added {mode} ⟨{', '.join(map(str, pattern))}⟩ to {self.custom_target_var.get()}.", fg=GREEN_DARK)
+        self.custom_pattern_status.configure(text=f"Added {mode} ⟨{', '.join(map(str, pattern))}⟩ to Class {'A' if side == 'left' else 'B'}.", fg=GREEN_DARK)
         self.custom_pattern_var.set("")
 
     def load_example(self):
@@ -1042,20 +1086,35 @@ def _window_smoke_check() -> None:
     if {"mode": "avoid", "pattern": [2, 1, 2, 2]} not in app.rules["right"] or app.drag_payload is not None:
         root.destroy()
         raise RuntimeError("dragged preset did not land in Class B")
-    app.focused_side = "left"
+    app._set_palette_target("left")
     app._quick_add("contain", "221")
     if {"mode": "contain", "pattern": [2, 2, 1]} not in app.rules["left"]:
         root.destroy()
-        raise RuntimeError("double-click quick-add did not reach the focused class")
+        raise RuntimeError("palette click-add did not reach the selected class")
     try:
         app._drag_start_family(drag_event, "revised")
         root.winfo_containing = lambda *_args: app.left_lane
+        app._drag_motion(drag_event)
         app._drag_end(drag_event)
     finally:
         root.winfo_containing = original_containing
     if app.left_lane.family.get() != "Revised":
         root.destroy()
         raise RuntimeError("dragging a family did not update Class A")
+    app.rules["left"] = [{"mode": "avoid", "pattern": [2, 1, 2, 2]}]
+    app.rules["right"] = []
+    app.left_lane.render(); app.right_lane.render()
+    rule_label = app.left_lane.chips.winfo_children()[0].winfo_children()[0]
+    try:
+        app._drag_start_rule(type("DragEvent", (), {"widget": rule_label})(), "left", 0)
+        root.winfo_containing = lambda *_args: app.right_lane
+        app._drag_motion(drag_event)
+        app._drag_end(type("DragEvent", (), {"widget": rule_label})())
+    finally:
+        root.winfo_containing = original_containing
+    if {"mode": "avoid", "pattern": [2, 1, 2, 2]} not in app.rules["right"]:
+        root.destroy()
+        raise RuntimeError("dragging an existing rule did not copy it to Class B")
     app.left_lane.family.set("Modified")
     app.stat_var.set(STATISTICS["ascent_runs"])
     if app._spec()["statistic"] != "ascent_runs":
