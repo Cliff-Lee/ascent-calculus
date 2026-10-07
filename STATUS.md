@@ -360,3 +360,7 @@ Version a22 hides transform inputs that the current map does not need and adds a
 Version a23 makes palette clicks explicit with a visible Class A/B target, removes the
 last-hovered-class behavior, reuses that target for custom patterns, and lets researchers
 drag existing rule chips between classes to copy a nearby case.
+
+
+Version a24 updates the custom-pattern instruction to match the selected-class click
+flow and renames the statistic control to the more direct “Compare by.”
