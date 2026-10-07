@@ -78,6 +78,8 @@ jobs:
           if (-not (Test-Path $installedExe)) { throw "Installed app executable not found: $installedExe" }
           $smoke = Start-Process -FilePath $installedExe -ArgumentList "--startup-check" -Wait -PassThru
           if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed with exit code $($smoke.ExitCode)" }
+          $windowSmoke = Start-Process -FilePath $installedExe -ArgumentList "--window-smoke-check" -Wait -PassThru
+          if ($windowSmoke.ExitCode -ne 0) { throw "Installed native-window check failed with exit code $($windowSmoke.ExitCode)" }
       - name: Attach installer and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -99,7 +101,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip python3-gi python3-gi-cairo python3-cairo \
-            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev
+            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev xvfb
       - name: Build Ubuntu package and Python wheel
         run: bash scripts/build_ubuntu.sh
       - name: Install and smoke-test the Ubuntu package
@@ -108,6 +110,7 @@ jobs:
           test -n "$package"
           sudo dpkg -i "$package"
           ascent-calculus --startup-check
+          xvfb-run -a ascent-calculus --window-smoke-check
       - name: Attach installer and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
