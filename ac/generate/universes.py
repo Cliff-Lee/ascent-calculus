@@ -31,12 +31,22 @@ def cayley_words(n: int):
 
 def ascent_sequences(n: int):
     """Generate positive ordinary ascent sequences recursively."""
+    for values in ascent_sequence_values(n):
+        yield ChainWord(values)
+
+
+def ascent_sequence_values(n: int):
+    """Generate the raw tuples underlying ``ascent_sequences``.
+
+    This avoids constructing a temporary ChainWord when a conversion such as
+    ``modified_via_hat`` immediately maps each generated sequence.
+    """
     if n <= 0:
         return
 
     def rec(prefix: tuple[int, ...]):
         if len(prefix) == n:
-            yield ChainWord(prefix)
+            yield prefix
             return
         asc = sum(1 for a, b in zip(prefix, prefix[1:]) if a < b)
         upper = asc + 2
@@ -65,6 +75,6 @@ def modified_via_hat(n: int):
     brute-force recognizer ``modified_sequences`` so the two can cross-check
     one another in tests.
     """
-    from ac.transform.hat import hat
-    for x in ascent_sequences(n):
-        yield hat(x)
+    from ac.transform.hat import hat_values
+    for values in ascent_sequence_values(n):
+        yield ChainWord(hat_values(values))

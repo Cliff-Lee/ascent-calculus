@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AC Research Workbench — GUI-1</title>
+  <title>Ascent Calculus — Learn and Explore</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
@@ -11,30 +11,120 @@
     <div class="brand">
       <div class="mark">AC</div>
       <div>
-        <h1>Research Workbench</h1>
-        <p>Ascent Calculus — GUI-1 prototype</p>
+        <h1>Ascent Calculus</h1>
+        <p>Learn and explore ascent sequences</p>
       </div>
     </div>
     <div id="overall-status" class="status-chip open">OPEN</div>
   </header>
 
-  <main>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Workbench navigation">
+      <div class="sidebar-kicker">YOUR WORKSPACE</div>
+      <nav class="tabs sidebar-nav" aria-label="Workbench sections" role="tablist" aria-orientation="vertical">
+        <div class="nav-group-label" role="presentation">LEARN</div>
+        <button class="tab nav-item active" id="tab-learn" data-tab="learn" role="tab" aria-controls="panel-learn" aria-selected="true" tabindex="0">
+          <span class="nav-number">01</span><span class="nav-copy"><b>Foundations</b><small>Definitions and examples</small></span>
+        </button>
+        <div class="nav-group-label research-label" role="presentation">WORKBENCH</div>
+        <button class="tab nav-item" id="tab-inspector" data-tab="inspector" role="tab" aria-controls="panel-inspector" aria-selected="false" tabindex="-1">
+          <span class="nav-number">02</span><span class="nav-copy"><b>Sequence inspector</b><small>Explore a word</small></span>
+        </button>
+        <button class="tab nav-item" id="tab-trace" data-tab="trace" role="tab" aria-controls="panel-trace" aria-selected="false" tabindex="-1">
+          <span class="nav-number">03</span><span class="nav-copy"><b>Transformation trace</b><small>Follow each move</small></span>
+        </button>
+        <button class="tab nav-item" id="tab-lab" data-tab="lab" role="tab" aria-controls="panel-lab" aria-selected="false" tabindex="-1">
+          <span class="nav-number">04</span><span class="nav-copy"><b>Experiment builder</b><small>Ask a bounded question</small></span>
+        </button>
+        <button class="tab nav-item" id="tab-status" data-tab="status" role="tab" aria-controls="panel-status" aria-selected="false" tabindex="-1">
+          <span class="nav-number">05</span><span class="nav-copy"><b>Research status</b><small>Evidence and open work</small></span>
+        </button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="sidebar-note-icon" aria-hidden="true">i</span>
+        <p><strong>Evidence stays explicit.</strong><br />A finite check is not a proof for every degree.</p>
+      </div>
+    </aside>
+
+    <main id="main-content">
     <section class="research-banner" id="research-banner">
       <div>
         <strong>Current theorem status:</strong>
         <span id="overall-detail">Loading research status…</span>
       </div>
-      <button class="ghost" data-panel="status">View obligations</button>
+      <button class="ghost" data-panel="status">Research status</button>
     </section>
 
-    <nav class="tabs" aria-label="Workbench sections">
-      <button class="tab active" data-tab="inspector">Sequence inspector</button>
-      <button class="tab" data-tab="trace">Transformation trace</button>
-      <button class="tab" data-tab="lab">Conjecture lab</button>
-      <button class="tab" data-tab="status">Proof status</button>
-    </nav>
+    <section class="panel active" id="panel-learn" role="tabpanel" aria-labelledby="tab-learn" tabindex="0">
+      <div class="learn-hero">
+        <div class="hero-copy">
+          <span class="eyebrow">START HERE · A 5 MINUTE TOUR</span>
+          <h2>Sequences with a story<br><em>in every position.</em></h2>
+          <p>Learn the basic vocabulary, then use the live engine to check what a sequence is doing. Hover or keyboard-focus any dotted term for a quick definition.</p>
+          <div class="hero-actions">
+            <button class="primary" id="learn-example">Try the guided example <span aria-hidden="true">↓</span></button>
+            <button class="text-button" data-panel="inspector">Open the full inspector <span aria-hidden="true">↗</span></button>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Example sequence 1, 2, 1, 3, 2">
+          <div class="art-label">A sequence is a word of values</div>
+          <div class="art-word"><span>1</span><span class="rise">2<i>↗</i></span><span>1</span><span class="rise">3<i>↗</i></span><span>2</span></div>
+          <div class="art-caption"><span class="legend-dot"></span> each upward step is an <b>ascent</b></div>
+        </div>
+      </div>
 
-    <section class="panel active" id="panel-inspector">
+      <div class="learning-path"><span class="path-line"></span><span class="path-step current">01 <small>ordinary</small></span><span class="path-step">02 <small>rises</small></span><span class="path-step">03 <small>variants</small></span><span class="path-step">04 <small>try it</small></span></div>
+
+      <section class="lesson-section" id="lesson-ordinary">
+        <div class="section-kicker">01 · THE STARTING POINT</div>
+        <div class="lesson-grid">
+          <div>
+            <h2>What is an ascent sequence?</h2>
+            <p class="lesson-lead">It is a sequence whose next value is allowed to grow as upward steps appear.</p>
+            <p>In this engine’s positive convention, the first value is 1. At each later position, the value is at least 1 and at most <span class="math-chip">2 + the number of earlier ascents</span>.</p>
+            <button class="term" tabindex="0" data-tip="An ascent is an adjacent rise: xᵢ < xᵢ₊₁. For example, 1, 2, 1, 3, 2 has rises 1→2 and 1→3, so it has 2 ascents.">What counts as an ascent?</button>
+          </div>
+          <article class="example-card">
+            <div class="example-top"><span class="example-tag">VALID EXAMPLE</span><span class="muted">length 5</span></div>
+            <div class="sequence-display" aria-label="1, 2, 1, 3, 2"><span>1</span><span class="rise-cell">2<small>rise</small></span><span>1</span><span class="rise-cell">3<small>rise</small></span><span>2</span></div>
+            <div class="checkline"><span class="checkmark">✓</span><span><b>1, 2, 1, 3, 2</b> is an ascent sequence.</span></div>
+            <p class="small muted">Before the final 2, there are two ascents, so the allowed values are 1 through 4.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="lesson-section concepts-section">
+        <div class="section-kicker">02 · MARK THE RISES</div>
+        <h2>Each rise has two important positions</h2>
+        <p class="lesson-lead">Compare neighboring values. The smaller one is the <span class="term" tabindex="0" data-tip="AscBottom: position 1 by convention, together with the left-hand position of every adjacent rise xᵢ < xᵢ₊₁.">ascent bottom</span>; the larger one is the <span class="term" tabindex="0" data-tip="AscTop: position 1 by convention, together with the right-hand position of every adjacent rise xᵢ < xᵢ₊₁.">ascent top</span>.</p>
+        <article class="wide-example">
+          <div class="sequence-display annotated"><span class="bottom-mark">1<small>bottom</small></span><span class="top-mark">2<small>top</small></span><span class="bottom-mark">1<small>bottom</small></span><span class="top-mark">3<small>top</small></span><span>2</span></div>
+          <p>For <b>1, 2, 1, 3, 2</b>, the engine records ascent tops at positions <b>1, 2, 4</b> and ascent bottoms at positions <b>1, 3</b>. Position 1 is included by convention.</p>
+          <button class="text-button" data-inspect-word="12132">See these positions in the inspector ↗</button>
+        </article>
+      </section>
+
+      <section class="lesson-section variants-section">
+        <div class="section-kicker">03 · THREE RELATED FAMILIES</div>
+        <h2>Ordinary, modified, and revised</h2>
+        <p class="lesson-lead">They use related ascent vocabulary, but their definitions are different. The engine checks each rule independently.</p>
+        <div class="variant-grid">
+          <article class="variant-card"><span class="variant-number">A</span><h3>Ordinary</h3><p>Starts with 1; each later value is bounded by 2 plus the number of earlier ascents.</p><button class="term" tabindex="0" data-tip="The positive convention implemented by AC-Engine: x₁=1 and 1 ≤ xᵢ ≤ 2 + asc(x₁…xᵢ₋₁) for i>1.">Definition</button></article>
+          <article class="variant-card accent-card"><span class="variant-number">M</span><h3>Modified</h3><p>A <span class="term" tabindex="0" data-tip="A Cayley word of height h uses every value 1, 2, …, h at least once.">Cayley word</span> where each value’s first occurrence is an ascent top.</p><button class="text-button" data-inspect-word="133122">Example: 1, 3, 3, 1, 2, 2 ↗</button></article>
+          <article class="variant-card warm-card"><span class="variant-number">R</span><h3>Revised</h3><p>A Cayley word where each value’s first occurrence is an ascent bottom.</p><button class="text-button" data-inspect-word="212">Example: 2, 1, 2 ↗</button></article>
+        </div>
+        <div class="note-strip"><span class="note-icon">i</span><span>These are precise definitions used by this calculus. Some sequences belong to more than one family; the inspector checks all three.</span></div>
+      </section>
+
+      <section class="lesson-section try-section" id="lesson-try">
+        <div class="section-kicker">04 · YOUR TURN</div>
+        <div class="try-head"><div><h2>Try a sequence</h2><p class="lesson-lead">Enter positive values separated by commas or spaces. The Python engine will classify it.</p></div><div class="try-input"><label class="sr-only" for="learn-word">Sequence values</label><input id="learn-word" value="1, 2, 1, 3, 2"/><button id="learn-check" class="primary">Check sequence</button></div></div>
+        <div id="learn-result" class="learn-result" aria-live="polite"><span class="result-hint">Choose an example above or check this sequence.</span></div>
+      </section>
+      <div class="next-step"><span>Ready to go deeper?</span><p>Inspect position roles, trace transformations, or run bounded conjecture checks.</p><button class="primary" data-panel="inspector">Explore the engine <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section class="panel" id="panel-inspector" role="tabpanel" aria-labelledby="tab-inspector" tabindex="0">
       <div class="panel-head">
         <div>
           <h2>Sequence inspector</h2>
@@ -66,11 +156,11 @@
       </div>
     </section>
 
-    <section class="panel" id="panel-trace">
+    <section class="panel" id="panel-trace" role="tabpanel" aria-labelledby="tab-trace" tabindex="0">
       <div class="panel-head">
         <div>
-          <h2>Gap swap + canonical repair trace</h2>
-          <p>Occurrence IDs travel with entries, so you can follow the same object through each move.</p>
+          <h2>Transformation trace</h2>
+          <p>This view traces the original one-pass M-repair, now a historical candidate. Occurrence IDs travel with entries so you can follow each move.</p>
         </div>
         <div class="controls inline">
           <input id="trace-word" value="12321432" aria-label="Trace word" />
@@ -81,6 +171,7 @@
           </select>
         </div>
       </div>
+      <div class="callout info trace-version-note"><strong>Current research result:</strong> the frozen alternating M/O construction passed exhaustive checks through n=11; its all-degree proof is still open. This trace view currently demonstrates the earlier one-pass M-repair only. The alternating trace has not yet been connected to this screen.</div>
       <div class="trace-toolbar">
         <button id="trace-prev" class="ghost">← Previous</button>
         <span id="trace-step-label">No trace loaded</span>
@@ -89,55 +180,134 @@
       <div id="trace-stage" class="trace-stage"></div>
       <div id="trace-details" class="trace-details"></div>
       <div class="callout warning">
-        <strong>Why provenance matters.</strong>
-        The locally valid move <code>14323312 → 13243312</code> is deliberately included: the next generic repair can have a heavy crossing. The open E11c theorem is specifically about states reachable from <code>ExtremeGapSwap</code>, not every locally admissible word.
+        <strong>Historical guardrail for the one-pass rule.</strong>
+        The locally valid move <code>14323312 → 13243312</code> shows why a proof for arbitrary local-repair states cannot establish safety on its own. The current alternating M/O algorithm is the live research candidate; its termination and target-preservation proof remain open.
       </div>
     </section>
 
-    <section class="panel" id="panel-lab">
+    <section class="panel" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab" tabindex="0">
       <div class="panel-head">
         <div>
-          <h2>Conjecture lab</h2>
-          <p>Run a finite check. Results are labelled as bounded evidence, never as general proofs.</p>
+          <h2>Research experiment</h2>
+          <p>Build a mathematical question from ascent-sequence families, pattern restrictions, and a degree range. The engine runs the exact specification shown below.</p>
         </div>
       </div>
-      <div class="lab-form card">
-        <label>Source class
-          <select id="lab-source">
-            <option value="m2122">Modified & Avoid(2122)</option>
-            <option value="m2212">Modified & Avoid(2212)</option>
-            <option value="modified">Modified</option>
-          </select>
-        </label>
-        <label>Transformation
-          <select id="lab-transform">
-            <option value="repair21">GapSwapRepair(2,1)</option>
-            <option value="gap21">ExtremeGapSwap(2,1)</option>
-            <option value="repair12">GapSwapRepair(1,2)</option>
-            <option value="gap12">ExtremeGapSwap(1,2)</option>
-            <option value="reverse">Reverse</option>
-            <option value="identity">Identity</option>
-          </select>
-        </label>
-        <label>Target class
-          <select id="lab-target">
-            <option value="m2212">Modified & Avoid(2212)</option>
-            <option value="m2122">Modified & Avoid(2122)</option>
-            <option value="modified">Modified</option>
-          </select>
-        </label>
-        <label>Maximum degree
-          <select id="lab-maxn">
-            <option>6</option><option>7</option><option selected>8</option><option>9</option><option>10</option>
-          </select>
-        </label>
-        <button id="lab-run" class="primary">Run bounded check</button>
+      <div class="experiment-presets" aria-label="Load an example experiment">
+        <button class="preset-chip" data-experiment-preset="modified-pattern-pair">Modified 2122 vs 2212</button>
+        <button class="preset-chip" data-experiment-preset="revised-shift">Revised 3121 vs ordinary 221</button>
       </div>
-      <div class="finite-warning">Finite computation only. Completing every case through n=k warrants <strong>VERIFIED THROUGH n=k</strong>, not <strong>PROVED</strong>.</div>
-      <div id="lab-result"></div>
+      <div class="experiment-composer card">
+        <div class="question-line">
+          <label>Question
+            <select id="experiment-question"><option value="compare">Compare two classes</option><option value="count">Count one class</option></select>
+          </label>
+          <div class="range-controls">
+            <label>from n <input id="experiment-start" type="number" min="1" max="11" value="1" /></label>
+            <span class="range-dash">to</span>
+            <label>through n <input id="experiment-stop" type="number" min="1" max="11" value="11" /></label>
+          </div>
+        </div>
+        <div class="experiment-sides">
+          <article class="experiment-side" id="experiment-left-card">
+            <div class="side-heading"><span class="side-index">A</span><div><h3>First class</h3><p>Choose a family and its pattern restriction.</p></div></div>
+            <label>Family
+              <select id="experiment-left-family"><option value="ordinary">Ordinary ascent sequences</option><option value="modified" selected>Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select>
+            </label>
+            <label>Restriction
+              <select id="experiment-left-mode"><option value="avoid">Avoid every listed pattern</option><option value="contain">Contain every listed pattern</option><option value="none">No pattern restriction</option></select>
+            </label>
+            <label class="pattern-entry-label" for="experiment-left-patterns">Patterns <small>one Cayley pattern per line</small></label>
+            <textarea id="experiment-left-patterns" rows="2" spellcheck="false">2122</textarea>
+            <div class="pattern-validation" id="experiment-left-validation" aria-live="polite"></div>
+          </article>
+
+          <div class="compare-connector" id="experiment-connector" aria-hidden="true"><span>compare with</span><b>↔</b></div>
+
+          <article class="experiment-side" id="experiment-right-card">
+            <div class="side-heading"><span class="side-index">B</span><div><h3>Second class</h3><p>Compare against another family or restriction.</p></div></div>
+            <label>Family
+              <select id="experiment-right-family"><option value="ordinary">Ordinary ascent sequences</option><option value="modified" selected>Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select>
+            </label>
+            <label>Restriction
+              <select id="experiment-right-mode"><option value="avoid">Avoid every listed pattern</option><option value="contain">Contain every listed pattern</option><option value="none">No pattern restriction</option></select>
+            </label>
+            <label class="pattern-entry-label" for="experiment-right-patterns">Patterns <small>one Cayley pattern per line</small></label>
+            <textarea id="experiment-right-patterns" rows="2" spellcheck="false">2212</textarea>
+            <div class="pattern-validation" id="experiment-right-validation" aria-live="polite"></div>
+          </article>
+        </div>
+
+        <details class="experiment-advanced">
+          <summary>Advanced range and refinement</summary>
+          <div class="advanced-grid">
+            <label>First class degree shift
+              <input id="experiment-left-offset" type="number" min="-10" max="10" value="0" />
+              <small>Use +1 to compare at n+1.</small>
+            </label>
+            <label id="experiment-right-offset-wrap">Second class degree shift
+              <input id="experiment-right-offset" type="number" min="-10" max="10" value="0" />
+              <small>Use 0 for the displayed n.</small>
+            </label>
+            <label>Refine by
+              <select id="experiment-statistic">
+                <option value="none">Overall count</option><option value="ascents">Number of ascents</option><option value="ascent_runs">Number of ascent runs</option><option value="run_lengths">Ascent-run lengths</option><option value="maximum">Maximum value</option><option value="distinct_values">Number of distinct values</option><option value="multiplicity_partition">Multiplicity partition</option><option value="first_occurrence_positions">First-occurrence positions</option><option value="last_occurrence_positions">Last-occurrence positions</option><option value="run_start_positions" title="Positions that start an engine-defined run: position 1 or any position not entered by an ascent.">Run-start positions</option>
+              </select>
+              <small>Compare the distribution as well as the total.</small>
+            </label>
+            <div class="condition-controls">
+              <label>Optional structural filter
+                <select id="experiment-condition-stat"><option value="none">No extra condition</option><option value="ascents">Ascent count</option><option value="maximum">Maximum value</option><option value="distinct_values">Number of distinct values</option></select>
+              </label>
+              <label>Relation
+                <select id="experiment-condition-op"><option value="eq">exactly</option><option value="ge">at least</option><option value="le">at most</option></select>
+              </label>
+              <label>Value <input id="experiment-condition-value" type="number" min="0" value="2" /></label>
+            </div>
+          </div>
+        </details>
+
+        <div class="experiment-sentence" id="experiment-sentence" aria-live="polite"></div>
+        <div class="composer-actions"><span id="experiment-validation-summary" class="muted small">Checking pattern definitions…</span><button id="experiment-run" class="primary" disabled>Run experiment</button></div>
+      </div>
+      <div class="finite-warning">A completed bounded comparison is finite evidence only. Matching through n=k does not prove equality for all degrees.</div>
+      <div id="experiment-result" aria-live="polite"></div>
+
+      <details class="transform-experiment-panel">
+        <summary>Transformation experiment · first release</summary>
+        <p class="muted small">Apply an existing engine transformation to every member of a bounded source class. The audit checks output validity, target membership, collisions, target coverage, inverse recovery, and one selected statistic.</p>
+        <div class="transform-builder card">
+          <label>Transformation<select id="tx-name"><option value="hat" selected title="Apply prefix lifts at ascent-top positions.">Hat map</option><option value="inverse_hat" title="Invert the hat map when the input lies in its image.">Inverse hat map</option><option value="prefix_lift" title="At position i, raise earlier entries at least as large as the pivot value.">Prefix lift</option><option value="inverse_prefix_lift" title="Undo a prefix lift when the pivot is a first occurrence.">Inverse prefix lift</option><option value="insert_position" title="Insert one copy of a chosen existing value after a selected cut.">Insert a position</option><option value="delete_position" title="Restrict to all positions except the selected one, retaining ambient value levels.">Delete a position</option><option value="reverse" title="Read the word backward.">Reverse</option><option value="complement" title="Reverse the ambient value scale.">Complement</option></select><small id="tx-description">Apply prefix lifts at the ascent-top positions.</small></label>
+          <label id="tx-parameter-wrap" hidden><span id="tx-parameter-label">Pivot position</span> <input id="tx-parameter" type="number" min="1" step="1" value="2" /><small id="tx-parameter-help">Positions start at 1. A position outside a word is reported as a failure witness.</small></label>
+          <label id="tx-value-wrap" hidden><span id="tx-value-label">Value level to insert</span> <input id="tx-value" type="number" min="1" step="1" value="1" /><small id="tx-value-help">The inserted value must already occur in the source word's ambient chain.</small></label>
+          <label>Source family<select id="tx-source-family"><option value="ordinary" selected>Ordinary ascent sequences</option><option value="modified">Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select></label>
+          <label>Source pattern rule<select id="tx-source-mode"><option value="none">No pattern restriction</option><option value="avoid">Avoid</option><option value="contain">Contain</option></select></label>
+          <label>Source pattern<input id="tx-source-pattern" placeholder="e.g. 2122" /></label>
+          <div class="transform-arrow" aria-hidden="true">→</div>
+          <label>Target family<select id="tx-target-family"><option value="ordinary">Ordinary ascent sequences</option><option value="modified" selected>Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select></label>
+          <label>Target pattern rule<select id="tx-target-mode"><option value="none">No pattern restriction</option><option value="avoid">Avoid</option><option value="contain">Contain</option></select></label>
+          <label>Target pattern<input id="tx-target-pattern" placeholder="e.g. 2212" /></label>
+          <label>Degree range<input id="tx-range" value="1–6" aria-label="Degree range, use start-stop such as 1-6" /><small id="tx-degree-effect">Use start-stop, such as 1-6. This transformation check is capped at 10.</small></label>
+          <label>Check statistic<select id="tx-statistic"><option value="none">No statistic</option><option value="ascents" selected>Ascent count</option><option value="ascent_runs">Ascent-run count</option><option value="run_lengths">Run-length profile</option><option value="maximum">Maximum</option><option value="distinct_values">Distinct values</option><option value="multiplicity_partition">Multiplicity profile</option><option value="first_occurrence_positions">First-occurrence positions</option><option value="last_occurrence_positions">Last-occurrence positions</option><option value="run_start_positions">Run-start positions</option></select></label>
+          <button id="tx-run" class="primary">Run transformation experiment</button>
+        </div>
+        <div id="tx-result" aria-live="polite"></div>
+      </details>
+
+      <details class="legacy-lab-panel">
+        <summary>Legacy one-pass transformation checks</summary>
+        <p class="muted small">Kept for reproducing earlier GUI-1 experiments. These controls test the old transformations described in the Research Status panel.</p>
+        <div class="lab-form card">
+          <label>Source class<select id="lab-source"><option value="m2122">Modified & Avoid(2122)</option><option value="m2212">Modified & Avoid(2212)</option><option value="modified">Modified</option></select></label>
+          <label>Transformation<select id="lab-transform"><option value="repair21">Legacy one-pass GapSwapRepair(2,1)</option><option value="gap21">ExtremeGapSwap(2,1)</option><option value="repair12">Legacy one-pass GapSwapRepair(1,2)</option><option value="gap12">ExtremeGapSwap(1,2)</option><option value="reverse">Reverse</option><option value="identity">Identity</option></select></label>
+          <label>Target class<select id="lab-target"><option value="m2212">Modified & Avoid(2212)</option><option value="m2122">Modified & Avoid(2122)</option><option value="modified">Modified</option></select></label>
+          <label>Maximum degree<select id="lab-maxn"><option>6</option><option>7</option><option selected>8</option><option>9</option><option>10</option></select></label>
+          <button id="lab-run" class="primary">Run bounded check</button>
+        </div>
+        <div id="lab-result"></div>
+      </details>
     </section>
 
-    <section class="panel" id="panel-status">
+    <section class="panel" id="panel-status" role="tabpanel" aria-labelledby="tab-status" tabindex="0">
       <div class="panel-head">
         <div>
           <h2>Proof status and obligations</h2>
@@ -157,10 +327,11 @@
         <p id="contract-rule" class="muted"></p>
       </div>
     </section>
-  </main>
+    </main>
+  </div>
 
   <footer>
-    <span>GUI-1 is a research prototype. Mathematics lives in AC-Engine; the browser renders engine view models.</span>
+    <span>Ascent Calculus · Alpha research and learning tool. Computation through n does not prove a general theorem.</span>
     <span id="connection-state">Connecting to engine…</span>
   </footer>
   <script src="/static/app.js"></script>

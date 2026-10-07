@@ -14,13 +14,15 @@ from .viewmodel import (
     research_status,
     trace_gap_swap_repair,
 )
+from .experiments import browse_objects, find_unmatched_objects, run_experiment, validate_pattern
+from .transform_experiments import run_transform_experiment
 
 
 STATIC = files("ac.gui.static")
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "ACGUI1/0.1"
+    server_version = "ACGUI3/0.1"
 
     def _json(self, payload, status=200):
         body = json.dumps(payload, indent=2).encode("utf-8")
@@ -77,6 +79,20 @@ class Handler(BaseHTTPRequestHandler):
                     body.get("transform", "repair21"),
                     int(body.get("max_n", 8)),
                 ))
+            if path == "/api/experiment/validate-pattern":
+                return self._json(validate_pattern(body.get("pattern", "")))
+            if path == "/api/experiment/run":
+                return self._json(run_experiment(body))
+            if path == "/api/experiment/objects":
+                return self._json(browse_objects(
+                    body.get("specification", {}), body.get("side", "left"),
+                    body.get("n", 1), body.get("offset", 0), body.get("limit", 25),
+                    body.get("filters"),
+                ))
+            if path == "/api/experiment/unmatched":
+                return self._json(find_unmatched_objects(body.get("specification", {}), body.get("n", 1)))
+            if path == "/api/transform-experiment/run":
+                return self._json(run_transform_experiment(body))
             self.send_error(404)
         except Exception as exc:
             self._json({"error": type(exc).__name__, "detail": str(exc)}, status=400)
@@ -87,12 +103,12 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description="Run the GUI-1 AC Research Workbench prototype")
+    p = argparse.ArgumentParser(description="Run the Ascent Calculus research workbench")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8765)
     args = p.parse_args(argv)
     server = ThreadingHTTPServer((args.host, args.port), Handler)
-    print(f"AC Research Workbench: http://{args.host}:{args.port}")
+    print(f"Ascent Calculus Research Workbench: http://{args.host}:{args.port}")
     print("Research prototype: bounded verification is never displayed as proof.")
     try:
         server.serve_forever()

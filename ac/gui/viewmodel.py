@@ -5,7 +5,7 @@ from dataclasses import asdict
 from typing import Callable
 
 from ac.core.word import ChainWord
-from ac.classes.theories import is_modified
+from ac.classes.theories import is_ascent_sequence, is_modified, is_revised
 from ac.generate.universes import modified_via_hat
 from ac.discovery.fibre_geometry import fibre_gaps, contains_repeated_sandwich
 from ac.discovery.local_repair import (
@@ -37,7 +37,7 @@ DEFINITIONS = {
     "RunStart": "Position 1, or a position not entered by an ascent.",
     "Orientation": "For a repeated value, records whether lower-valued material occurs only in its first gap, only in its last gap, both, or neither.",
     "Potential": "Proof-oriented defect potential: sum (n+1)^(height-value) over false-first defects.",
-    "HeavyCrossing": "A multiplicity >=3 fibre meeting both blocks of a canonical repair. E11c is proving this cannot occur in reachable repair states.",
+    "HeavyCrossing": "A multiplicity >=3 fibre meeting both blocks of a canonical repair. It obstructs the original one-pass repair proof; the alternating repair handles observed cases, while its general termination and preservation remain open.",
 }
 
 
@@ -137,7 +137,9 @@ def inspect_word(word: ChainWord | str | list[int] | tuple[int, ...]):
         "height": word.height,
         "length": len(word),
         "is_cayley": word.is_cayley,
+        "is_ascent_sequence": is_ascent_sequence(word),
         "is_modified": is_modified(word),
+        "is_revised": is_revised(word),
         "avoids_2122": not contains_repeated_sandwich(word, 1, 2),
         "avoids_2212": not contains_repeated_sandwich(word, 2, 1),
         "first_positions": sorted(word.first_positions),
@@ -239,8 +241,8 @@ def research_status():
     return {
         "overall": {
             "label": "open",
-            "title": "Gap-swap + canonical repair bijection",
-            "detail": "Finite bijection verified through n=10; the general proof is still open in E11c/E11d.",
+            "title": "Alternating gap-swap repair bijection",
+            "detail": "The frozen alternating construction is verified through n=11. Its all-degree bijection proof remains open.",
         },
         "claims": [
             {
@@ -265,14 +267,15 @@ def research_status():
                 "id": "finite-bijection",
                 "label": "verified",
                 "verified_through": 10,
-                "title": "GapSwapRepair(2,1) maps M(2122) to M(2212)",
-                "detail": "At n=10: 183,931 source words, 183,931 target words, 183,931 unique images, no finite inverse failures.",
+                "title": "One-pass GapSwapRepair maps M(2122) to M(2212)",
+                "detail": "The original one-pass construction is verified through n=10, but it is not the current candidate: its degree-11 failure is recorded below.",
             },
             {
-                "id": "reachable-heavy-crossing",
-                "label": "open",
-                "title": "Reachable no-heavy-crossing invariant",
-                "detail": "0/437 degree-10 reachable repair steps have a heavy crossing. A length-independent proof remains E11c's key obligation.",
+                "id": "reachable-fibre-shielding",
+                "label": "counterexample",
+                "title": "One-pass no-heavy-crossing claim fails at n=11",
+                "detail": "For the old one-pass rule, the first canonical repair has value 4 (multiplicity 3) in both A and B. Source 12321443542 reaches terminal state 12143544232 with pair (f,q,v)=(5,10,3), A=[4], B=[3,5,4,4,2]. This refutes that proof route, not the alternating candidate.",
+                "witness": "12321443542",
             },
             {
                 "id": "generic-repair-warning",
@@ -282,10 +285,33 @@ def research_status():
                 "witness": "14323312",
             },
             {
-                "id": "n11-incomplete",
+                "id": "n11-audit",
+                "priority": 0,
+                "label": "verified",
+                "verified_through": 11,
+                "title": "Alternating construction is bijective through degree 11",
+                "detail": "Exhaustive check: 1,248,595 sources map to 1,248,595 distinct targets. All terminate in the modified 2212-avoiding class; no cycles, stalls, unpaired defects, target failures, collisions, or missing targets. Finite evidence only.",
+            },
+            {
+                "id": "alternating-repair-taxonomy",
+                "priority": 1,
                 "label": "open",
-                "title": "Degree-11 stress run",
-                "detail": "An earlier run checked the first 250,000 modified words without failure, but degree 11 was not completed and is not certified.",
+                "title": "Alternating repair termination and state taxonomy",
+                "detail": "The current proof campaign must explain which defect types M-repair and O-repair can create, and prove that alternation terminates and preserves the target class. This is the next open proof obligation.",
+            },
+            {
+                "id": "bijection-candidate-n11",
+                "label": "counterexample",
+                "title": "The original one-pass repair fails at degree 11",
+                "detail": "This is a counterexample to the old GapSwapRepair(2,1) rule, not the alternating candidate. The frozen M/O alternating algorithm was independently checked through degree 11.",
+                "witness": "12321443542",
+            },
+            {
+                "id": "alternating-traces-n11",
+                "label": "verified",
+                "verified_through": 11,
+                "title": "Rare degree-11 traces exercise the new branch",
+                "detail": "The three longest observed traces are M→O→M for 12321443542, M→M→M for 12324215432, and M→O→M for 12324431542. Only two degree-11 words use the orientation-repair branch.",
             },
         ],
     }
@@ -297,7 +323,8 @@ def interface_contract():
             "Inspect a sequence and explain structural roles position-by-position.",
             "Apply ExtremeGapSwap and inspect each pivot step.",
             "Step through CanonicalRepair with stable occurrence IDs and proof-oriented invariants.",
-            "Run a bounded finite check with explicit source, target, transformation, and maximum degree.",
+            "Compose a bounded count or class comparison from a family, pattern rules, range, and optional refinement.",
+            "Reproduce an experiment from its serialized specification and inspect its finite result table.",
         ],
         "result_labels": {
             "proved": "General statement supported by a recorded mathematical argument in the current proof layer.",

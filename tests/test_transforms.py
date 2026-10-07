@@ -38,6 +38,17 @@ def test_hat_roundtrip_small():
             assert inverse_hat(m).values == a.values
 
 
+def test_optimized_hat_matches_ordered_prefix_lift_definition():
+    for n in range(1, 7):
+        for a in ascent_sequences(n):
+            expected = a
+            for position in sorted(a.raw_ascent_tops):
+                expected = prefix_lift(expected, position).output
+            actual = hat(a)
+            assert actual.values == expected.values
+            assert actual.position_ids == expected.position_ids
+
+
 def test_lift_does_not_create_unused_ambient_level_when_no_value_moves():
     x = ChainWord.of([1, 2])
     y = prefix_lift(x, 2).output
