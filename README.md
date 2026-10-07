@@ -34,16 +34,23 @@ The GUI is a view over the AC engine. The standalone HTML review page is a curat
 clickable demonstration; the live workbench supports arbitrary inputs and executes the
 Python engine.
 
-## Download the alpha app for macOS
+## Download an alpha app
 
-The GitHub **Releases** page will hold the macOS `.dmg` and `.zip` when a build is
-published. The desktop app bundles Python and the AC engine. It starts its local API
-inside the app and opens the workbench in a native window; users do not install Python
-or manage a server.
+Installers and the importable Python wheel are attached to the GitHub
+[**Releases**](https://github.com/Cliff-Lee/ascent-calculus/releases) page. The desktop
+app bundles the AC engine and starts its local API inside the application; users do not
+manage a Python server.
 
-The build is unsigned and not notarized. macOS may show a security prompt when opening
-it. The repository provides the build script and complete source so the build can be
-inspected or reproduced.
+| Platform | Release download | Notes |
+| --- | --- | --- |
+| macOS Apple silicon | `.dmg` or `.zip` | Unsigned and not notarized; macOS may show a security prompt. |
+| Windows 10/11, x64 | `*-windows-x64-setup.exe` | Requires the Microsoft Edge WebView2 Runtime. |
+| Ubuntu 24.04, x86_64 | `*_amd64.deb` | Install with `sudo apt install ./ascent-calculus_*.deb`; Ubuntu resolves GTK and WebKit dependencies. |
+
+The Windows installer is per-user and offers a Start menu shortcut. On Ubuntu, launch
+**Ascent Calculus** from the Applications menu after installing the `.deb`. These are
+alpha builds; the platform release jobs build and run focused regression tests, but the
+installers have not yet been manually exercised on every end-user machine.
 
 ## Run from source
 
@@ -85,7 +92,29 @@ Run this script on a Mac. It packages the Python interpreter, engine, and GUI in
 ```
 
 The build follows the architecture of the Python used to run it (`arm64` on Apple
-silicon or `x86_64` on Intel). Build on each target architecture for native artifacts.
+silicon or `x86_64` on Intel). The automated release currently builds the Apple silicon
+version.
+
+### Build Windows and Ubuntu installers
+
+The Windows installer is built on Windows with PyInstaller and Inno Setup:
+
+```powershell
+.\scripts\build_windows.ps1
+```
+
+It creates a per-user setup executable and Python wheel in `dist/`. Windows needs the
+WebView2 Runtime for the native app window.
+
+The Ubuntu `.deb` is built on Ubuntu 24.04 x86_64. Its dependencies use Ubuntu's GTK 3
+and WebKit2GTK 4.1 packages, while the installer vendors pywebview and the AC code:
+
+```bash
+./scripts/build_ubuntu.sh
+```
+
+It creates the `.deb` and Python wheel in `dist/`. The current Ubuntu installer targets
+Ubuntu 24.04 on x86_64.
 
 ## Use the Python package
 

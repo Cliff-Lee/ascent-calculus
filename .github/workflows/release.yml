@@ -1,0 +1,87 @@
+name: Cross-platform alpha release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Focused regression (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, windows-2025, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run focused regression
+        run: >-
+          python -m pytest -q
+          tests/test_gui1_viewmodel.py
+          tests/test_e11_proof_extraction.py
+          tests/test_e9_local_repair.py
+
+  macos-arm64:
+    needs: test
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build app, disk image, zip, and Python wheel
+        run: ./scripts/build_macos.sh
+      - name: Attach app and wheel to the published release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-macos-arm64/* --clobber
+
+  windows-x64:
+    needs: test
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build Windows installer and Python wheel
+        shell: pwsh
+        run: ./scripts/build_windows.ps1
+      - name: Attach installer and wheel to the published release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: gh release upload $env:GITHUB_REF_NAME dist/AscentCalculus-windows-x64/* --clobber
+
+  ubuntu-amd64:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install native webview dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-gi python3-gi-cairo python3-cairo \
+            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev
+      - name: Build Ubuntu package and Python wheel
+        run: ./scripts/build_ubuntu.sh
+      - name: Attach installer and wheel to the published release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-ubuntu-24.04-amd64/* --clobber
