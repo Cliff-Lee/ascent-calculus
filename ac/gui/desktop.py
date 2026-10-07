@@ -530,13 +530,14 @@ def _window_smoke_check() -> None:
     """Create and map the real desktop workbench, then close it automatically."""
     root = tk.Tk()
     DesktopWorkbench(root)
-    root.update_idletasks()
+    root.update()
+    if not root.winfo_ismapped():
+        root.destroy()
+        raise RuntimeError("native Tk window was not mapped")
+    _log("window_mapped", toolkit="tkinter")
     root.after(800, root.destroy)
     root.mainloop()
-    if not root.winfo_exists():
-        _log("window_smoke_passed", toolkit="tkinter")
-        return
-    raise RuntimeError("native window smoke check did not close cleanly")
+    _log("window_smoke_passed", toolkit="tkinter")
 
 
 def main(argv=None) -> None:
