@@ -117,7 +117,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip python3-gi python3-gi-cairo python3-cairo \
-            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev xvfb
+            gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev xvfb openbox dbus-x11
       - name: Build Ubuntu package and Python wheel
         run: bash scripts/build_ubuntu.sh
       - name: Install and smoke-test the Ubuntu package
@@ -126,7 +126,7 @@ jobs:
           test -n "$package"
           sudo dpkg -i "$package"
           ascent-calculus --startup-check
-          xvfb-run -a ascent-calculus --window-smoke-check
+          xvfb-run -a dbus-run-session -- sh -c 'openbox >/tmp/ascent-openbox.log 2>&1 & wm_pid=$!; trap "kill $wm_pid 2>/dev/null || true" EXIT; ascent-calculus --window-smoke-check'
       - name: Print Ubuntu launch diagnostics on failure
         if: failure()
         run: |
