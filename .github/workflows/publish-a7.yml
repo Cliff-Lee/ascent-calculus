@@ -1,0 +1,146 @@
+name: Publish Ascent Calculus 0.1.0a7
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Focused regression (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, windows-2025, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 31f8b6ce636a546768630574ed63e79fbce93b25
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run focused regression
+        run: >-
+          python -m pytest -q
+          tests/test_gui1_viewmodel.py
+          tests/test_gui3_experiments.py
+          tests/test_gui3_transform_experiments.py
+          tests/test_e11_proof_extraction.py
+          tests/test_e9_local_repair.py
+
+  publish:
+    name: Create prerelease
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 31f8b6ce636a546768630574ed63e79fbce93b25
+      - name: Create GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > /tmp/release-notes.md <<'EOF'
+          ## Ascent Calculus 0.1.0a7 — GUI-3 Research Workbench
+
+          This alpha turns the Ascent Engine into a more general research workbench.
+
+          ### New
+          - Universal bounded experiment builder for ordinary, modified, and revised ascent sequences
+          - Class comparisons and structural refinements
+          - Class-wide transformation workbench
+          - Position insertion with degree shift n → n+1
+          - Single-position deletion with degree shift n → n-1
+          - Collision/injectivity reporting
+          - Target coverage/surjectivity reporting
+          - Inverse-recovery checks
+          - Deletion uses ambient restriction, so empty value levels are preserved where appropriate
+
+          ### Validation
+          - 57 focused GUI/research regression tests are required to pass on macOS, Windows, and Ubuntu before packaging
+          - Finite computational verification is reported as evidence, not proof
+
+          ### Visual review
+          The automated and structural checks are green. A final browser visual review remains desirable because the development Chrome session blocked the localhost page with ERR_BLOCKED_BY_CLIENT.
+
+          This remains alpha research software.
+          EOF
+          gh release create v0.1.0a7             --repo Cliff-Lee/ascent-calculus             --target 31f8b6ce636a546768630574ed63e79fbce93b25             --prerelease             --title "Ascent Calculus 0.1.0a7 — GUI-3 Research Workbench"             --notes-file /tmp/release-notes.md
+
+  macos-arm64:
+    name: Build macOS ARM64
+    needs: publish
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 31f8b6ce636a546768630574ed63e79fbce93b25
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build app, DMG, ZIP, and wheel
+        run: ./scripts/build_macos.sh
+      - name: Upload macOS assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release upload v0.1.0a7
+          dist/AscentCalculus-macos-arm64/*.dmg
+          dist/AscentCalculus-macos-arm64/*.zip
+          dist/AscentCalculus-macos-arm64/*.whl
+          --repo Cliff-Lee/ascent-calculus
+          --clobber
+
+  windows-x64:
+    name: Build Windows x64
+    needs: publish
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 31f8b6ce636a546768630574ed63e79fbce93b25
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build Windows installer
+        shell: pwsh
+        run: ./scripts/build_windows.ps1
+      - name: Upload Windows installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $installer = (Get-ChildItem -Path "dist/AscentCalculus-windows-x64" -Filter "*-windows-x64-setup.exe").FullName
+          gh release upload v0.1.0a7 $installer --repo Cliff-Lee/ascent-calculus --clobber
+
+  ubuntu-amd64:
+    name: Build Ubuntu amd64
+    needs: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 31f8b6ce636a546768630574ed63e79fbce93b25
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install native webview dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-gi python3-gi-cairo python3-cairo             gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev
+      - name: Build Ubuntu package
+        run: ./scripts/build_ubuntu.sh
+      - name: Upload Ubuntu package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v0.1.0a7 dist/AscentCalculus-ubuntu-24.04-amd64/*.deb --repo Cliff-Lee/ascent-calculus --clobber
