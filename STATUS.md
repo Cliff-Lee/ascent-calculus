@@ -322,3 +322,10 @@ standard patterns can be added directly to either lane, and a one-click 2122 ver
 2212 starter comparison demonstrates the bounded test loop. The packaged window
 smoke check now adds a custom pattern, loads the example, switches to the transform
 visualizer, and verifies that both sequence diagrams render.
+
+Version a13 follows a native-window visual review. The conjecture composer now uses
+its full width and wraps the generated statement to the available space; the
+transform redraw avoids nested canvas rendering and keeps position numbers clear;
+and the saved-tests panel explains how to save and reopen a test when it is empty.
+The CI previews wait for the bounded comparison to finish before capturing both
+primary screens.

@@ -51,7 +51,7 @@ jobs:
       - name: Upload tested macOS app for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-macos-arm64-a12
+          name: AscentCalculus-macos-arm64-a13
           path: |
             dist/AscentCalculus-macos-arm64/*.dmg
             dist/AscentCalculus-macos-arm64/*.zip
@@ -100,7 +100,7 @@ jobs:
       - name: Upload tested Windows installer for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-windows-x64-a12
+          name: AscentCalculus-windows-x64-a13
           path: dist/AscentCalculus-windows-x64/*
           if-no-files-found: error
           retention-days: 14
@@ -152,16 +152,16 @@ jobs:
             PYTHONPATH=/usr/lib/ascent-calculus /usr/bin/python3 scripts/desktop_preview.py &
             app_pid=$!
             trap "kill $app_pid $wm_pid 2>/dev/null || true" EXIT
-            sleep 1.5
+            sleep 2.5
             import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-conjecture.png"
-            sleep 1.8
+            sleep 2.0
             import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-transform.png"
             wait "$app_pid"
           '
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-ubuntu-amd64-a12
+          name: AscentCalculus-ubuntu-amd64-a13
           path: dist/AscentCalculus-ubuntu-24.04-amd64/*
           if-no-files-found: error
           retention-days: 14

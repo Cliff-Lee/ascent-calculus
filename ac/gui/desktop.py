@@ -243,7 +243,7 @@ class DesktopWorkbench:
         tk.Label(top, text="SAVED TESTS", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).pack(side="left")
         tk.Button(top, text="Save current", command=self.save_current, relief="flat", bg=PANEL, fg=GREEN, activebackground=PANEL, cursor="hand2", font=("TkDefaultFont", 8, "bold")).pack(side="right")
         self.saved_list = tk.Listbox(saved, height=7, relief="flat", borderwidth=0, highlightthickness=0, activestyle="none", bg=PANEL, fg=INK, selectbackground=MINT, selectforeground=INK, font=("TkDefaultFont", 9))
-        self.saved_list.pack(fill="both", expand=True, padx=8, pady=(0, 4))
+        self.saved_empty = tk.Label(saved, text="No saved tests yet.\nSave a conjecture to keep it here.\nDouble-click a saved test to reopen it.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), justify="center")
         self.saved_list.bind("<Double-Button-1>", self.load_saved)
         self._render_saved()
         actions = tk.Frame(saved, bg=PANEL)
@@ -265,8 +265,10 @@ class DesktopWorkbench:
         composer = tk.Frame(work, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         composer.grid(row=1, column=0, sticky="ew", pady=(0, 14))
         composer.columnconfigure(0, weight=1)
-        tk.Label(composer, text="CONJECTURE COMPOSER", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, sticky="w", padx=16, pady=(13, 8))
-        tk.Button(composer, text="Load 2122 ↔ 2212 example", command=self.load_example, relief="flat", bg="#f0f4f1", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).grid(row=0, column=1, sticky="e", padx=12, pady=(8, 4))
+        composer_top = tk.Frame(composer, bg=PANEL)
+        composer_top.grid(row=0, column=0, sticky="ew", padx=12, pady=(8, 4))
+        tk.Label(composer_top, text="CONJECTURE COMPOSER", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).pack(side="left", padx=4, pady=(5, 4))
+        tk.Button(composer_top, text="Load 2122 ↔ 2212 example", command=self.load_example, relief="flat", bg="#f0f4f1", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).pack(side="right")
         sides = tk.Frame(composer, bg=PANEL)
         sides.grid(row=1, column=0, sticky="ew", padx=12)
         sides.columnconfigure(0, weight=1, uniform="side")
@@ -298,6 +300,7 @@ class DesktopWorkbench:
         self.stop_var.trace_add("write", lambda *_: self.changed())
         self.question_text = tk.Label(composer, text="", bg=MINT, fg=GREEN_DARK, font=("TkDefaultFont", 10), justify="left", anchor="w", padx=14, pady=10, wraplength=1000)
         self.question_text.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 12))
+        self.question_text.bind("<Configure>", lambda event: self.question_text.configure(wraplength=max(320, event.width - 28)))
 
         results = tk.Frame(work, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         results.grid(row=2, column=0, sticky="nsew")
@@ -461,6 +464,15 @@ class DesktopWorkbench:
     def _redraw_transform(self):
         if not getattr(self, "_last_transform", None):
             return
+        if getattr(self, "_drawing_transform", False):
+            return
+        self._drawing_transform = True
+        try:
+            self._draw_transform_contents()
+        finally:
+            self._drawing_transform = False
+
+    def _draw_transform_contents(self):
         source, output, name, detail, pmap, vmap, created = self._last_transform
         self._draw_sequence(self.before_canvas, source, set())
         old_by_id = {pid: value for pid, value in zip(source.position_ids, source.values)}
@@ -479,7 +491,6 @@ class DesktopWorkbench:
 
     def _draw_sequence(self, canvas, word, created):
         canvas.delete("all")
-        canvas.update_idletasks()
         width = max(canvas.winfo_width(), 320)
         height = max(canvas.winfo_height(), 210)
         left, right, top, bottom = 42, width - 30, 24, height - 38
@@ -507,7 +518,6 @@ class DesktopWorkbench:
         if not word.values:
             canvas.create_text(width / 2, height / 2, text="empty word", fill=MUTED, font=("TkDefaultFont", 10, "italic"))
         canvas.create_text(12, 13, text="value level ↑", anchor="w", fill=MUTED, font=("TkDefaultFont", 8))
-        canvas.create_text(width - 12, bottom + 23, text="position", anchor="e", fill=MUTED, font=("TkDefaultFont", 8))
 
     def _drag_start(self, event, mode, pattern):
         self.drag_payload = {"mode": mode, "pattern": pattern}
@@ -708,8 +718,15 @@ class DesktopWorkbench:
         if not hasattr(self, "saved_list"):
             return
         self.saved_list.delete(0, "end")
-        for item in self.state.get("saved", []):
+        saved = self.state.get("saved", [])
+        for item in saved:
             self.saved_list.insert("end", item.get("name", "Saved conjecture"))
+        if saved:
+            self.saved_empty.pack_forget()
+            self.saved_list.pack(fill="both", expand=True, padx=8, pady=(0, 4))
+        else:
+            self.saved_list.pack_forget()
+            self.saved_empty.pack(fill="both", expand=True, padx=8, pady=(0, 4))
 
     def save_current(self):
         try:
