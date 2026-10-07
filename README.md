@@ -80,9 +80,11 @@ not need to manage a server.
 | Ubuntu 24.04, x86_64 | `*_amd64.deb` | Install with `sudo apt install ./ascent-calculus_*.deb`; Ubuntu resolves GTK and WebKit dependencies. |
 
 The Windows installer is per-user and offers a Start menu shortcut. On Ubuntu, launch
-**Ascent Calculus** from the Applications menu after installing the `.deb`. These are
-alpha builds; the platform release jobs build and run focused regression tests, but the
-installers have not yet been manually exercised on every end-user machine.
+**Ascent Calculus** from the Applications menu after installing the `.deb`. These are alpha builds. The release workflow now installs and exercises the packaged
+native window on each platform runner before attaching installers. The Mac launcher
+writes startup stages and failures to
+`~/Library/Logs/AscentCalculus/startup.log`; this log is useful if the app exits early.
+Hosted checks do not replace testing on every user's device.
 
 ## Run from source
 
