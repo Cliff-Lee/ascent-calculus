@@ -1,0 +1,26 @@
+name: Create Ascent Calculus 0.1.0a9 release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".release-a9/READY"
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create v0.1.0a9 \
+            --target "$GITHUB_SHA" \
+            --title "Ascent Calculus 0.1.0a9 — desktop startup fix" \
+            --notes "Fixes immediate desktop exit on macOS by using a frozen-app-safe entry point. Adds packaged executable startup health checks before macOS and Windows installers are created." \
+            --prerelease
