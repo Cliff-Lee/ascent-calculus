@@ -19,14 +19,24 @@ python -m PyInstaller `
   --hidden-import webview.platforms.winforms `
   ac/gui/desktop.py
 
+$PackagedExe = Join-Path $Root "dist\AscentCalculus\AscentCalculus.exe"
+if (-not (Test-Path $PackagedExe)) {
+  throw "Packaged Windows executable not found at $PackagedExe"
+}
+$Smoke = Start-Process -FilePath $PackagedExe -ArgumentList "--startup-check" -Wait -PassThru
+if ($Smoke.ExitCode -ne 0) {
+  throw "Packaged Windows startup check failed with exit code $($Smoke.ExitCode)"
+}
+Write-Host "Packaged Windows startup check passed."
+
 $Iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
 if (-not (Test-Path $Iscc)) {
   throw "Inno Setup 6 compiler not found at $Iscc"
 }
-& $Iscc "/DAppVersion=0.1.0a8" "scripts\windows-installer.iss"
+& $Iscc "/DAppVersion=0.1.0a9" "scripts\windows-installer.iss"
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE" }
 
 New-Item -ItemType Directory -Force "dist\AscentCalculus-windows-x64" | Out-Null
-Move-Item -Force "dist\AscentCalculus-0.1.0a8-windows-x64-setup.exe" `
-  "dist\AscentCalculus-windows-x64\AscentCalculus-0.1.0a8-windows-x64-setup.exe"
+Move-Item -Force "dist\AscentCalculus-0.1.0a9-windows-x64-setup.exe" `
+  "dist\AscentCalculus-windows-x64\AscentCalculus-0.1.0a9-windows-x64-setup.exe"
 python -m pip wheel --no-deps . --wheel-dir "dist\AscentCalculus-windows-x64"
