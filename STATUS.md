@@ -329,3 +329,7 @@ transform redraw avoids nested canvas rendering and keeps position numbers clear
 and the saved-tests panel explains how to save and reopen a test when it is empty.
 The CI previews wait for the bounded comparison to finish before capturing both
 primary screens.
+
+Version a14 adds a visible scrollbar to the conjecture results table so every tested
+degree remains accessible in the compact desktop layout. The screenshot workflow
+holds the completed conjecture screen longer before switching to the transform view.

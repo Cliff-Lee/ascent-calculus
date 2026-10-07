@@ -20,8 +20,8 @@ def main() -> None:
         app._show_view("transform")
         app.apply_transform()
 
-    root.after(3800, show_transform)
-    root.after(7500, root.destroy)
+    root.after(5200, show_transform)
+    root.after(8000, root.destroy)
     root.mainloop()
 
 
