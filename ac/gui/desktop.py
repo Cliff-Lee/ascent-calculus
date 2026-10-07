@@ -175,59 +175,57 @@ def _window_smoke_check() -> None:
 
         window.events.response_received += on_response
 
-        def close_after_load(target):
+        def monitor_window(target):
             if not shown.wait(timeout=20):
                 evidence["error"] = "native window was never shown"
                 _log("window_smoke_timeout", stage="shown")
-                target.destroy()
-                return
-
-            deadline = time.monotonic() + 20
-            while time.monotonic() < deadline:
-                try:
-                    probe = target.evaluate_js(
-                        "JSON.stringify({"
-                        "ready: document.readyState,"
-                        "title: document.title,"
-                        "text: (document.body ? document.body.innerText : '').slice(0, 300),"
-                        "contentLength: document.documentElement ? "
-                        "document.documentElement.innerHTML.length : 0"
-                        "})"
-                    )
-                    evidence["probe"] = probe
-                    result = json.loads(probe) if isinstance(probe, str) else probe
-                    page_ready = (
-                        result.get("ready") in {"interactive", "complete"}
-                        and result.get("contentLength", 0) > 100
-                        and bool(result.get("text", "").strip())
-                    )
-                    if page_ready:
-                        evidence["page_ready"] = True
-                        _log(
-                            "page_probe_passed",
-                            title=result.get("title"),
-                            content_length=result.get("contentLength"),
-                            loaded_event=loaded.is_set(),
+            else:
+                deadline = time.monotonic() + 20
+                while time.monotonic() < deadline:
+                    try:
+                        probe = target.evaluate_js(
+                            "JSON.stringify({"
+                            "ready: document.readyState,"
+                            "title: document.title,"
+                            "text: (document.body ? document.body.innerText : '').slice(0, 300),"
+                            "contentLength: document.documentElement ? "
+                            "document.documentElement.innerHTML.length : 0"
+                            "})"
                         )
-                        time.sleep(1)
-                        break
-                except Exception as exc:
-                    evidence["probe_error"] = repr(exc)
-                time.sleep(0.25)
-
-            if not evidence["page_ready"]:
-                evidence["error"] = "webview document did not become ready"
-                _log(
-                    "page_probe_failed",
-                    loaded_event=loaded.is_set(),
-                    probe=evidence["probe"],
-                    probe_error=evidence["probe_error"],
-                )
+                        evidence["probe"] = probe
+                        result = json.loads(probe) if isinstance(probe, str) else probe
+                        page_ready = (
+                            result.get("ready") in {"interactive", "complete"}
+                            and result.get("contentLength", 0) > 100
+                            and bool(result.get("text", "").strip())
+                        )
+                        if page_ready:
+                            evidence["page_ready"] = True
+                            _log(
+                                "page_probe_passed",
+                                title=result.get("title"),
+                                content_length=result.get("contentLength"),
+                                loaded_event=loaded.is_set(),
+                            )
+                            time.sleep(1)
+                            break
+                    except Exception as exc:
+                        evidence["probe_error"] = repr(exc)
+                    time.sleep(0.25)
+                if not evidence["page_ready"]:
+                    evidence["error"] = "webview document did not become ready"
+                    _log(
+                        "page_probe_failed",
+                        loaded_event=loaded.is_set(),
+                        probe=evidence["probe"],
+                        probe_error=evidence["probe_error"],
+                    )
             _log("window_smoke_closing")
             target.destroy()
 
         _log("window_smoke_starting")
-        webview.start(close_after_load, window)
+        Thread(target=monitor_window, args=(window,), daemon=True).start()
+        webview.start()
         if not shown.is_set():
             raise RuntimeError("native window was never shown")
         if not evidence["page_ready"]:
