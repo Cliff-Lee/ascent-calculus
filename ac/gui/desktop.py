@@ -360,7 +360,7 @@ class DesktopWorkbench:
         self.custom_target_box.grid(row=1, column=0, sticky="ew", padx=(0, 5))
         HoverTip(self.custom_target_box, "Choose which class receives the custom pattern rule.")
         tk.Button(custom, text="Add rule", command=self.add_custom_rule, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=7, pady=5).grid(row=1, column=1, sticky="ew")
-        self.custom_pattern_status = tk.Label(card, text="Drag patterns · or double-click to add", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w")
+        self.custom_pattern_status = tk.Label(card, text="e.g. 3121  ·  double-click to add", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), anchor="w")
         self.custom_pattern_status.grid(row=12, column=0, columnspan=2, sticky="ew", padx=12, pady=(0, 10))
         saved = tk.Frame(rail, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
         saved.pack(fill="x", pady=(10, 0))
@@ -581,8 +581,18 @@ class DesktopWorkbench:
         name = self.transform_labels.get(self.transform_name_var.get(), self.transform_name_var.get())
         uses_param = name in {"prefix_lift", "inverse_prefix_lift", "insert_position", "delete_position"}
         self.transform_parameter_label.configure(text="CUT" if name == "insert_position" else "POSITION")
-        self.transform_parameter_entry.configure(state="normal" if uses_param else "disabled")
-        self.transform_value_entry.configure(state="normal" if name == "insert_position" else "disabled")
+        if uses_param:
+            self.transform_parameter_label.grid()
+            self.transform_parameter_entry.grid()
+        else:
+            self.transform_parameter_label.grid_remove()
+            self.transform_parameter_entry.grid_remove()
+        if name == "insert_position":
+            self.transform_value_label.grid()
+            self.transform_value_entry.grid()
+        else:
+            self.transform_value_label.grid_remove()
+            self.transform_value_entry.grid_remove()
         guidance = TRANSFORM_DESCRIPTIONS.get(name, "Choose a transform to see what changes.")
         if uses_param:
             guidance += " Click a position in the Before graph to choose the pivot, cut, or position to remove."
