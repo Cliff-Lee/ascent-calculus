@@ -32,7 +32,8 @@ if [[ ! -x "$APP_BIN" ]]; then
   exit 1
 fi
 "$APP_BIN" --startup-check
-echo "Packaged macOS startup check passed."
+"$APP_BIN" --window-smoke-check
+echo "Packaged macOS engine and native-window checks passed."
 
 OUT="dist/AscentCalculus-macos-$ARCH"
 mkdir -p "$OUT"
@@ -41,8 +42,8 @@ hdiutil create \
   -volname "Ascent Calculus Alpha" \
   -srcfolder dist/AscentCalculus.app \
   -ov -format UDZO \
-  "$OUT/AscentCalculus-0.1.0a9-macos-$ARCH.dmg"
+  "$OUT/AscentCalculus-0.1.0a10-macos-$ARCH.dmg"
 ditto -c -k --sequesterRsrc --keepParent \
   dist/AscentCalculus.app \
-  "$OUT/AscentCalculus-0.1.0a9-macos-$ARCH.zip"
+  "$OUT/AscentCalculus-0.1.0a10-macos-$ARCH.zip"
 echo "Created release artifacts in $OUT"
