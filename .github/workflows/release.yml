@@ -131,7 +131,7 @@ jobs:
       - name: Install Tk desktop build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip python3-tk dpkg-dev xvfb openbox dbus-x11
+          sudo apt-get install -y python3-pip python3-tk dpkg-dev xvfb openbox dbus-x11 imagemagick
       - name: Build Ubuntu package and Python wheel
         run: bash scripts/build_ubuntu.sh
       - name: Install and smoke-test the Ubuntu package
@@ -141,6 +141,23 @@ jobs:
           sudo dpkg -i "$package"
           ascent-calculus --startup-check
           xvfb-run -a dbus-run-session -- sh -c 'openbox >/tmp/ascent-openbox.log 2>&1 & wm_pid=$!; trap "kill $wm_pid 2>/dev/null || true" EXIT; ascent-calculus --window-smoke-check'
+      - name: Capture native desktop UX previews
+        run: |
+          preview_dir="$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64"
+          mkdir -p "$preview_dir"
+          xvfb-run -a -s '-screen 0 1600x1000x24' dbus-run-session -- bash -c '
+            set -e
+            openbox >/tmp/ascent-preview-openbox.log 2>&1 &
+            wm_pid=$!
+            PYTHONPATH=/usr/lib/ascent-calculus /usr/bin/python3 scripts/desktop_preview.py &
+            app_pid=$!
+            trap "kill $app_pid $wm_pid 2>/dev/null || true" EXIT
+            sleep 1.5
+            import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-conjecture.png"
+            sleep 1.8
+            import -window root "$GITHUB_WORKSPACE/dist/AscentCalculus-ubuntu-24.04-amd64/preview-transform.png"
+            wait "$app_pid"
+          '
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
