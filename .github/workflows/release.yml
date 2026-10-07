@@ -1,6 +1,9 @@
 name: Cross-platform alpha release
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   release:
     types: [published]
 
@@ -45,6 +48,7 @@ jobs:
       - name: Build app, disk image, zip, and Python wheel
         run: bash scripts/build_macos.sh
       - name: Attach app and wheel to the published release
+        if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
@@ -81,6 +85,7 @@ jobs:
           $windowSmoke = Start-Process -FilePath $installedExe -ArgumentList "--window-smoke-check" -Wait -PassThru
           if ($windowSmoke.ExitCode -ne 0) { throw "Installed native-window check failed with exit code $($windowSmoke.ExitCode)" }
       - name: Attach installer and wheel to the published release
+        if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
@@ -112,6 +117,7 @@ jobs:
           ascent-calculus --startup-check
           xvfb-run -a ascent-calculus --window-smoke-check
       - name: Attach installer and wheel to the published release
+        if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$GITHUB_REF_NAME" dist/AscentCalculus-ubuntu-24.04-amd64/*.deb --clobber
