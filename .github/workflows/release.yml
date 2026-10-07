@@ -47,6 +47,15 @@ jobs:
           python-version: "3.12"
       - name: Build app, disk image, zip, and Python wheel
         run: bash scripts/build_macos.sh
+      - name: Upload tested macOS app for device testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: AscentCalculus-macos-arm64-a10
+          path: |
+            dist/AscentCalculus-macos-arm64/*.dmg
+            dist/AscentCalculus-macos-arm64/*.zip
+          if-no-files-found: error
+          retention-days: 14
       - name: Print macOS launch diagnostics on failure
         if: failure()
         run: |
@@ -89,6 +98,13 @@ jobs:
           if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed with exit code $($smoke.ExitCode)" }
           $windowSmoke = Start-Process -FilePath $installedExe -ArgumentList "--window-smoke-check" -Wait -PassThru
           if ($windowSmoke.ExitCode -ne 0) { throw "Installed native-window check failed with exit code $($windowSmoke.ExitCode)" }
+      - name: Upload tested Windows installer for device testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: AscentCalculus-windows-x64-a10
+          path: dist/AscentCalculus-windows-x64/*
+          if-no-files-found: error
+          retention-days: 14
       - name: Print Windows launch diagnostics on failure
         if: failure()
         shell: pwsh
@@ -127,6 +143,13 @@ jobs:
           sudo dpkg -i "$package"
           ascent-calculus --startup-check
           xvfb-run -a dbus-run-session -- sh -c 'openbox >/tmp/ascent-openbox.log 2>&1 & wm_pid=$!; trap "kill $wm_pid 2>/dev/null || true" EXIT; ascent-calculus --window-smoke-check'
+      - name: Upload tested Ubuntu package for device testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: AscentCalculus-ubuntu-amd64-a10
+          path: dist/AscentCalculus-ubuntu-24.04-amd64/*
+          if-no-files-found: error
+          retention-days: 14
       - name: Print Ubuntu launch diagnostics on failure
         if: failure()
         run: |
