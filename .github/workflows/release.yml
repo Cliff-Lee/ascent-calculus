@@ -66,6 +66,18 @@ jobs:
       - name: Build Windows installer and Python wheel
         shell: pwsh
         run: ./scripts/build_windows.ps1
+      - name: Install and smoke-test the Windows installer
+        shell: pwsh
+        run: |
+          $installer = (Get-ChildItem -Path "dist/AscentCalculus-windows-x64" -Filter "*-windows-x64-setup.exe").FullName
+          $install = Start-Process -FilePath $installer -ArgumentList @(
+            "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-"
+          ) -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Windows installer failed with exit code $($install.ExitCode)" }
+          $installedExe = Join-Path $env:LOCALAPPDATA "Programs\Ascent Calculus\AscentCalculus.exe"
+          if (-not (Test-Path $installedExe)) { throw "Installed app executable not found: $installedExe" }
+          $smoke = Start-Process -FilePath $installedExe -ArgumentList "--startup-check" -Wait -PassThru
+          if ($smoke.ExitCode -ne 0) { throw "Installed app startup check failed with exit code $($smoke.ExitCode)" }
       - name: Attach installer and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -90,6 +102,12 @@ jobs:
             gir1.2-gtk-3.0 gir1.2-webkit2-4.1 dpkg-dev
       - name: Build Ubuntu package and Python wheel
         run: bash scripts/build_ubuntu.sh
+      - name: Install and smoke-test the Ubuntu package
+        run: |
+          package=$(find dist/AscentCalculus-ubuntu-24.04-amd64 -maxdepth 1 -name '*.deb' -print -quit)
+          test -n "$package"
+          sudo dpkg -i "$package"
+          ascent-calculus --startup-check
       - name: Attach installer and wheel to the published release
         env:
           GH_TOKEN: ${{ github.token }}
