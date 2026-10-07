@@ -351,3 +351,5 @@ Class B hover feedback, rule placement, and the double-click quick-add path.
 
 
 Version a20 adds example-led hover explanations to every workbench dropdown choice, including statistic refinements, transformation options, family and pattern rules, and object-browser filters. The native tooltip also appears on keyboard focus; transformation parameter guidance now includes concrete input/output examples.
+
+Version a21 simplifies the native desktop palette into a single pattern list with a clear Avoid/Contain switch, adds draggable family tokens, collapses saved tests until requested, replaces internal statistic keys with researcher-friendly labels, and lets users click a position in the transform graph to choose its pivot or cut. Hover help explains families, rules, statistics, transformations, and examples without adding permanent interface clutter.

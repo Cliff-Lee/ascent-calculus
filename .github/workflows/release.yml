@@ -51,7 +51,7 @@ jobs:
       - name: Upload tested macOS app for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-macos-arm64-a20
+          name: AscentCalculus-macos-arm64-a21
           path: |
             dist/AscentCalculus-macos-arm64/*.dmg
             dist/AscentCalculus-macos-arm64/*.zip
@@ -100,7 +100,7 @@ jobs:
       - name: Upload tested Windows installer for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-windows-x64-a20
+          name: AscentCalculus-windows-x64-a21
           path: dist/AscentCalculus-windows-x64/*
           if-no-files-found: error
           retention-days: 14
@@ -174,7 +174,7 @@ jobs:
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-ubuntu-amd64-a20
+          name: AscentCalculus-ubuntu-amd64-a21
           path: dist/AscentCalculus-ubuntu-24.04-amd64/*
           if-no-files-found: error
           retention-days: 14
