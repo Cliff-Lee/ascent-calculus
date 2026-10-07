@@ -1,5 +1,5 @@
 #ifndef AppVersion
-  #define AppVersion "0.1.0a4"
+  #define AppVersion "0.1.0a5"
 #endif
 
 [Setup]
@@ -10,7 +10,7 @@ AppPublisher=Cliff Lee
 DefaultDirName={localappdata}\Programs\Ascent Calculus
 DefaultGroupName=Ascent Calculus
 PrivilegesRequired=lowest
-OutputDir=dist
+OutputDir=..\dist
 OutputBaseFilename=AscentCalculus-{#AppVersion}-windows-x64-setup
 Compression=lzma2
 SolidCompression=yes
@@ -21,7 +21,7 @@ UninstallDisplayIcon={app}\AscentCalculus.exe
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional shortcuts:"; Flags: unchecked
 
 [Files]
-Source: "dist\AscentCalculus\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\AscentCalculus\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Ascent Calculus"; Filename: "{app}\AscentCalculus.exe"
