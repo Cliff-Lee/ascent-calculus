@@ -345,3 +345,6 @@ the pattern preset grid so the results and saved-test areas retain usable space.
 
 Version a18 reduces header and intro chrome below 850 px screen height and uses
 slightly denser result rows, preserving more of the experiment table in laptop mode.
+
+Version a19 extends the packaged window smoke check to exercise preset dragging,
+Class B hover feedback, rule placement, and the double-click quick-add path.

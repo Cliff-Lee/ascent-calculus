@@ -215,6 +215,7 @@ class DesktopWorkbench:
         card.columnconfigure(1, weight=1, uniform="pattern-column")
         tk.Label(card, text="PATTERN RULES", bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=0, column=0, columnspan=2, sticky="w", padx=12, pady=(12, 3))
         tk.Label(card, text="Drag a preset into Class A or B. Double-click adds it to the lane you last hovered over.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), wraplength=205, justify="left").grid(row=1, column=0, columnspan=2, sticky="w", padx=12, pady=(0, 5))
+        self.pattern_blocks = {}
         for mode_index, (mode, caption, mode_bg, mode_fg) in enumerate((("avoid", "Avoid", "#fff0e9", "#965233"), ("contain", "Contain", MINT, GREEN_DARK))):
             first_row = 2 + mode_index * 4
             tk.Label(card, text=caption.upper(), bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=first_row, column=0, columnspan=2, sticky="w", padx=12, pady=(6, 3))
@@ -222,6 +223,7 @@ class DesktopWorkbench:
                 row, column = first_row + 1 + index // 2, index % 2
                 block = tk.Label(card, text=f"⟨{pattern}⟩", bg=mode_bg, fg=mode_fg, font=("TkDefaultFont", 9, "bold"), padx=5, pady=3, cursor="hand2", anchor="center")
                 block.grid(row=row, column=column, sticky="ew", padx=4, pady=1)
+                self.pattern_blocks[(mode, pattern)] = block
                 block.bind("<ButtonPress-1>", lambda e, m=mode, p=pattern: self._drag_start(e, m, p))
                 block.bind("<B1-Motion>", self._drag_motion)
                 block.bind("<ButtonRelease-1>", self._drag_end)
@@ -821,6 +823,29 @@ def _window_smoke_check() -> None:
     if not root.winfo_ismapped():
         root.destroy()
         raise RuntimeError("native Tk window was not mapped")
+    # Exercise the same press, hover, and release handlers used by a native drag.
+    # The pointer target is controlled so the check is deterministic on each OS.
+    block = app.pattern_blocks[("avoid", "2122")]
+    drag_event = type("DragEvent", (), {"widget": block})()
+    original_containing = root.winfo_containing
+    try:
+        app._drag_start(drag_event, "avoid", "2122")
+        root.winfo_containing = lambda *_args: app.right_lane
+        app._drag_motion(drag_event)
+        if int(app.right_lane.cget("highlightthickness")) != 2:
+            root.destroy()
+            raise RuntimeError("dragging a preset did not highlight Class B")
+        app._drag_end(drag_event)
+    finally:
+        root.winfo_containing = original_containing
+    if {"mode": "avoid", "pattern": [2, 1, 2, 2]} not in app.rules["right"] or app.drag_payload is not None:
+        root.destroy()
+        raise RuntimeError("dragged preset did not land in Class B")
+    app.focused_side = "left"
+    app._quick_add("contain", "221")
+    if {"mode": "contain", "pattern": [2, 2, 1]} not in app.rules["left"]:
+        root.destroy()
+        raise RuntimeError("double-click quick-add did not reach the focused class")
     app.custom_pattern_var.set("3121")
     app.add_custom_rule()
     if {"mode": "avoid", "pattern": [3, 1, 2, 1]} not in app.rules["left"]:
