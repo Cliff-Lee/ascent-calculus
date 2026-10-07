@@ -1,0 +1,14 @@
+E10 defect calculus and canonical local repair
+===============================================
+degree: 10
+source M(2122): 183931
+target M(2212): 183931
+extreme-gap images with structural defect: 434
+defect-size histogram: {2: 433, 4: 1}
+repair-step histogram: {0: 183497, 1: 431, 2: 3}
+measure violations: 0
+target-pattern violations: 0
+repair failures: 0
+dual inverse failures: 0
+unique final images: 183931
+finite bijection: True

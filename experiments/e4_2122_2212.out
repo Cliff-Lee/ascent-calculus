@@ -1,0 +1,37 @@
+n=1: M=1, Av2122=1, Av2212=1
+n=2: M=2, Av2122=2, Av2212=2
+n=3: M=5, Av2122=5, Av2212=5
+n=4: M=15, Av2122=15, Av2212=15
+n=5: M=53, Av2122=53, Av2212=53
+n=6: M=217, Av2122=216, Av2212=216
+    height                   =
+    ascents                  =
+    multiplicity_partition   =
+    first_positions          !=
+    last_positions           !=
+    height+partition         =
+    ascents+partition        =
+n=7: M=1014, Av2122=998, Av2212=998
+    height                   =
+    ascents                  =
+    multiplicity_partition   =
+    first_positions          !=
+    last_positions           !=
+    height+partition         =
+    ascents+partition        =
+n=8: M=5335, Av2122=5155, Av2212=5155
+    height                   =
+    ascents                  =
+    multiplicity_partition   =
+    first_positions          !=
+    last_positions           !=
+    height+partition         =
+    ascents+partition        =
+n=9: M=31240, Av2122=29429, Av2212=29429
+    height                   =
+    ascents                  =
+    multiplicity_partition   =
+    first_positions          !=
+    last_positions           !=
+    height+partition         =
+    ascents+partition        =

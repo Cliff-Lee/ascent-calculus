@@ -1,0 +1,36 @@
+E7 — conjecture mining and theorem-schema discovery
+
+1. Repeated-sandwich fibre-gap schema
+  (a,b)=(1,1) -> pattern 212
+  (a,b)=(1,2) -> pattern 2122
+  (a,b)=(2,1) -> pattern 2212
+  (a,b)=(2,2) -> pattern 22122
+  structural law: 2^a 1 2^b occurs iff a lower-valued entry lies
+  in a repeated-value gap with >=a copies to its left and >=b to its right.
+  exhaustive test coverage: all Cayley words through n=6 (unit suite).
+
+2. Minimal-hypothesis search for Occ(2)=Repeat on modified sequences
+  ('Av(111)',): support=143, verified=True
+  ('Av(11)',): support=6, verified=True
+  ranked weakest empirical repair: Av(111)
+
+3. Parameterized 1^r occurrence/run-start schema
+  r=2: ok=True, matched=7
+  r=3: ok=True, matched=510
+  r=4: ok=True, matched=1063
+  r=5: ok=True, matched=1253
+  r=6: ok=True, matched=1298
+
+4. Semantic selector normal forms for Modified
+  Repeat semantic class contains RunStart-{1}
+  First semantic class contains AscTop
+
+5. Discriminating invariants for M(2122) vs M(2212)
+  lower_gap_count_profile    first mismatch: n=6
+  lower_gap_profile          first mismatch: n=6
+  first_positions            first mismatch: n=6
+  last_positions             first mismatch: n=6
+  fibre_span_profile         first mismatch: n=7
+  ascents                    first mismatch: none through n=9
+  height                     first mismatch: none through n=9
+  multiplicity_partition     first mismatch: none through n=9

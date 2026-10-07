@@ -1,0 +1,37 @@
+
+== E6 finite-logic calibration ==
+n=1: modified old/FO=1/1; revised=1
+n=2: modified old/FO=2/2; revised=1
+n=3: modified old/FO=5/5; revised=2
+n=4: modified old/FO=15/15; revised=5
+n=5: modified old/FO=53/53; revised=15
+n=6: modified old/FO=217/217; revised=53
+
+== Direct model search for the 2122/2212 class difference ==
+status: sat
+model: 121322
+finite candidates tested at (n=6,h=3): 104
+
+== Smallest logical countermodel: Occ(2)=Repeat on Modified ==
+countermodel: 111
+length/height: (3, 1)
+with 111-avoidance countermodel through n=6: None
+
+== Existing AC predicate DSL -> finite logic -> solver ==
+DSL model: 121322
+
+== Automatic structural-law mining ==
+Modified
+   First() = AscTop()
+   Repeat() = SetBinary(op='difference', left=RunStart(), right=Positions(indices=(1,)), kind=<SelectionKind.POSITION: 'position'>)
+Revised
+   First() = AscBottom()
+
+== Claim provenance ==
+status: verified
+verified through: 6
+evidence: exhaustive reference semantics
+
+== Optional Z3 backend ==
+status: unavailable
+optional z3-solver dependency unavailable: No module named 'z3'

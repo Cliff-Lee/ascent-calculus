@@ -1,0 +1,10 @@
+E11c reachable-state provenance invariant
+========================================
+degree-10 reachable repair steps: 437
+heavy-crossing histogram: {0: 437}
+orientation-profile changes: 0
+
+guardrail: no-heavy-crossing is not an intrinsic invariant of arbitrary repairs
+safe state: 14323312
+after one repair: 13243312
+next repair has a multiplicity-3 fibre crossing both blocks and can break 2212 avoidance

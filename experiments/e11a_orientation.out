@@ -1,0 +1,9 @@
+E11a orientation calculus
+========================
+orientation/pattern semantics checked Cayley words: 52609
+extreme-oriented Cayley words through n=7: 50717
+extreme-gap closure swaps checked: 11584
+orientation-closure failures: 0
+actual gap-swap steps through modified n=9: 1703
+pivot histogram: {2: 986, 3: 544, 4: 158, 5: 15}
+gap-trace failures: {}

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AC Research Workbench — GUI-1</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">AC</div>
+      <div>
+        <h1>Research Workbench</h1>
+        <p>Ascent Calculus — GUI-1 prototype</p>
+      </div>
+    </div>
+    <div id="overall-status" class="status-chip open">OPEN</div>
+  </header>
+
+  <main>
+    <section class="research-banner" id="research-banner">
+      <div>
+        <strong>Current theorem status:</strong>
+        <span id="overall-detail">Loading research status…</span>
+      </div>
+      <button class="ghost" data-panel="status">View obligations</button>
+    </section>
+
+    <nav class="tabs" aria-label="Workbench sections">
+      <button class="tab active" data-tab="inspector">Sequence inspector</button>
+      <button class="tab" data-tab="trace">Transformation trace</button>
+      <button class="tab" data-tab="lab">Conjecture lab</button>
+      <button class="tab" data-tab="status">Proof status</button>
+    </nav>
+
+    <section class="panel active" id="panel-inspector">
+      <div class="panel-head">
+        <div>
+          <h2>Sequence inspector</h2>
+          <p>Structural roles come from the Python engine. Click any position to see why it has each role.</p>
+        </div>
+        <div class="controls inline">
+          <input id="inspect-word" value="133122" aria-label="Word" />
+          <button id="inspect-run" class="primary">Inspect</button>
+          <select id="inspect-sample" aria-label="Example sequence">
+            <option value="133122">Modified example · 133122</option>
+            <option value="12321432">E10 source · 12321432</option>
+            <option value="12143232">Raw gap-swap defect · 12143232</option>
+            <option value="14323312">Provenance guardrail · 14323312</option>
+          </select>
+        </div>
+      </div>
+      <div id="inspect-summary" class="summary-row"></div>
+      <div id="word-strip" class="word-strip"></div>
+      <div class="inspector-grid">
+        <div class="card">
+          <h3>Position explanation</h3>
+          <div id="position-explanation" class="empty-state">Select a position in the word.</div>
+        </div>
+        <div class="card">
+          <h3>Fibre orientation</h3>
+          <p class="muted small">Lower-valued material in repeated-value gaps. RIGHT/BOTH corresponds to 2122-avoidance; LEFT/BOTH to 2212-avoidance.</p>
+          <div id="fibre-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-trace">
+      <div class="panel-head">
+        <div>
+          <h2>Gap swap + canonical repair trace</h2>
+          <p>Occurrence IDs travel with entries, so you can follow the same object through each move.</p>
+        </div>
+        <div class="controls inline">
+          <input id="trace-word" value="12321432" aria-label="Trace word" />
+          <button id="trace-run" class="primary">Build trace</button>
+          <select id="trace-sample">
+            <option value="12321432">Successful one-step repair</option>
+            <option value="14323312">Provenance guardrail</option>
+          </select>
+        </div>
+      </div>
+      <div class="trace-toolbar">
+        <button id="trace-prev" class="ghost">← Previous</button>
+        <span id="trace-step-label">No trace loaded</span>
+        <button id="trace-next" class="ghost">Next →</button>
+      </div>
+      <div id="trace-stage" class="trace-stage"></div>
+      <div id="trace-details" class="trace-details"></div>
+      <div class="callout warning">
+        <strong>Why provenance matters.</strong>
+        The locally valid move <code>14323312 → 13243312</code> is deliberately included: the next generic repair can have a heavy crossing. The open E11c theorem is specifically about states reachable from <code>ExtremeGapSwap</code>, not every locally admissible word.
+      </div>
+    </section>
+
+    <section class="panel" id="panel-lab">
+      <div class="panel-head">
+        <div>
+          <h2>Conjecture lab</h2>
+          <p>Run a finite check. Results are labelled as bounded evidence, never as general proofs.</p>
+        </div>
+      </div>
+      <div class="lab-form card">
+        <label>Source class
+          <select id="lab-source">
+            <option value="m2122">Modified & Avoid(2122)</option>
+            <option value="m2212">Modified & Avoid(2212)</option>
+            <option value="modified">Modified</option>
+          </select>
+        </label>
+        <label>Transformation
+          <select id="lab-transform">
+            <option value="repair21">GapSwapRepair(2,1)</option>
+            <option value="gap21">ExtremeGapSwap(2,1)</option>
+            <option value="repair12">GapSwapRepair(1,2)</option>
+            <option value="gap12">ExtremeGapSwap(1,2)</option>
+            <option value="reverse">Reverse</option>
+            <option value="identity">Identity</option>
+          </select>
+        </label>
+        <label>Target class
+          <select id="lab-target">
+            <option value="m2212">Modified & Avoid(2212)</option>
+            <option value="m2122">Modified & Avoid(2122)</option>
+            <option value="modified">Modified</option>
+          </select>
+        </label>
+        <label>Maximum degree
+          <select id="lab-maxn">
+            <option>6</option><option>7</option><option selected>8</option><option>9</option><option>10</option>
+          </select>
+        </label>
+        <button id="lab-run" class="primary">Run bounded check</button>
+      </div>
+      <div class="finite-warning">Finite computation only. Completing every case through n=k warrants <strong>VERIFIED THROUGH n=k</strong>, not <strong>PROVED</strong>.</div>
+      <div id="lab-result"></div>
+    </section>
+
+    <section class="panel" id="panel-status">
+      <div class="panel-head">
+        <div>
+          <h2>Proof status and obligations</h2>
+          <p>The same four result labels are used throughout the workbench.</p>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="status-chip proved">PROVED</span>
+        <span class="status-chip verified">VERIFIED THROUGH n</span>
+        <span class="status-chip open">OPEN</span>
+        <span class="status-chip counterexample">COUNTEREXAMPLE FOUND</span>
+      </div>
+      <div id="claim-list" class="claim-list"></div>
+      <div class="card contract-card">
+        <h3>Interface contract</h3>
+        <ul id="contract-tasks"></ul>
+        <p id="contract-rule" class="muted"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>GUI-1 is a research prototype. Mathematics lives in AC-Engine; the browser renders engine view models.</span>
+    <span id="connection-state">Connecting to engine…</span>
+  </footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>

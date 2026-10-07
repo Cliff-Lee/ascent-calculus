@@ -1,0 +1,10 @@
+E11b local defect-rotation proof obligations
+===========================================
+defective intermediate states: 437
+repair steps: 437
+defect-admissibility failures: 0
+rank-pair signatures: {(True, True, True): 437}
+first-identity-change histogram: {0: 435, 1: 2}
+new-defect-value histogram: {0: 435, 1: 2}
+local-certificate failures: {}
+value-potential failures: 0

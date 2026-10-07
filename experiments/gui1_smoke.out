@@ -1,0 +1,6 @@
+GUI-1 research workbench smoke
+==============================
+overall: open
+inspect 133122: True
+trace: 12321432 -> 12143232 -> 12132432
+bounded check: Verified through n=8
