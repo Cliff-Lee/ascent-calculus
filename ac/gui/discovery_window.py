@@ -11,6 +11,11 @@ from ac.discovery.dossiers import build_research_dossier, write_dossier
 from ac.discovery.jobs import ResearchJobStore, default_job_database
 from ac.discovery.significance import build_research_priority_review
 from ac.discovery.experiment_design import build_experiment_design_options
+from ac.discovery.experiment_refinement import (
+    build_experiment_refinement_options,
+    build_refinement_context,
+    validate_experiment_refinement,
+)
 from ac.gui.discovery_campaign import build_transformation_family_spec
 from ac.ai import AIAssistantSettings, ProviderLocality, default_ai_settings_path, load_ai_settings
 from ac.gui.ai_assistant import AIAssistantSettingsDialog, AIExperimentDesignerDialog, AIExplanationDialog, build_candidate_evidence
@@ -61,6 +66,16 @@ def _failure_text(failure):
     if failure.get("detail"):
         bits.append(failure["detail"])
     return "; ".join(bits)
+
+
+def _candidate_has_failure(row):
+    if not isinstance(row, dict):
+        return False
+    for item in row.get("scenario_results", ()):
+        evaluation = item.get("evaluation", {}) if isinstance(item, dict) else {}
+        if isinstance(evaluation, dict) and isinstance(evaluation.get("first_failure") or evaluation.get("counterexample"), dict):
+            return True
+    return False
 
 
 class DiscoveryCampaignWindow:
@@ -218,6 +233,8 @@ class DiscoveryCampaignWindow:
         self.memory_label.pack(side="left", fill="x", expand=True)
         self.preview_button = tk.Button(bottom, text="Preview sample map", command=self.preview_selected, state="disabled", relief="flat", bg="#e8f2ec", fg=GREEN_DARK, activebackground="#e1eee7", cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
         self.preview_button.pack(side="right")
+        self.refine_button = tk.Button(bottom, text="Refine from failure…", command=self.refine_selected, state="disabled", relief="flat", bg="#f6efe3", fg="#7e4a16", activebackground="#efe1ca", cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
+        self.refine_button.pack(side="right", padx=(0, 6))
         self.ask_ai_button = tk.Button(bottom, text="Ask Ollama", command=self.ask_about_candidate, state="disabled", relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
         self.ask_ai_button.pack(side="right", padx=(0, 6))
         self.export_button = tk.Button(bottom, text="Export dossier…", command=self.export_selected, relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground="#e1eee7", cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
@@ -251,22 +268,36 @@ class DiscoveryCampaignWindow:
             options = {}
             if self._pending_experiment_design is not None:
                 design, provenance = self._pending_experiment_design
-                options = build_experiment_design_options(
-                    question=provenance["question"],
-                    endpoint=provenance["endpoint"],
-                    model=provenance["requested_model"],
-                    response_model=provenance["response_model"],
-                    provider_id=provenance["provider_id"],
-                    inference_locality=provenance["inference_locality"],
-                    requested_at=provenance["requested_at"],
-                    completed_at=provenance["completed_at"],
-                    system_prompt=provenance["system_prompt"],
-                    user_prompt=provenance["user_prompt"],
-                    response_text=provenance["response_text"],
-                    parameters=provenance["parameters"],
-                    design=design,
-                    applied_spec_fingerprint=spec.fingerprint,
-                )
+                refinement_data = provenance.get("refinement")
+                if refinement_data is not None:
+                    context = refinement_data["context"]
+                    refinement = validate_experiment_refinement(
+                        json.loads(provenance["response_text"]), context,
+                    )
+                    options = build_experiment_refinement_options(
+                        design=design,
+                        provenance=provenance,
+                        context=context,
+                        refinement=refinement,
+                        applied_spec_fingerprint=spec.fingerprint,
+                    )
+                else:
+                    options = build_experiment_design_options(
+                        question=provenance["question"],
+                        endpoint=provenance["endpoint"],
+                        model=provenance["requested_model"],
+                        response_model=provenance["response_model"],
+                        provider_id=provenance["provider_id"],
+                        inference_locality=provenance["inference_locality"],
+                        requested_at=provenance["requested_at"],
+                        completed_at=provenance["completed_at"],
+                        system_prompt=provenance["system_prompt"],
+                        user_prompt=provenance["user_prompt"],
+                        response_text=provenance["response_text"],
+                        parameters=provenance["parameters"],
+                        design=design,
+                        applied_spec_fingerprint=spec.fingerprint,
+                    )
             job = self.store.create_job(spec, handler=HANDLER, options=options)
             self._pending_experiment_design = None
             self.form_note.configure(
@@ -366,6 +397,7 @@ class DiscoveryCampaignWindow:
     def _show_candidate(self, row):
         self.preview_button.configure(state="normal" if row and row.get("example_map_preview") else "disabled")
         self.ask_ai_button.configure(state="normal" if row and self.ai_settings.enabled else "disabled")
+        self.refine_button.configure(state="normal" if _candidate_has_failure(row) else "disabled")
         if not row:
             return
         lines = [row.get("program", ""), f"Cost {row.get('cost', '?')} · matches {row.get('matching_scenario_count', 0)}/{row.get('scenario_count', 0)} scenarios", "Finite result: not a proof."]
@@ -442,10 +474,12 @@ class DiscoveryCampaignWindow:
         for name, value in design.form_values.items():
             getattr(self, name).set(value)
         self._pending_experiment_design = (design, provenance)
+        is_refinement = isinstance(provenance.get("refinement"), dict)
         self.form_note.configure(
             text=(
-                f"Unverified AI design applied: {design.title}. The controls passed local bounds checks. "
-                "Review or edit them, then press Start campaign to run the deterministic search."
+                f"Unverified AI {'refinement' if is_refinement else 'design'} applied: {design.title}. "
+                + ("It retains exact parent failure evidence. " if is_refinement else "")
+                + "Review or edit the controls, then press Start campaign to run the deterministic search."
             ),
             fg=AMBER,
         )
@@ -458,6 +492,36 @@ class DiscoveryCampaignWindow:
         selected = self.candidate_table.selection()
         row = self._candidate_by_iid.get(selected[0]) if selected else None
         self.ask_ai_button.configure(state="normal" if row and settings.enabled else "disabled")
+        self.refine_button.configure(state="normal" if _candidate_has_failure(row) else "disabled")
+
+    def refine_selected(self):
+        job = self._selected_job()
+        selected = self.candidate_table.selection()
+        row = self._candidate_by_iid.get(selected[0]) if selected else None
+        if not job or not row or not _candidate_has_failure(row):
+            return
+        if not self.ai_settings.enabled or not self.ai_settings.model.strip():
+            self.configure_ai()
+            return
+        try:
+            context = build_refinement_context(
+                parent_job_id=job.id,
+                prior_specification=json.loads(job.question.canonical_json()),
+                prior_specification_fingerprint=job.question.fingerprint,
+                candidate=row,
+            )
+        except (TypeError, ValueError, KeyError) as exc:
+            messagebox.showerror("Counterexample context", str(exc), parent=self.window)
+            return
+        self.ai_design_dialog = AIExperimentDesignerDialog(
+            self.window,
+            self.ai_settings,
+            self._ai_settings_saved,
+            self._experiment_design_accepted,
+            refinement_context=context,
+            settings_path=self.ai_settings_path,
+            model_locality=self.ai_model_locality,
+        )
 
     def ask_about_candidate(self):
         job = self._selected_job()

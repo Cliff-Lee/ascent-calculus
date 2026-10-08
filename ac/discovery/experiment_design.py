@@ -278,7 +278,9 @@ def build_experiment_design_options(
             "requested_at": _text(requested_at, "requested_at", maximum=80),
             "completed_at": _text(completed_at, "completed_at", maximum=80),
             "system_prompt": _text(system_prompt, "system_prompt", maximum=6000),
-            "user_prompt": _text(user_prompt, "user_prompt", maximum=4000),
+            # Counterexample-guided follow-ups include the exact parent spec
+            # and several bounded engine witness records in the prompt.
+            "user_prompt": _text(user_prompt, "user_prompt", maximum=20_000),
             "parameters": dict(parameters),
             "response_text": response_text,
             "response_json": decoded,

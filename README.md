@@ -70,6 +70,12 @@ finite verification is evidence, not a proof of a general theorem.
   count tests accept any valid degree offsets; the current map grammar covers net shifts
   `0`, `+1`, `+2`, and the registered paper inverse at `−2`. A selected statistic is not
   currently an extra map constraint. Every finite pass is evidence, not proof.
+- **Refine a search from a failure:** in Discover, select a candidate with an exact
+  engine failure and ask the optional assistant for a linked follow-up experiment.
+  It must cite supplied failure scenarios and change a bounded search control. Review
+  or edit the suggested classes, offsets, range, and budgets, then start the next
+  deterministic campaign yourself. The exact parent evidence and proposal are kept
+  in the dossier; the assistant does not repair maps or prove conjectures.
 - **Test degree offsets:** either class can use a degree `n+d`, so count questions can
   compare shifted classes and the map search can test maps whose lengths differ. A preset
   loads the paper's `M_n(111) → R_{n+2}(111)` conjecture, with the reverse map available

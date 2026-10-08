@@ -22,7 +22,7 @@ complete supported mode. No candidate code from a model is executed.
 | AI4 | Evidence-aware dossiers | Passed: exact request, model, response, and evidence hashes persist with the campaign and export separately from mathematical results |
 | AI5 | Significance review | Passed: deterministic, explainable candidate triage with explicit score inputs, uncertainty, and dossier reproducibility |
 | AI6 | Experiment designer | Passed offline gate: convert a research question into bounded, typed transformation-family search specs for deterministic evaluation |
-| AI7 | Closed-loop refinement | Use exact counterexamples to revise the next proposed experiment; never self-certify a claim |
+| AI7 | Closed-loop refinement | Offline implementation gate passed: exact engine failures can guide a linked, bounded follow-up plan; never self-certify a claim |
 | AI8 | Proof assistance | Organize proof obligations and candidate lemmas; preserve human review and separate proof text from machine verification |
 | AI9 | Overnight research | Resumable, budgeted AI-assisted campaigns with checkpoints, cancellation, and interpretable reports |
 | AI10 | Benchmarking, privacy, and release gate | Compare against non-AI search, test offline behavior and failure modes, document data flow, and validate packaged builds |
@@ -234,3 +234,43 @@ Validation completed on 2026-10-08:
   The target Linux machine still needs to verify the layout and a proposal
   using a local Ollama model. This remains the open AI3 desktop/provider gate
   and the AI6 acceptance check.
+
+## AI7 — Counterexample-guided follow-up experiments
+
+**Status: implementation and offline validation passed; target-desktop and
+live-model review pending.** A selected candidate with recorded engine failure
+evidence now offers **Refine from failure…**. The assistant receives the exact
+parent search specification, selected candidate program, and a bounded set of
+engine-generated failure records. It must cite existing failed scenario
+indices and propose a different typed search specification. Local validation
+checks the citations, evidence fingerprints, closed response shape, supported
+class/pattern/offset controls, and existing degree and budget limits.
+
+The researcher reviews the returned interpretation, cited failures, and
+proposed control change. **Use this design** only fills the existing form; the
+researcher can edit it and must press **Start campaign** separately. The
+follow-up dossier retains the parent job, parent specification and candidate
+fingerprints, exact witness packet, model request and response, cited scenario
+indices, and proposed/applied specification fingerprints. A follow-up result
+therefore remains linked to the evidence that motivated it.
+
+This stage proposes another bounded search. It does not modify or repair the
+candidate map, automatically run the next campaign, turn a failure explanation
+into a theorem, or certify a conjecture. AI analysis and every proposed
+control change are explicitly unverified; only the deterministic engine
+produces the next finite result.
+
+Validation completed on 2026-10-08:
+
+- Four AI7 tests passed for exact witness capture and hashing, valid failure
+  references, rejection of nonexistent or duplicate references, no-op plan
+  rejection, tamper detection, and dossier lineage with edited-after-proposal
+  status. The combined AM-AI1–AI7 suite has **36 passing offline tests**.
+- `python -m compileall -q ac tests` and `git diff --check` passed.
+- Ubuntu 24.04 amd64 package `0.1.0a32` built; metadata, extracted packaged
+  desktop `--startup-check`, worker help, and inclusion of the new refinement
+  module passed. The actual Debian launcher remains untested because the
+  container's `/usr/bin/python3` has no `python3-tk`.
+- AM-N pytest-based modules could not be executed because pytest is not
+  installed in this environment. No live Ollama request or visual Linux
+  desktop review was possible; those remain target-machine checks.
