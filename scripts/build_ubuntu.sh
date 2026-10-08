@@ -20,7 +20,7 @@ cp -R ac "$STAGE/usr/lib/ascent-calculus/ac"
 
 cat > "$STAGE/DEBIAN/control" <<'EOF'
 Package: ascent-calculus
-Version: 0.1.0a26
+Version: 0.1.0a27
 Section: science
 Priority: optional
 Architecture: amd64
@@ -48,6 +48,6 @@ Type=Application
 Categories=Science;Math;
 EOF
 
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a26_amd64.deb"
+dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a27_amd64.deb"
 python3 -m pip wheel --no-deps . --wheel-dir "$OUT"
 echo "Created release artifacts in $OUT"

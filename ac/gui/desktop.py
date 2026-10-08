@@ -12,6 +12,7 @@ import os
 import platform
 import queue
 import threading
+import time
 import tkinter as tk
 import traceback
 from datetime import datetime, timezone
@@ -1302,12 +1303,15 @@ def _window_smoke_check() -> None:
 def main(argv=None) -> None:
     import argparse
 
+    launch_started = time.perf_counter()
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--startup-check", action="store_true")
     parser.add_argument("--window-smoke-check", action="store_true")
+    parser.add_argument("--launch-smoke-check", action="store_true")
     args, _unknown = parser.parse_known_args(argv)
     log_path = _open_startup_log()
-    _log("main_entered", mode="window_smoke_check" if args.window_smoke_check else "startup_check" if args.startup_check else "desktop")
+    mode = "launch_smoke_check" if args.launch_smoke_check else "window_smoke_check" if args.window_smoke_check else "startup_check" if args.startup_check else "desktop"
+    _log("main_entered", mode=mode)
     try:
         if args.startup_check:
             _startup_check()
@@ -1317,13 +1321,35 @@ def main(argv=None) -> None:
             return
         root = tk.Tk()
         DesktopWorkbench(root)
-        _log("window_created", title=root.title())
+        _log("window_created", title=root.title(), ui_build_ms=round((time.perf_counter() - launch_started) * 1000))
+        smoke = {"mapped": False, "error": None, "startup_ms": None}
+        if args.launch_smoke_check:
+            def verify_mapped_window():
+                try:
+                    root.update_idletasks()
+                    if not root.winfo_ismapped():
+                        raise RuntimeError("LaunchServices opened the app but its main window did not map")
+                    smoke["mapped"] = True
+                    smoke["startup_ms"] = round((time.perf_counter() - launch_started) * 1000)
+                    _log("launch_smoke_window_mapped", startup_ms=smoke["startup_ms"], geometry=root.winfo_geometry())
+                except Exception as exc:
+                    smoke["error"] = str(exc)
+                    _log("launch_smoke_failed", error=smoke["error"])
+                finally:
+                    if root.winfo_exists():
+                        root.after(800, root.destroy)
+
+            root.after(500, verify_mapped_window)
         root.mainloop()
         _log("window_closed")
+        if args.launch_smoke_check:
+            if not smoke["mapped"]:
+                raise RuntimeError(smoke["error"] or "LaunchServices smoke test ended before the main window appeared")
+            _log("launch_smoke_passed", startup_ms=smoke["startup_ms"])
     except Exception:
         details = traceback.format_exc()
         _log("fatal_exception", traceback=details)
-        if __import__("sys").platform == "darwin" and not args.startup_check and not args.window_smoke_check:
+        if __import__("sys").platform == "darwin" and not (args.startup_check or args.window_smoke_check or args.launch_smoke_check):
             try:
                 import subprocess
                 script = 'display dialog ' + json.dumps(f"Ascent Engine could not start. Diagnostic log: {log_path}") + ' with title "Ascent Engine" buttons {"OK"}'

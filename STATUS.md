@@ -376,3 +376,8 @@ Version a26 explains each exact witness by showing the opposing class rule that 
 it. Forbidden-pattern explanations include the engine-reported 1-based occurrence
 positions; missing required patterns and failed structural conditions are described too.
 Restoring an unchanged experiment revalidates its previous result.
+
+Version a27 adds a macOS LaunchServices smoke test against the app inside the mounted
+DMG. The check verifies that an ordinary app launch maps its main window, keeps it alive,
+and records startup timing before closing automatically. The a26 binary passed direct
+startup and window checks, but the user's Apple Silicon launch still needs confirmation.
