@@ -1,0 +1,236 @@
+# AM-AI — Optional AI Assistance for Ascent Research
+
+AM-AI adds an optional assistant for proposing experiments, organizing
+computational evidence, and explaining results. It does not replace the
+deterministic Ascent Calculus engine: class membership, transformations,
+collisions, coverage, statistics, counterexamples, and tested bounds remain
+engine-checked. Model output is always labeled unverified, and AI is disabled
+when no provider is configured.
+
+The first integration target is the user's Ollama API at `http://localhost:11434`.
+The app connects only to a loopback endpoint, but Ollama can offload selected
+cloud models; the UI must make that data path clear. Offline use remains a
+complete supported mode. No candidate code from a model is executed.
+
+## Subcampaigns
+
+| Stage | Scope | Gate |
+|---|---|---|
+| AI1 | Provider-neutral interface, capability model, structured requests, cancellation, timeouts, safe errors, disconnected mode | Passed: ten offline fake-provider tests; no third-party dependency; all outputs unverified |
+| AI2 | Ollama discovery and chat adapter | Offline adapter gate passed; live Ollama check on the target Linux machine remains |
+| AI3 | Desktop settings and contextual assistant actions | In progress: explicit opt-in; endpoint/model status; explanations attached to selected experiment results |
+| AI4 | Evidence-aware dossiers | Passed: exact request, model, response, and evidence hashes persist with the campaign and export separately from mathematical results |
+| AI5 | Significance review | Passed: deterministic, explainable candidate triage with explicit score inputs, uncertainty, and dossier reproducibility |
+| AI6 | Experiment designer | Passed offline gate: convert a research question into bounded, typed transformation-family search specs for deterministic evaluation |
+| AI7 | Closed-loop refinement | Use exact counterexamples to revise the next proposed experiment; never self-certify a claim |
+| AI8 | Proof assistance | Organize proof obligations and candidate lemmas; preserve human review and separate proof text from machine verification |
+| AI9 | Overnight research | Resumable, budgeted AI-assisted campaigns with checkpoints, cancellation, and interpretable reports |
+| AI10 | Benchmarking, privacy, and release gate | Compare against non-AI search, test offline behavior and failure modes, document data flow, and validate packaged builds |
+
+## AI1 — Provider architecture
+
+**Status: passed.** The `ac.ai` package
+defines provider descriptors and capabilities, model discovery and chat
+contracts, text and JSON request modes, a thread-safe cancellation token,
+normalized timeout/failure/response errors, a lazy in-memory registry, and an
+`AIService` that works with no provider configured. Structured output is parsed
+as JSON but is not thereby validated as mathematics or as a theorem. The
+service labels every response `unverified`.
+
+AI1 deliberately added no Ollama network calls and no desktop settings. AI2
+provides that adapter, defaulting to the loopback endpoint. The adapter enforces
+the request's timeout, cooperates with cancellation, and avoids exposing raw
+transport details in user-facing errors.
+
+Validation completed on 2026-10-08:
+
+- Ten offline `unittest` cases passed. They cover disconnected mode, explicit
+  registry selection, capability gating, JSON parsing, cancellation, timeout
+  normalization, safe error text, and request bounds.
+- `python -m compileall -q ac tests` and `git diff --check` passed.
+- The environment has no `pytest`; no pytest run is claimed. AI1 makes no
+  mathematical-engine or desktop changes, and no real provider was contacted.
+
+## AI2 — Ollama loopback adapter
+
+The adapter talks to Ollama's local `GET /api/tags` model-list endpoint and
+streaming `POST /api/chat` endpoint. Streaming is consumed internally so a
+cancel signal can close the active response. Structured requests pass a JSON
+schema through Ollama's `format` field; Ascent Calculus still only verifies the
+returned text's JSON syntax at this layer. The endpoint is restricted to
+localhost/loopback, with `http://localhost:11434` as its default. The provider
+does not start Ollama, pull models, or execute tool calls. Ollama Cloud models
+can send prompts to remote inference even though the app connects to the local
+API; model discovery reports remote metadata when Ollama supplies it.
+
+Official references: [Ollama API](https://github.com/ollama/ollama/blob/main/docs/api.md),
+[structured outputs](https://ollama.com/blog/structured-outputs), and
+[Ollama Cloud models](https://github.com/ollama/ollama/blob/main/docs/cloud.mdx).
+
+**Status: offline adapter gate passed; target-machine check pending.** Six
+mocked-transport tests cover `/api/tags`, streaming `/api/chat`, model selection
+and absence, structured output, cancellation, and loopback-only transport
+restrictions. The transport bypasses proxy settings and refuses redirects, so
+the adapter itself stays loopback-only. The tests use no network because this build
+environment blocks local socket binding. A real request to the user's Ollama
+process still needs to be checked from the Ubuntu machine.
+
+Validation completed on 2026-10-08:
+
+- Six AI2 adapter tests passed; AI1 plus AI2 total **16 passing tests**.
+- `python -m compileall -q ac tests experiments`, `git diff --check`, and the
+  desktop `--startup-check` passed.
+- `pytest` is not installed, and the live Ollama process is not available in
+  this container. These limitations are not represented as passing checks.
+
+## AI3 — Desktop settings and contextual review
+
+The Discover window now exposes an **Ollama · Off** settings control and a
+candidate-specific **Ask Ollama** action. Settings are opt-in and saved locally
+without credentials. Model discovery runs only after the user clicks its
+button; requests run in a worker thread with a cancel action. The assistant
+receives the exact search specification plus a bounded candidate summary and
+selected counterexample data. Its response is shown as unverified and does not
+change the saved conjecture or campaign.
+
+The endpoint is loopback-only, but a local API does not guarantee local
+inference: Ollama Cloud models can offload prompts. The model selector shows
+remote metadata when Ollama provides it and warns when the selected model is
+cloud or its inference location is unknown.
+
+**Status: implementation added; desktop visual review pending.** Settings
+round-trip, disabled defaults, local endpoint validation, protected file
+permissions, and bounded evidence packets have focused offline tests. The
+window cannot be visually exercised in this headless container. The target
+Linux desktop should confirm the layout and make one request using a local
+model such as the user's `qwen3.5:9b` before AM-AI3 is marked fully passed.
+
+Validation completed on 2026-10-08:
+
+- Four AI3 settings/context tests passed; AI1–AI3 total **20 offline tests**.
+- `python -m compileall -q ac tests experiments`, `git diff --check`, desktop
+  `--startup-check`, and worker `--help` passed.
+- Ubuntu 24.04 amd64 package `0.1.0a28` built. Its metadata and dependencies
+  were checked, packaged startup self-check passed after extraction, and the
+  launcher and desktop entry were present.
+- The package has not received a visual window review or a live Ollama request
+  in this headless environment. The Ubuntu machine's UI and local model check
+  are the remaining AI3 gate.
+
+## AI4 — Evidence-aware assistant dossiers
+
+**Status: offline data and dossier gate passed.** Each successful assistant
+review is saved in the local research-jobs database for its campaign. The
+record includes the exact system and user messages, bounded evidence packet,
+provider and endpoint, requested and reported model, known inference locality,
+request parameters, timestamps, response text, and separate SHA-256
+fingerprints for the request and evidence. The response remains explicitly
+`unverified` and is stored separately from the deterministic finite result.
+
+Version-2 dossiers introduced saved assistant reviews beside the ordinary
+mathematical result. Version-1 dossiers remain readable. Review records are
+written only after a successful, explicit Ask action; failed and cancelled
+requests are not recorded. The settings screen and review dialog state that
+successful reviews are retained locally and included in dossier exports.
+
+Validation completed on 2026-10-08:
+
+- Two AI4 tests passed for durable local storage, dossier round-trip, legacy
+  version-1 reading, request/evidence integrity, and the unverified status.
+- The combined AI1–AI4 suite has **22 passing offline tests**; four existing
+  AM-N11 dossier tests also passed when invoked directly.
+- `compileall`, desktop `--startup-check`, worker `--help`, and
+  `git diff --check` passed.
+- Ubuntu 24.04 amd64 package `0.1.0a29` built; metadata and dependencies
+  were checked, and packaged startup self-check, worker help, launcher, and
+  desktop-entry checks passed after extraction.
+- The live Linux window and Ollama request are still untested here; AI3's
+  target-machine visual and provider check remains open.
+
+## AI5 — Explainable research-priority review
+
+**Status: deterministic ranking and dossier gate passed.** Discover now sorts
+candidate transformations by an explicit priority rubric and shows the score,
+component breakdown, reasons, and missing evidence for the selected candidate.
+The optional Ollama explanation receives this review as context. It cannot
+change the score or mathematical result.
+
+| Component | Weight | Rule |
+|---|---:|---|
+| Finite match coverage | 40 | Matched selected scenarios divided by all selected scenarios |
+| Family and offset breadth | 20 | Ten points for coverage of distinct source/target family pairs and ten for distinct offset pairs |
+| Tested degree coverage | 15 | Average fraction of each planned degree window checked |
+| Program simplicity | 15 | Linear preference for lower transformation cost within the configured maximum |
+| Research-memory novelty | 10 | New transformation 10; new application 8; same finite map 4; same failure signature 2; exact duplicate 0 |
+
+The sum is out of 100. Missing components are marked unavailable and not
+renormalized; the score reports signal completeness separately. Candidate
+ordering breaks ties by lower cost and then program text. “Confidence” describes
+completeness of score inputs only. The UI and dossier state that this is triage,
+not a probability of truth, proof, or publication value. The rubric version and
+recomputed candidate scores are stored in version-3 dossiers; versions 1 and 2
+remain readable.
+
+Validation completed on 2026-10-08:
+
+- Four AI5 tests passed for deterministic ordering, finite evidence reasons,
+  novelty contribution, missing-signal uncertainty, and tamper-checked dossier
+  reproduction.
+- The combined AI1–AI5 suite has **26 passing offline tests**; four existing
+  AM-N11 dossier tests also passed when invoked directly.
+- `compileall`, desktop `--startup-check`, worker `--help`, and
+  `git diff --check` passed.
+- Ubuntu 24.04 amd64 package `0.1.0a30` built. Package metadata, extracted
+  startup, worker help, launcher, desktop entry, and six AI4/AI5 tests against
+  the extracted package passed.
+- The live Linux window and real Ollama request remain the open AI3 gate.
+
+## AI6 — Bounded experiment designer
+
+**Status: implementation and offline validation passed; target-desktop review
+pending.** Discover now offers **Design experiment…**. After explicit Ollama
+opt-in, a researcher can describe a question and request a typed proposal for
+the current transformation-family workflow. The scope is intentionally
+specific: ordinary/modified/revised source and target families, avoidance or
+containment classes, source/target degree offsets, base-degree window, and
+finite transformation-search budgets. Each listed pattern represents a
+separate class choice; classes and offsets make a Cartesian scenario grid.
+Questions outside this scope are identified without applying a plan.
+
+The response must match a closed JSON schema. Local validation then checks the
+families, pattern syntax, distinct offsets, supported degree and grammar
+bounds, and the 32-scenario maximum before constructing a
+`TransformationFamilySearchSpec`. The model cannot supply a transformation
+program or execute code. **Use this design** only fills the existing controls;
+the researcher reviews or edits them and presses **Start campaign** separately
+to run the deterministic worker. A finite match remains evidence through the
+tested bound, not a proof.
+
+When the researcher starts a campaign from an accepted proposal, job options
+retain the research question, endpoint, model and known inference locality,
+request prompts and parameters, exact structured response, normalized typed
+specification, and both proposed/applied fingerprints. The dossier records
+whether the controls were used as proposed or edited after proposal. These
+fields remain separate from the worker's deterministic mathematical result.
+
+Validation completed on 2026-10-08:
+
+- Six AM-AI6 tests passed for grid construction, exact prefilled-spec
+  reconstruction, out-of-scope behavior,
+  strict schema and budget rejection, persisted job/dossier provenance, and
+  edited-after-proposal labeling. The combined AM-AI1–AI6 suite has **32
+  passing offline tests**.
+- `python -m compileall -q ac tests experiments`, `git diff --check`, and the
+  packaged desktop `--startup-check` and worker `--help` passed using the
+  available Python runtime with Tk. The extracted package's AM-AI1–AI6 tests
+  also passed against the packaged application code.
+- Ubuntu 24.04 amd64 package `0.1.0a31` built; package metadata, launcher and
+  desktop entry were inspected. The container's `/usr/bin/python3` lacks
+  `python3-tk`, so the actual Debian launcher could not run here; the package
+  correctly declares `python3-tk` as a dependency. Full unittest discovery
+  also cannot import eight existing pytest-based modules because pytest is not
+  installed in this environment.
+- No live Ollama request or visual Linux desktop review was possible here.
+  The target Linux machine still needs to verify the layout and a proposal
+  using a local Ollama model. This remains the open AI3 desktop/provider gate
+  and the AI6 acceptance check.

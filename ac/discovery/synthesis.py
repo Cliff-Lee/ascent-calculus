@@ -24,6 +24,7 @@ class SynthesisFailure:
     source: ChainWord | None = None
     output: ChainWord | None = None
     detail: str = ""
+    other_source: ChainWord | None = None
 
 
 @dataclass(frozen=True)
@@ -96,12 +97,18 @@ def analyze_finite_map(
     *,
     universe,
     n: int,
+    target_universe=None,
+    degree_shift: int = 0,
 ) -> FiniteMapDiagnostics:
-    """Return the complete finite image/collision defect at one degree."""
+    """Return the complete finite map defect from degree n to n+degree_shift."""
 
     words = tuple(universe(n))
     src = tuple(x for x in words if source.holds(x))
-    tgt = tuple(x for x in words if target.holds(x))
+    target_degree = n + degree_shift
+    if target_degree < 0:
+        raise ValueError("target degree cannot be negative")
+    target_words = tuple((target_universe or universe)(target_degree))
+    tgt = tuple(x for x in target_words if target.holds(x))
     target_by_key = {_word_key(x): x for x in tgt}
     undefined: list[ChainWord] = []
     outside: list[tuple[ChainWord, ChainWord]] = []
@@ -142,6 +149,7 @@ class CandidateEvaluation:
     verified_through: int
     failure: SynthesisFailure | None
     diagnostics: CandidateDiagnostics | None = None
+    finite_map_fingerprint: str | None = None
 
     @property
     def exact(self) -> bool:
@@ -223,15 +231,21 @@ def evaluate_bijection_candidate(
     universe,
     through: int,
     start: int = 1,
+    target_universe=None,
+    degree_shift: int = 0,
 ) -> CandidateEvaluation:
-    """Test whether ``transform`` is a degree-preserving bijection source->target."""
+    """Test whether a candidate is a bijection from degree n to n+shift."""
 
     verified = start - 1
     failure: SynthesisFailure | None = None
     for n in range(start, through + 1):
+        target_degree = n + degree_shift
+        if target_degree < 0:
+            raise ValueError("target degree cannot be negative")
         words = list(universe(n))
+        target_words = list((target_universe or universe)(target_degree))
         src = [x for x in words if source.holds(x)]
-        tgt = [x for x in words if target.holds(x)]
+        tgt = [x for x in target_words if target.holds(x)]
         tgt_keys = {_word_key(x) for x in tgt}
         outputs: list[ChainWord] = []
         for x in src:
@@ -257,6 +271,7 @@ def evaluate_bijection_candidate(
                 failure = SynthesisFailure(
                     FailureKind.COLLISION, n, source=source_word, output=output_word,
                     detail=f"also image of {first_source.values}",
+                    other_source=first_source,
                 )
                 return CandidateEvaluation(transform, transformation_cost(transform), verified, failure)
             seen[key] = source_word
@@ -337,12 +352,16 @@ def _rank_key(ev: CandidateEvaluation):
     )
 
 
-def _precompute_degree_classes(source, target, universe, *, start: int, through: int):
+def _precompute_degree_classes(source, target, universe, *, start: int, through: int, target_universe=None, degree_shift: int = 0):
     degrees = {}
     for n in range(start, through + 1):
+        target_degree = n + degree_shift
+        if target_degree < 0:
+            raise ValueError("target degree cannot be negative")
         words = tuple(universe(n))
+        target_words = tuple((target_universe or universe)(target_degree))
         src = tuple(x for x in words if source.holds(x))
-        tgt = tuple(x for x in words if target.holds(x))
+        tgt = tuple(x for x in target_words if target.holds(x))
         degrees[n] = (src, tgt, frozenset(_word_key(x) for x in tgt))
     return degrees
 
@@ -373,6 +392,7 @@ def _evaluate_precomputed(transform, degrees, *, start: int, through: int) -> Ca
                     SynthesisFailure(
                         FailureKind.COLLISION, n, source=x, output=y,
                         detail=f"also image of {first_source.values}",
+                        other_source=first_source,
                     ),
                 )
             seen[key] = x
@@ -422,6 +442,8 @@ def synthesize_bijections(
     target: WordPredicate,
     *,
     universe,
+    target_universe=None,
+    degree_shift: int = 0,
     atoms: Iterable[Transformation],
     max_cost: int,
     through: int,
@@ -445,11 +467,24 @@ def synthesize_bijections(
         seed=seed,
         max_steps=max_steps,
     )
-    degrees = _precompute_degree_classes(source, target, universe, start=start, through=through)
+    target_universe = target_universe or universe
+    degrees = _precompute_degree_classes(
+        source,
+        target,
+        universe,
+        start=start,
+        through=through,
+        target_universe=target_universe,
+        degree_shift=degree_shift,
+    )
     if probe_n is not None and probe_n not in degrees:
+        target_n = probe_n + degree_shift
+        if target_n < 0:
+            raise ValueError("probe degree and shift produce a negative target degree")
         words = tuple(universe(probe_n))
+        target_words = tuple(target_universe(target_n))
         src = tuple(x for x in words if source.holds(x))
-        tgt = tuple(x for x in words if target.holds(x))
+        tgt = tuple(x for x in target_words if target.holds(x))
         probe_data = (src, tgt, frozenset(_word_key(x) for x in tgt))
     elif probe_n is not None:
         probe_data = degrees[probe_n]
@@ -460,7 +495,7 @@ def synthesize_bijections(
     exact: list[CandidateEvaluation] = []
     for program in programs:
         sig = program.signature
-        if sig.delta_length not in (0, None):
+        if sig.delta_length != degree_shift:
             continue
         ev = _evaluate_precomputed(program, degrees, start=start, through=through)
         if probe_data is not None:

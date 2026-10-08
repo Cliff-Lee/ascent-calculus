@@ -17,10 +17,12 @@ mkdir -p "$STAGE/DEBIAN" "$STAGE/usr/lib/ascent-calculus" \
   "$STAGE/usr/share/applications" "$STAGE/usr/bin" "$OUT"
 
 cp -R ac "$STAGE/usr/lib/ascent-calculus/ac"
+find "$STAGE/usr/lib/ascent-calculus/ac" -type d -name __pycache__ -prune -exec rm -rf {} +
+find "$STAGE/usr/lib/ascent-calculus/ac" -type f -name '*.pyc' -delete
 
 cat > "$STAGE/DEBIAN/control" <<'EOF'
 Package: ascent-calculus
-Version: 0.1.0a27
+Version: 0.1.0a31
 Section: science
 Priority: optional
 Architecture: amd64
@@ -48,6 +50,10 @@ Type=Application
 Categories=Science;Math;
 EOF
 
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a27_amd64.deb"
-python3 -m pip wheel --no-deps . --wheel-dir "$OUT"
+dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a31_amd64.deb"
+if python3 -c 'import setuptools; parts = tuple(int(p) for p in setuptools.__version__.split(".")[:2]); raise SystemExit(0 if parts >= (68, 0) else 1)'; then
+  python3 -m pip wheel --no-deps --no-build-isolation . --wheel-dir "$OUT"
+else
+  python3 -m pip wheel --no-deps . --wheel-dir "$OUT"
+fi
 echo "Created release artifacts in $OUT"

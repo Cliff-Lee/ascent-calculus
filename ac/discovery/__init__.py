@@ -72,3 +72,37 @@ from .proof_extraction import DefectAdmissibility, defect_admissibility
 __all__ = [name for name in globals() if not name.startswith("_")]
 from .proof_extraction import orientation_profile, repair_heavy_crossing_values, repair_preserves_orientation_profile
 __all__ = [name for name in globals() if not name.startswith("_")]
+from .wilf import WilfMatch, cayley_patterns, search_wilf_matches
+__all__ = [name for name in globals() if not name.startswith("_")]
+from .statistics import STATISTICS, statistic_value
+from .specification import (
+    SPEC_FORMAT, SPEC_VERSION, SEMANTICS_VERSION,
+    PatternRuleSpec, ClassSpec, DegreeWindow, SearchSpec,
+)
+from .jobs import JOB_STATUSES, ResearchJob, ResearchJobStore, default_job_database
+from .conjecture_search import (
+    DISCOVERY_FORMAT, DISCOVERY_VERSION, ConjectureSearchSpec,
+    discover_count_conjectures,
+)
+from .wilf import pattern_avoidance_counts
+from .fingerprints import (
+    FINGERPRINT_FORMAT, FINGERPRINT_VERSION, FEATURE_LABELS, DEFAULT_FEATURES,
+    structural_features, structural_fingerprint, class_structural_profile,
+    compare_structural_profiles, analyze_count_match_structure,
+)
+from .transformation_search import (
+    TRANSFORM_SEARCH_FORMAT, TRANSFORM_SEARCH_VERSION, GRAMMAR_VERSION,
+    TransformationGrammarSpec, TransformationSearchSpec,
+    generate_transformation_atoms, iter_typed_transform_programs,
+)
+from .transformation_family import (
+    FAMILY_SEARCH_FORMAT, FAMILY_SEARCH_VERSION, TransformationFamilySearchSpec,
+)
+from .research_memory import (
+    MEMORY_SCHEMA_VERSION, ResearchMemoryStore, default_research_memory_database,
+)
+from .dossiers import (
+    DOSSIER_FORMAT, DOSSIER_VERSION, SEMANTICS_DEFINITION,
+    build_research_dossier, validate_dossier, write_dossier, read_dossier,
+)
+__all__ = [name for name in globals() if not name.startswith("_")]
