@@ -16,9 +16,10 @@ from ac.discovery.experiment_refinement import (
     build_refinement_context,
     validate_experiment_refinement,
 )
+from ac.discovery.proof_assistance import build_proof_assistance_context
 from ac.gui.discovery_campaign import build_transformation_family_spec
 from ac.ai import AIAssistantSettings, ProviderLocality, default_ai_settings_path, load_ai_settings
-from ac.gui.ai_assistant import AIAssistantSettingsDialog, AIExperimentDesignerDialog, AIExplanationDialog, build_candidate_evidence
+from ac.gui.ai_assistant import AIAssistantSettingsDialog, AIExperimentDesignerDialog, AIExplanationDialog, AIProofPlanDialog, build_candidate_evidence
 
 
 BG = "#f3f5f2"
@@ -105,6 +106,7 @@ class DiscoveryCampaignWindow:
         self.ai_model_locality = ProviderLocality.UNKNOWN
         self.ai_dialog = None
         self.ai_design_dialog = None
+        self.ai_proof_dialog = None
         self._pending_experiment_design = None
         self._build()
         self.refresh()
@@ -237,6 +239,8 @@ class DiscoveryCampaignWindow:
         self.refine_button.pack(side="right", padx=(0, 6))
         self.ask_ai_button = tk.Button(bottom, text="Ask Ollama", command=self.ask_about_candidate, state="disabled", relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
         self.ask_ai_button.pack(side="right", padx=(0, 6))
+        self.proof_plan_button = tk.Button(bottom, text="Build proof plan…", command=self.plan_proof_selected, state="disabled", relief="flat", bg="#e9f0eb", fg=GREEN_DARK, activebackground="#dce9e1", cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
+        self.proof_plan_button.pack(side="right", padx=(0, 6))
         self.export_button = tk.Button(bottom, text="Export dossier…", command=self.export_selected, relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground="#e1eee7", cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5)
         self.export_button.pack(side="right", padx=(0, 6))
 
@@ -397,6 +401,7 @@ class DiscoveryCampaignWindow:
     def _show_candidate(self, row):
         self.preview_button.configure(state="normal" if row and row.get("example_map_preview") else "disabled")
         self.ask_ai_button.configure(state="normal" if row and self.ai_settings.enabled else "disabled")
+        self.proof_plan_button.configure(state="normal" if row else "disabled")
         self.refine_button.configure(state="normal" if _candidate_has_failure(row) else "disabled")
         if not row:
             return
@@ -541,6 +546,32 @@ class DiscoveryCampaignWindow:
             self.window,
             self.ai_settings,
             evidence,
+            self._ai_settings_saved,
+            on_review_saved=lambda review: self._save_ai_review(job.id, review),
+            settings_path=self.ai_settings_path,
+            model_locality=self.ai_model_locality,
+        )
+
+    def plan_proof_selected(self):
+        job = self._selected_job()
+        selected = self.candidate_table.selection()
+        row = self._candidate_by_iid.get(selected[0]) if selected else None
+        if not job or not row:
+            return
+        if not self.ai_settings.enabled or not self.ai_settings.model.strip():
+            self.configure_ai()
+            return
+        try:
+            evidence = build_candidate_evidence(job, row)
+            obligations = (job.result or {}).get("proof_obligations", ())
+            context = build_proof_assistance_context(evidence, obligations)
+        except (TypeError, ValueError, KeyError) as exc:
+            messagebox.showerror("Proof-plan context", str(exc), parent=self.window)
+            return
+        self.ai_proof_dialog = AIProofPlanDialog(
+            self.window,
+            self.ai_settings,
+            context,
             self._ai_settings_saved,
             on_review_saved=lambda review: self._save_ai_review(job.id, review),
             settings_path=self.ai_settings_path,

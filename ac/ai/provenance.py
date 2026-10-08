@@ -149,7 +149,7 @@ def validate_assistant_review(review: dict) -> dict:
         raise ValueError("AI review temperature is invalid")
     if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("AI review timeout is invalid")
-    if type(tokens) is not int or tokens < 1 or parameters["output_mode"] != "text":
+    if type(tokens) is not int or tokens < 1 or parameters["output_mode"] not in ("text", "json"):
         raise ValueError("AI review output settings are invalid")
     response = review["response"]
     if not isinstance(response, dict) or set(response) != {"text", "verification_status"}:

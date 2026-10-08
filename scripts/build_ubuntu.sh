@@ -22,7 +22,7 @@ find "$STAGE/usr/lib/ascent-calculus/ac" -type f -name '*.pyc' -delete
 
 cat > "$STAGE/DEBIAN/control" <<'EOF'
 Package: ascent-calculus
-Version: 0.1.0a32
+Version: 0.1.0a33
 Section: science
 Priority: optional
 Architecture: amd64
@@ -50,7 +50,7 @@ Type=Application
 Categories=Science;Math;
 EOF
 
-dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a32_amd64.deb"
+dpkg-deb --root-owner-group --build "$STAGE" "$OUT/ascent-calculus_0.1.0a33_amd64.deb"
 if python3 -c 'import setuptools; parts = tuple(int(p) for p in setuptools.__version__.split(".")[:2]); raise SystemExit(0 if parts >= (68, 0) else 1)'; then
   python3 -m pip wheel --no-deps --no-build-isolation . --wheel-dir "$OUT"
 else

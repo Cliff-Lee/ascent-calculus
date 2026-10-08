@@ -274,3 +274,38 @@ Validation completed on 2026-10-08:
 - AM-N pytest-based modules could not be executed because pytest is not
   installed in this environment. No live Ollama request or visual Linux
   desktop review was possible; those remain target-machine checks.
+
+## AI8 — Proof-plan assistance
+
+**Status: implementation and offline validation passed; target-desktop and
+live-model review pending.** The Discover candidate panel now offers **Build
+proof plan…** for a selected generated map. The request contains the exact
+bounded candidate record and the deterministic engine's proof obligations.
+The assistant can organize them into proposed main claims, intermediate
+lemmas, case splits, inverse formulas, and induction hypotheses. Every step
+must cite one or more supplied obligation IDs, and every obligation must be
+covered.
+
+Local checks bind the response to a fingerprint of the exact candidate
+evidence, reject unknown obligation references, and check that the proposed
+step dependencies form an acyclic graph. These checks do not validate the
+mathematics. The interface labels the full outline **AI-proposed · unverified**
+and keeps the candidate's proof status `not_proved`. The plan is not saved
+automatically: the researcher reviews it and selects **Save plan to dossier**.
+The saved assistant review includes the exact prompt, context, schema text,
+model response, and provenance, and dossier validation still prevents it from
+changing the mathematical result or proof status.
+
+Validation completed on 2026-10-08:
+
+- Four AM-AI8 tests passed for obligation coverage, rejection of unknown
+  references, dependency-cycle detection, evidence-fingerprint integrity,
+  explicit unverified labeling, and JSON-mode review persistence. The combined
+  AM-AI1–AI8 suite has **40 passing offline tests**.
+- `python3 -m compileall -q ac tests experiments`, desktop `--startup-check`,
+  worker `--help`, and `git diff --check` passed.
+- `pytest` is not installed in this environment; pytest-based suite modules were
+  not run. AM-AI8 does not change the mathematical engine.
+- Ubuntu 24.04 amd64 package `0.1.0a33` built; the package metadata and
+  extracted startup checks are recorded with this campaign. A live Ollama
+  request and visual desktop review on the target Linux machine remain pending.

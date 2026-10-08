@@ -106,3 +106,9 @@ from .dossiers import (
     build_research_dossier, validate_dossier, write_dossier, read_dossier,
 )
 __all__ = [name for name in globals() if not name.startswith("_")]
+from .proof_assistance import (
+    PROOF_PLAN_FORMAT, PROOF_PLAN_VERSION, PROOF_PLAN_JSON_SCHEMA,
+    ProofPlan, build_proof_assistance_context, validate_proof_assistance_context,
+    validate_proof_plan, parse_proof_plan_json, render_proof_plan,
+)
+__all__ = [name for name in globals() if not name.startswith("_")]
