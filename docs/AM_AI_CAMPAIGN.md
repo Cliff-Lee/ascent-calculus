@@ -24,7 +24,7 @@ complete supported mode. No candidate code from a model is executed.
 | AI6 | Experiment designer | Passed offline gate: convert a research question into bounded, typed transformation-family search specs for deterministic evaluation |
 | AI7 | Closed-loop refinement | Offline implementation gate passed: exact engine failures can guide a linked, bounded follow-up plan; never self-certify a claim |
 | AI8 | Proof assistance | Organize proof obligations and candidate lemmas; preserve human review and separate proof text from machine verification |
-| AI9 | Overnight research | Resumable, budgeted AI-assisted campaigns with checkpoints, cancellation, and interpretable reports |
+| AI9 | Overnight research | In progress: resumable AI-assisted search/refinement loop, global candidate/time budgets, cancellation, exact round provenance; broader soak and target-machine validation remain |
 | AI10 | Benchmarking, privacy, and release gate | Compare against non-AI search, test offline behavior and failure modes, document data flow, and validate packaged builds |
 
 ## AI1 — Provider architecture
@@ -309,3 +309,53 @@ Validation completed on 2026-10-08:
 - Ubuntu 24.04 amd64 package `0.1.0a33` built; the package metadata and
   extracted startup checks are recorded with this campaign. A live Ollama
   request and visual desktop review on the target Linux machine remain pending.
+
+## AI9a — Resumable overnight search/refinement loop
+
+**Status: implementation and offline validation passed; AM-AI9 remains open.**
+The Discover workflow adds **Run overnight with AI…**. It starts from the
+currently selected class, pattern, offset, degree, and grammar controls, then
+runs the same deterministic transformation-family worker used by ordinary
+campaigns. When a completed round contains an exact engine failure, the worker
+can ask the configured Ollama model for a bounded follow-up class/offset/degree
+experiment. The response must pass the existing typed experiment and failure
+reference validators before the next deterministic round is launched.
+
+Each job is resumable from SQLite. It checkpoints the active search, completed
+rounds, pending refinement request, and any structured model response before
+applying it. A response already saved before a pause or process restart is
+reused without another model call. Pause and cancel are checked while Ollama
+is streaming; the provider request is interrupted promptly. The UI exposes
+limits for refinement rounds, total candidate programs, and elapsed hours. The
+elapsed limit includes paused time. Per-round finite results are stored in
+research memory under the exact round specification, not misattributed to the
+root question.
+
+The dossier indexes every applied round specification and preserves each
+search result, the exact prompt, structured response, failure context,
+validation result, and applied-spec fingerprint. Invalid, unsupported, or
+out-of-budget proposals stop the campaign with an interpretable reason. Every
+result remains `not_proved`; AI output is recorded as unverified. The supported
+refinement grammar changes class patterns, degree offsets, tested degree
+windows, and finite budgets. It does not yet synthesize new transformation
+program operations or block schemas.
+
+Validation completed on 2026-10-09:
+
+- Eight offline AM-AI9 tests passed, covering strict budgets and loopback-only
+  endpoints, two-round search/refinement, persisted-response reuse after pause,
+  interruption of an in-flight model request, exact-match early exit, rejected
+  proposal handling, partial-budget checkpoints, and dossier preservation of
+  every round's specification.
+- All **48 AM-AI1–AI9a offline tests** and all **51 repository unittest tests**
+  passed. `compileall`, desktop `--startup-check`, worker `--help`, and
+  `git diff --check` passed.
+- Ubuntu 24.04 amd64 `.deb` and wheel `0.1.0a34` built. The extracted package
+  passed the desktop startup check, worker help check, and overnight-handler
+  import check. The `.deb` SHA-256 is
+  `11eedf6ca3ad0492c8c5c53b098ccdaf08685705af5c3e8c4c7b223227082aec`.
+- This container has no display server or `xvfb-run`, so the desktop window
+  could not be visually reviewed here. Live Ollama operation and visual review
+  on the target Linux machine remain untested. AM-AI9 still needs overnight
+  soak/recovery testing and AM-AI10's independent benchmark, privacy, and
+  release gate.

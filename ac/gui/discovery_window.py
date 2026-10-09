@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import tkinter as tk
+from types import SimpleNamespace
 from tkinter import filedialog, messagebox, ttk
 
 from ac.discovery.dossiers import build_research_dossier, write_dossier
@@ -16,7 +17,14 @@ from ac.discovery.experiment_refinement import (
     build_refinement_context,
     validate_experiment_refinement,
 )
+from ac.discovery.transformation_family import TransformationFamilySearchSpec
 from ac.discovery.proof_assistance import build_proof_assistance_context
+from ac.discovery.overnight_campaign import (
+    MAX_REFINEMENTS,
+    MAX_TOTAL_CANDIDATES,
+    MAX_WALL_SECONDS,
+    OVERNIGHT_HANDLER_ID,
+)
 from ac.gui.discovery_campaign import build_transformation_family_spec
 from ac.ai import AIAssistantSettings, ProviderLocality, default_ai_settings_path, load_ai_settings
 from ac.gui.ai_assistant import AIAssistantSettingsDialog, AIExperimentDesignerDialog, AIExplanationDialog, AIProofPlanDialog, build_candidate_evidence
@@ -33,13 +41,69 @@ AMBER = "#a35b1b"
 RED = "#a8443c"
 FAMILIES = ("ordinary", "modified", "revised")
 HANDLER = "search-transformation-families"
+CAMPAIGN_HANDLERS = {HANDLER, OVERNIGHT_HANDLER_ID}
+
+
+def _overnight_state(job):
+    checkpoint = job.checkpoint if isinstance(job.checkpoint, dict) else {}
+    return checkpoint if checkpoint.get("overnight_checkpoint_version") else {}
+
+
+def _latest_campaign_result(job):
+    if job.handler == OVERNIGHT_HANDLER_ID:
+        report = (job.result or {}).get("overnight_campaign", {})
+        latest = (job.result or {}).get("latest_search_result")
+        if latest is None and report.get("completed_rounds"):
+            latest = report["completed_rounds"][-1].get("search_result")
+        if latest:
+            return latest
+        state = _overnight_state(job)
+        active = state.get("active_search_checkpoint", {})
+        rounds = state.get("completed_rounds", ())
+        if active and active.get("examined", 0) and state.get("round_index", 0) >= len(rounds):
+            return {
+                "exact_candidates": active.get("exact_candidates", []),
+                "ranked_candidates": active.get("ranked_candidates", []),
+                "candidates_tested": active.get("examined", 0),
+            }
+        if active and not rounds:
+            return {
+                "exact_candidates": active.get("exact_candidates", []),
+                "ranked_candidates": active.get("ranked_candidates", []),
+                "candidates_tested": active.get("examined", 0),
+            }
+        return rounds[-1].get("search_result") if rounds else None
+    if job.result:
+        return job.result
+    return job.checkpoint
+
+
+def _latest_campaign_spec(job):
+    if job.handler != OVERNIGHT_HANDLER_ID:
+        return job.question
+    state = _overnight_state(job)
+    active = state.get("active_search_checkpoint", {})
+    if active and (active.get("ranked_candidates") or active.get("exact_candidates")):
+        raw = state.get("active_specification")
+    elif state.get("completed_rounds"):
+        raw = state["completed_rounds"][-1].get("specification")
+    else:
+        report = (job.result or {}).get("overnight_campaign", {})
+        if report.get("completed_rounds"):
+            raw = report["completed_rounds"][-1].get("specification")
+        else:
+            raw = (job.result or {}).get("latest_specification") or state.get("active_specification")
+    if raw:
+        try:
+            return TransformationFamilySearchSpec.from_dict(raw)
+        except (TypeError, ValueError, KeyError):
+            pass
+    return job.question
 
 
 def _candidate_rows(job):
-    if job.result:
-        groups = (job.result.get("exact_candidates", ()), job.result.get("ranked_candidates", ()))
-    else:
-        groups = (job.checkpoint.get("exact_candidates", ()), job.checkpoint.get("ranked_candidates", ()))
+    result = _latest_campaign_result(job) or {}
+    groups = (result.get("exact_candidates", ()), result.get("ranked_candidates", ()))
     rows, seen = [], set()
     for group in groups:
         for row in group:
@@ -168,6 +232,12 @@ class DiscoveryCampaignWindow:
         self._field(form, "CANDIDATE BUDGET", self.candidate_budget, 4, 2, width=9)
         self.start_button = tk.Button(form, text="Start campaign", command=self.start_campaign, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=13, pady=7)
         self.start_button.grid(row=4, column=10, columnspan=2, sticky="e", padx=12, pady=(4, 10))
+        self.overnight_button = tk.Button(
+            form, text="Run overnight with AI…", command=self.start_overnight_campaign,
+            relief="flat", bg="#f3ead8", fg="#754415", activebackground="#eadcc3",
+            cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=10, pady=7,
+        )
+        self.overnight_button.grid(row=4, column=7, columnspan=3, sticky="e", padx=(4, 8), pady=(4, 10))
         self.form_note = tk.Label(form, text="Comma-separated patterns; use * for the unrestricted class. Offsets compare source n+a with target n+b. Increase cost, steps, or candidates for broader searches.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), wraplength=1050, justify="left")
         self.form_note.grid(row=6, column=0, columnspan=12, sticky="w", padx=12, pady=(0, 10))
 
@@ -256,19 +326,7 @@ class DiscoveryCampaignWindow:
 
     def start_campaign(self):
         try:
-            spec = build_transformation_family_spec(
-                source_family=self.source_family.get(),
-                target_family=self.target_family.get(),
-                rule_mode=self.rule_mode.get(),
-                source_patterns=self.source_patterns.get(),
-                target_patterns=self.target_patterns.get(),
-                offsets=self.offsets.get(),
-                start=int(self.start.get()),
-                stop=int(self.stop.get()),
-                max_cost=int(self.max_cost.get()),
-                max_steps=int(self.max_steps.get()),
-                candidate_budget=int(self.candidate_budget.get()),
-            )
+            spec = self._form_spec()
             options = {}
             if self._pending_experiment_design is not None:
                 design, provenance = self._pending_experiment_design
@@ -314,6 +372,101 @@ class DiscoveryCampaignWindow:
         except (ValueError, TypeError, OSError, RuntimeError) as exc:
             messagebox.showerror("Campaign settings", str(exc), parent=self.window)
 
+    def _form_spec(self):
+        return build_transformation_family_spec(
+            source_family=self.source_family.get(),
+            target_family=self.target_family.get(),
+            rule_mode=self.rule_mode.get(),
+            source_patterns=self.source_patterns.get(),
+            target_patterns=self.target_patterns.get(),
+            offsets=self.offsets.get(),
+            start=int(self.start.get()),
+            stop=int(self.stop.get()),
+            max_cost=int(self.max_cost.get()),
+            max_steps=int(self.max_steps.get()),
+            candidate_budget=int(self.candidate_budget.get()),
+        )
+
+    def start_overnight_campaign(self):
+        if not self.ai_settings.enabled or not self.ai_settings.model.strip():
+            messagebox.showinfo(
+                "Configure Ollama first",
+                "Enable Ollama and select a model in the top-right AI settings before starting an autonomous campaign.",
+                parent=self.window,
+            )
+            self.configure_ai()
+            return
+        try:
+            spec = self._form_spec()
+        except (ValueError, TypeError) as exc:
+            messagebox.showerror("Campaign settings", str(exc), parent=self.window)
+            return
+
+        dialog = tk.Toplevel(self.window)
+        dialog.title("Run an overnight research campaign")
+        dialog.transient(self.window)
+        dialog.grab_set()
+        dialog.configure(bg=BG)
+        dialog.resizable(False, False)
+        refinements = tk.StringVar(value="3")
+        candidates = tk.StringVar(value=str(min(MAX_TOTAL_CANDIDATES, max(1000, spec.candidate_budget))))
+        hours = tk.StringVar(value="8")
+        panel = tk.Frame(dialog, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        panel.pack(fill="both", expand=True, padx=16, pady=16)
+        tk.Label(panel, text="Budget the search", bg=PANEL, fg=INK, font=("TkDefaultFont", 13, "bold")).grid(row=0, column=0, columnspan=2, sticky="w", padx=14, pady=(14, 5))
+        tk.Label(
+            panel,
+            text=(
+                f"The worker runs the deterministic search, asks {self.ai_settings.model} for a bounded follow-up "
+                f"from exact failures, validates it, then searches again. Model locality: {self.ai_model_locality.value}. "
+                "The configured loopback Ollama endpoint receives the prompt; cloud models may offload inference. "
+                "The elapsed-time limit includes pauses. Every round and prompt is saved for export. Matches remain finite evidence."
+            ),
+            bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8), wraplength=470, justify="left",
+        ).grid(row=1, column=0, columnspan=2, sticky="w", padx=14, pady=(0, 10))
+        for row, (label, variable, suffix) in enumerate((
+            ("AI refinement rounds", refinements, f"1–{MAX_REFINEMENTS}"),
+            ("Total candidate programs", candidates, f"1–{MAX_TOTAL_CANDIDATES:,}"),
+            ("Elapsed hours", hours, f"1–{MAX_WALL_SECONDS // 3600}"),
+        ), start=2):
+            tk.Label(panel, text=label, bg=PANEL, fg=INK, font=("TkDefaultFont", 9, "bold")).grid(row=row, column=0, sticky="w", padx=14, pady=5)
+            field = ttk.Entry(panel, width=12, textvariable=variable)
+            field.grid(row=row, column=1, sticky="e", padx=(8, 14), pady=5)
+            tk.Label(panel, text=suffix, bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8)).grid(row=row, column=2, sticky="w", padx=(0, 14), pady=5)
+        actions = tk.Frame(panel, bg=PANEL)
+        actions.grid(row=5, column=0, columnspan=3, sticky="e", padx=14, pady=(12, 14))
+        tk.Button(actions, text="Cancel", command=dialog.destroy, relief="flat", bg="#edf3ef", fg=GREEN_DARK, padx=12, pady=6).pack(side="right")
+
+        def launch():
+            try:
+                round_budget = int(refinements.get())
+                candidate_budget = int(candidates.get())
+                hours_budget = int(hours.get())
+                if not 1 <= round_budget <= MAX_REFINEMENTS:
+                    raise ValueError(f"AI refinement rounds must be from 1 through {MAX_REFINEMENTS}.")
+                if not 1 <= candidate_budget <= MAX_TOTAL_CANDIDATES:
+                    raise ValueError(f"Total candidate programs must be from 1 through {MAX_TOTAL_CANDIDATES:,}.")
+                if not 1 <= hours_budget <= MAX_WALL_SECONDS // 3600:
+                    raise ValueError(f"Elapsed hours must be from 1 through {MAX_WALL_SECONDS // 3600}.")
+                options = {
+                    "endpoint": self.ai_settings.endpoint,
+                    "model": self.ai_settings.model,
+                    "timeout_seconds": self.ai_settings.timeout_seconds,
+                    "model_locality": self.ai_model_locality.value,
+                    "max_refinements": round_budget,
+                    "max_total_candidates": candidate_budget,
+                    "max_wall_seconds": hours_budget * 3600,
+                }
+                job = self.store.create_job(spec, handler=OVERNIGHT_HANDLER_ID, options=options)
+                self._active_job_id = job.id
+                dialog.destroy()
+                self.ensure_worker()
+                self.refresh(select_id=job.id)
+            except (ValueError, TypeError, OSError, RuntimeError) as exc:
+                messagebox.showerror("Overnight campaign settings", str(exc), parent=dialog)
+
+        tk.Button(actions, text="Start overnight search", command=launch, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=13, pady=6).pack(side="right", padx=(0, 7))
+
     def _selected_job(self):
         selected = self.jobs_table.selection()
         return self._rows_by_iid.get(selected[0]) if selected else None
@@ -334,24 +487,38 @@ class DiscoveryCampaignWindow:
         selected_row = self._candidate_by_iid.get(selected_candidate[0]) if selected_candidate else None
         selected_program = selected_row.get("program") if selected_row else None
         progress = dict(job.progress)
+        state = _overnight_state(job)
+        search_result = _latest_campaign_result(job) or {}
+        display_spec = _latest_campaign_spec(job)
         if job.status in {"queued", "running"}:
             checkpoint_progress = progress.get("candidates_tested", 0)
         else:
-            checkpoint_progress = (job.result or {}).get("candidates_tested", job.checkpoint.get("examined", 0))
-        budget = progress.get("candidate_budget") or (job.result or {}).get("effective_candidate_budget") or job.question.candidate_budget
+            checkpoint_progress = search_result.get("candidates_tested", job.checkpoint.get("examined", 0))
+        default_budget = (
+            job.options.get("max_total_candidates", job.question.candidate_budget)
+            if job.handler == OVERNIGHT_HANDLER_ID else job.question.candidate_budget
+        )
+        budget = progress.get("candidate_budget") or (job.result or {}).get("effective_candidate_budget") or default_budget
         budget = max(int(budget), 1)
         self.progress.configure(maximum=budget, value=min(int(checkpoint_progress), budget))
         stage = progress.get("stage", "waiting for worker" if job.status == "queued" else "")
-        if stage == "preparing scenarios":
+        if stage == "preparing scenarios" or "preparing scenarios" in stage:
             stage += f" · scenario {progress.get('scenario_index', 0)}/{progress.get('scenario_count', len(job.question.scenarios))}"
-        self.job_summary.configure(text=f"{job.status.upper()} · {len(job.question.scenarios)} scenarios · {job.question.grammar_version} · question {job.question.fingerprint[:12]}")
+        if job.handler == OVERNIGHT_HANDLER_ID:
+            round_number = int(state.get("round_index", 0)) + 1
+            stop_reason = ((job.result or {}).get("overnight_campaign") or {}).get("stop_reason")
+            extra = f" · {stop_reason.replace('_', ' ')}" if stop_reason else ""
+            summary = f"{job.status.upper()} · overnight round {round_number}/{job.options.get('max_refinements', 0) + 1} · {len(display_spec.scenarios)} scenarios · {display_spec.grammar_version}{extra}"
+        else:
+            summary = f"{job.status.upper()} · {len(job.question.scenarios)} scenarios · {job.question.grammar_version} · question {job.question.fingerprint[:12]}"
+        self.job_summary.configure(text=summary)
         self.progress_text.configure(text=f"{stage} · {checkpoint_progress:,}/{budget:,} candidates" if stage or checkpoint_progress else "")
         rows = _candidate_rows(job)
         priority_source = {
             "ranked_candidates": rows,
-            "research_memory": (job.result or {}).get("research_memory"),
+            "research_memory": search_result.get("research_memory"),
         }
-        priority_review = build_research_priority_review(job.question, priority_source)
+        priority_review = build_research_priority_review(display_spec, priority_source)
         priority_by_program = {
             item["program"]: item for item in (priority_review or {}).get("ranked_candidates", ())
         }
@@ -371,7 +538,7 @@ class DiscoveryCampaignWindow:
             iid = f"candidate-{index}"
             self._candidate_by_iid[iid] = row
             self.candidate_table.insert("", "end", iid=iid, values=(
-                f"{row.get('matching_scenario_count', 0)}/{row.get('scenario_count', len(job.question.scenarios))}",
+                f"{row.get('matching_scenario_count', 0)}/{row.get('scenario_count', len(display_spec.scenarios))}",
                 f"{row['research_priority']['priority_score']}/100" if row.get("research_priority") else "—",
                 row.get("cost", "?"),
                 row.get("program", ""),
@@ -389,14 +556,14 @@ class DiscoveryCampaignWindow:
                 f"Saved specification\n{job.question.canonical_json()}\n\nResult\n{saved_result}\n\nCheckpoint\n{checkpoint or 'No checkpoint yet.'}"
                 + (f"\n\nError\n{job.error}" if job.error else "")
             )
-        memory = (job.result or {}).get("research_memory") or {}
+        memory = search_result.get("research_memory") or {}
         novelty = memory.get("novelty_counts", {})
         memory_text = ", ".join(f"{key.replace('_', ' ')} {value}" for key, value in sorted(novelty.items()))
-        if job.result:
+        if memory:
             memory_summary = memory_text or "no candidate summary recorded"
             self.memory_label.configure(text=f"Research memory: {memory.get('status', 'unavailable')} · {memory_summary}")
         else:
-            self.memory_label.configure(text="Research memory is recorded when the campaign completes.")
+            self.memory_label.configure(text="Per-round research memory is recorded when each deterministic search finishes.")
 
     def _show_candidate(self, row):
         self.preview_button.configure(state="normal" if row and row.get("example_map_preview") else "disabled")
@@ -508,11 +675,12 @@ class DiscoveryCampaignWindow:
         if not self.ai_settings.enabled or not self.ai_settings.model.strip():
             self.configure_ai()
             return
+        spec = _latest_campaign_spec(job)
         try:
             context = build_refinement_context(
                 parent_job_id=job.id,
-                prior_specification=json.loads(job.question.canonical_json()),
-                prior_specification_fingerprint=job.question.fingerprint,
+                prior_specification=json.loads(spec.canonical_json()),
+                prior_specification_fingerprint=spec.fingerprint,
                 candidate=row,
             )
         except (TypeError, ValueError, KeyError) as exc:
@@ -538,7 +706,7 @@ class DiscoveryCampaignWindow:
             self.configure_ai()
             return
         try:
-            evidence = build_candidate_evidence(job, row)
+            evidence = build_candidate_evidence(SimpleNamespace(question=_latest_campaign_spec(job)), row)
         except (TypeError, ValueError, KeyError) as exc:
             messagebox.showerror("Candidate context", str(exc), parent=self.window)
             return
@@ -562,8 +730,17 @@ class DiscoveryCampaignWindow:
             self.configure_ai()
             return
         try:
-            evidence = build_candidate_evidence(job, row)
-            obligations = (job.result or {}).get("proof_obligations", ())
+            evidence = build_candidate_evidence(SimpleNamespace(question=_latest_campaign_spec(job)), row)
+            search_result = _latest_campaign_result(job) or {}
+            obligations = (
+                search_result.get("proof_obligations")
+                or (job.result or {}).get("proof_obligations")
+                or (
+                    "prove the map is defined on every source object in the stated class",
+                    "prove target membership, injectivity, and surjectivity or give a valid inverse",
+                    "prove the degree offset for every input size",
+                )
+            )
             context = build_proof_assistance_context(evidence, obligations)
         except (TypeError, ValueError, KeyError) as exc:
             messagebox.showerror("Proof-plan context", str(exc), parent=self.window)
@@ -681,7 +858,7 @@ class DiscoveryCampaignWindow:
 
     def refresh(self, select_id=None):
         try:
-            jobs = tuple(job for job in self.store.list_jobs(limit=500) if job.handler == HANDLER)
+            jobs = tuple(job for job in self.store.list_jobs(limit=500) if job.handler in CAMPAIGN_HANDLERS)
         except OSError as exc:
             self.job_summary.configure(text=f"Cannot read saved campaigns: {exc}")
             return
@@ -695,7 +872,8 @@ class DiscoveryCampaignWindow:
             self._rows_by_iid[iid] = job
             progress = job.progress.get("candidates_tested", job.checkpoint.get("examined", 0))
             stage = job.progress.get("stage", "")
-            label = f"{job.question.scenarios[0].source.family} → {job.question.scenarios[0].target.family} · {job.id[:8]}"
+            kind = "Overnight · " if job.handler == OVERNIGHT_HANDLER_ID else ""
+            label = f"{kind}{job.question.scenarios[0].source.family} → {job.question.scenarios[0].target.family} · {job.id[:8]}"
             values = (job.status, f"{progress:,} tested")
             if iid in existing:
                 self.jobs_table.item(iid, text=label, values=values)

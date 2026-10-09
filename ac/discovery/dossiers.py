@@ -131,6 +131,65 @@ def _proof_obligations(result: dict | None) -> list[str]:
     return obligations
 
 
+def _validate_overnight_dossier(dossier: dict, question) -> None:
+    result = dossier.get("finite_result") or {}
+    campaign = result.get("overnight_campaign")
+    indexed_rounds = dossier["tested_bounds"].get("overnight_rounds")
+    if campaign is None:
+        if indexed_rounds is not None:
+            raise ValueError("dossier has overnight-round bounds without an overnight result")
+        return
+    from ac.discovery.transformation_family import TransformationFamilySearchSpec
+
+    if not isinstance(question, TransformationFamilySearchSpec):
+        raise ValueError("overnight campaign root question must be a transformation-family specification")
+    if not isinstance(campaign, dict) or campaign.get("version") != 1:
+        raise ValueError("unsupported overnight campaign report version")
+    root_spec = campaign.get("root_specification")
+    if not isinstance(root_spec, dict):
+        raise ValueError("overnight report must retain its exact root specification")
+    parsed_root = TransformationFamilySearchSpec.from_dict(root_spec)
+    if (
+        parsed_root.fingerprint != question.fingerprint
+        or campaign.get("root_specification_fingerprint") != question.fingerprint
+    ):
+        raise ValueError("overnight report root specification does not match the dossier question")
+    rounds = campaign.get("completed_rounds")
+    if not isinstance(rounds, list):
+        raise ValueError("overnight completed rounds must be an array")
+    if not isinstance(indexed_rounds, list) or len(indexed_rounds) != len(rounds):
+        raise ValueError("dossier tested bounds do not index every overnight search round")
+    if result.get("proof_status") != "not_proved":
+        raise ValueError("overnight finite search reports must retain proof_status not_proved")
+    for index, (round_record, index_record) in enumerate(zip(rounds, indexed_rounds)):
+        if not isinstance(round_record, dict):
+            raise ValueError("overnight round record must be an object")
+        if round_record.get("round_index") != index:
+            raise ValueError("overnight round indices must be consecutive from zero")
+        round_spec_data = round_record.get("specification")
+        if not isinstance(round_spec_data, dict):
+            raise ValueError("overnight round must retain its typed search specification")
+        round_spec = TransformationFamilySearchSpec.from_dict(round_spec_data)
+        round_fingerprint = round_record.get("specification_fingerprint")
+        if round_fingerprint != round_spec.fingerprint:
+            raise ValueError("overnight round specification fingerprint is invalid")
+        search = round_record.get("search_result")
+        if not isinstance(search, dict) or search.get("specification_fingerprint") != round_fingerprint:
+            raise ValueError("overnight finite result does not match its exact round specification")
+        if search.get("proof_status") != "not_proved":
+            raise ValueError("overnight search round must retain proof_status not_proved")
+        tested = round_record.get("candidates_tested")
+        if type(tested) is not int or tested < 0 or search.get("candidates_tested") != tested:
+            raise ValueError("overnight candidate count does not match its round result")
+        if (
+            index_record.get("round_index") != index
+            or index_record.get("specification_fingerprint") != round_fingerprint
+            or index_record.get("specification") != round_spec_data
+            or index_record.get("candidates_tested") != tested
+        ):
+            raise ValueError("dossier overnight-round index does not match its exact campaign result")
+
+
 def build_research_dossier(job, *, events=(), assistant_reviews=()) -> dict:
     """Capture the exact question, finite computation, and durable worker state."""
     question = job.question
@@ -230,6 +289,24 @@ def build_research_dossier(job, *, events=(), assistant_reviews=()) -> dict:
         "assistant_reviews": [dict(item) for item in assistant_reviews],
         "research_priority_review": None,
     }
+    overnight = (result or {}).get("overnight_campaign")
+    if isinstance(overnight, dict):
+        # Preserve every applied typed specification as an immediately
+        # inspectable tested bound. The full result already includes the raw
+        # searches and AI requests; this concise index prevents the dossier's
+        # root question window from hiding later class/offset refinements.
+        dossier["tested_bounds"]["overnight_rounds"] = [
+            {
+                "round_index": item.get("round_index"),
+                "specification_fingerprint": item.get("specification_fingerprint"),
+                "specification": item.get("specification"),
+                "candidates_tested": item.get("candidates_tested"),
+                "effective_candidate_budget": (item.get("search_result") or {}).get("effective_candidate_budget"),
+                "proof_status": (item.get("search_result") or {}).get("proof_status", "not_proved"),
+            }
+            for item in overnight.get("completed_rounds", ())
+            if isinstance(item, dict)
+        ]
     from ac.discovery.significance import build_research_priority_review
     dossier["research_priority_review"] = build_research_priority_review(question, result)
     validate_dossier(dossier)
@@ -296,6 +373,7 @@ def validate_dossier(dossier: dict) -> dict:
         expected_priority = build_research_priority_review(parsed_question, dossier["finite_result"])
         if dossier["research_priority_review"] != expected_priority:
             raise ValueError("dossier research-priority review does not match its finite results and rubric")
+    _validate_overnight_dossier(dossier, parsed_question)
     _canonical_json(dossier)
     return dossier
 

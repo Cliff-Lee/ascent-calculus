@@ -31,6 +31,7 @@ DEFAULT_HANDLERS = {
     "analyze-structural-profiles": "ac.discovery.fingerprints:run_structural_profile_analysis",
     "search-transformations": "ac.discovery.transformation_search:run_transformation_search",
     "search-transformation-families": "ac.discovery.transformation_family:run_worker_search",
+    "overnight-ai-transformation-campaign": "ac.discovery.overnight_campaign:run_overnight_campaign",
 }
 
 
@@ -112,7 +113,14 @@ def _run_claimed_job(
         from ac.discovery.transformation_search import TransformationSearchSpec
         from ac.discovery.transformation_family import TransformationFamilySearchSpec
         question = job.question
-        if isinstance(question, (TransformationSearchSpec, TransformationFamilySearchSpec)):
+        # Overnight campaigns store each finite search round against that
+        # round's exact typed specification inside the handler. Recording the
+        # aggregate report as though it answered the root question would
+        # corrupt the research-memory lineage.
+        if (
+            job.handler != "overnight-ai-transformation-campaign"
+            and isinstance(question, (TransformationSearchSpec, TransformationFamilySearchSpec))
+        ):
             try:
                 from ac.discovery.research_memory import ResearchMemoryStore
                 memory_path = store.path.with_name("research-memory.sqlite3")
