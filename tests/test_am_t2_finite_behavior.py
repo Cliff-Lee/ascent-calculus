@@ -39,6 +39,13 @@ class AMT2FiniteBehaviorTests(unittest.TestCase):
         job = type("Job", (), {"question": spec, "checkpoint": {}})()
         result = run_worker_search(job, context)
 
+        self.assertEqual(spec.to_dict()["version"], 1)
+        self.assertEqual(TransformationFamilySearchSpec.from_dict(spec.to_dict()), spec)
+        version_two_spec = spec.to_dict()
+        version_two_spec["version"] = 2
+        self.assertEqual(TransformationFamilySearchSpec.from_dict(version_two_spec), spec)
+        self.assertEqual(result["family_search_version"], 1)
+        self.assertEqual(result["family_checkpoint_version"], 3)
         self.assertEqual(result["exact_candidate_count"], 3)
         self.assertEqual(result["finite_behavior_group_count"], 1)
         group, = result["finite_behavior_groups"]
@@ -48,6 +55,13 @@ class AMT2FiniteBehaviorTests(unittest.TestCase):
             candidate["finite_family_map_fingerprint"] == group["finite_family_map_fingerprint"]
             for candidate in result["exact_candidates"]
         ))
+        self.assertEqual(
+            group["scenario_maps"], result["exact_candidates"][0]["finite_family_scenario_maps"],
+        )
+        self.assertEqual(
+            [item["scenario_fingerprint"] for item in group["scenario_maps"]],
+            [scenario.fingerprint for scenario in scenarios],
+        )
         self.assertEqual(result["proof_status"], "not_proved")
         self.assertIn("only over the listed finite", result["finite_behavior_scope"])
 
