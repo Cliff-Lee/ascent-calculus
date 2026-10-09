@@ -18,14 +18,14 @@ complete supported mode. No candidate code from a model is executed.
 |---|---|---|
 | AI1 | Provider-neutral interface, capability model, structured requests, cancellation, timeouts, safe errors, disconnected mode | Passed: ten offline fake-provider tests; no third-party dependency; all outputs unverified |
 | AI2 | Ollama discovery and chat adapter | Offline adapter gate passed; live Ollama check on the target Linux machine remains |
-| AI3 | Desktop settings and contextual assistant actions | In progress: explicit opt-in; endpoint/model status; explanations attached to selected experiment results |
+| AI3 | Desktop settings and contextual assistant actions | Implementation and hosted desktop checks passed; live review with the target Ubuntu desktop and local model remains |
 | AI4 | Evidence-aware dossiers | Passed: exact request, model, response, and evidence hashes persist with the campaign and export separately from mathematical results |
 | AI5 | Significance review | Passed: deterministic, explainable candidate triage with explicit score inputs, uncertainty, and dossier reproducibility |
 | AI6 | Experiment designer | Passed offline gate: convert a research question into bounded, typed transformation-family search specs for deterministic evaluation |
 | AI7 | Closed-loop refinement | Offline implementation gate passed: exact engine failures can guide a linked, bounded follow-up plan; never self-certify a claim |
 | AI8 | Proof assistance | Organize proof obligations and candidate lemmas; preserve human review and separate proof text from machine verification |
-| AI9 | Overnight research | In progress: resumable AI-assisted search/refinement loop, global candidate/time budgets, cancellation, exact round provenance; broader soak and target-machine validation remain |
-| AI10 | Benchmarking, privacy, and release gate | In progress: AI10a offline paired-benchmark protocol and data-flow audit passed; live model comparison, target-Linux checks, and packaged release gate remain |
+| AI9 | Overnight research | Offline implementation and recovery tests passed; target-machine overnight soak and live-model validation remain |
+| AI10 | Benchmarking, privacy, and release gate | Offline benchmark/privacy protocol and hosted cross-platform package gate passed; live paired model comparison and target-machine review remain |
 
 ## AI1 — Provider architecture
 
@@ -422,14 +422,15 @@ Linux package check on 2026-10-09:
 - This checks package construction and payload, not a visible desktop launch on
   the target Ubuntu machine.
 
-The release workflow now includes every `test_am_ai*.py` module and the N11
-dossier checks in its focused regression job. Its macOS, Windows, and Ubuntu
-artifact labels have been aligned with the current `0.1.0a34` package version.
-The workflow YAML parses successfully; the local AM-AI1–AI10, research-state,
-and dossier regression checks all pass. The workflow itself still needs its
-GitHub Actions run: its push trigger is limited to `main`, so this campaign
-branch will run those gates when a pull request is opened or the changes reach
-`main`.
+The release workflow includes every AM-AI test module and the N11 dossier
+checks, with artifact labels aligned to `0.1.0a34`. On 2026-10-09, GitHub
+Actions run [#39](https://github.com/Cliff-Lee/ascent-calculus/actions/runs/37913158827)
+passed all three focused regression jobs and all three platform package jobs.
+Ubuntu package installation, startup and window smoke checks, and desktop
+preview captures passed; the Windows installer smoke checks and macOS build
+also passed. The run uploaded Ubuntu, Windows, and macOS test artifacts, which
+expire after 14 days. The workflow uses a pull-request trigger for this
+campaign branch; its push trigger remains limited to `main`.
 
 To run the paired challenge on the Ubuntu machine, after confirming the model
 is local in Ollama, use:
@@ -442,7 +443,8 @@ python3 experiments/am_ai10_benchmark.py \
   --output experiments/results/am_ai10_refinement_challenge_paired.json
 ```
 
-That live paired result, an overnight soak on the target Linux machine, the
-visual desktop review, and the packaged-launch gate remain pending. The
-identity control stops before an AI call by design; use the challenge fixture
-for a refinement comparison.
+The target Ubuntu machine still needs the live paired result, overnight soak,
+and interactive desktop review. The hosted package-install and window-launch
+gate has passed, but it does not replace installation and review on the target
+machine. The identity control stops before an AI call by design; use the
+challenge fixture for a refinement comparison.
