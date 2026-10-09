@@ -62,6 +62,15 @@ class AMT2FiniteBehaviorTests(unittest.TestCase):
             [item["scenario_fingerprint"] for item in group["scenario_maps"]],
             [scenario.fingerprint for scenario in scenarios],
         )
+        for candidate in result["exact_candidates"]:
+            previews = candidate["scenario_map_previews"]
+            self.assertEqual(len(previews), len(scenarios))
+            self.assertTrue(all(item["example_map"] is not None for item in previews))
+            self.assertEqual(
+                [item["scenario_fingerprint"] for item in previews],
+                [scenario.fingerprint for scenario in scenarios],
+            )
+            self.assertEqual(candidate["example_map_preview"], previews[0]["example_map"])
         self.assertEqual(result["proof_status"], "not_proved")
         self.assertIn("only over the listed finite", result["finite_behavior_scope"])
 
