@@ -47,6 +47,7 @@ jobs:
           tests/test_am_ai9_overnight_campaign.py
           tests/test_am_ai10_benchmark.py
           tests/test_am_t1_transformation_manifest.py
+          tests/test_am_t2_finite_behavior.py
           tests/test_am_n11_dossiers.py
 
   macos-arm64:
