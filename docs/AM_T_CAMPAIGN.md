@@ -53,7 +53,7 @@ passed; Windows installer smoke checks and the macOS package build passed.
 
 ## T3 — Auditable behavior vectors and schema-safe checkpoints
 
-**Status: implementation added; hosted validation pending.** Each finite
+**Status: passed on 2026-10-09.** Each finite
 behavior group now includes the scenario fingerprint and finite-map
 fingerprint for every component of its combined family fingerprint. That
 lets a researcher inspect exactly which bounded scenario maps define a group
@@ -64,6 +64,9 @@ form is also accepted. The resumable checkpoint now has its own version,
 separate from the saved-question schema, so future progress-state changes do
 not silently change the experiment format. Regression checks cover both
 specification versions, the scenario-level vector, and checkpoint resume.
+The local focused suite, `compileall`, and `git diff --check` passed. GitHub
+Actions run #47 passed all three regression runners and all three platform
+package jobs, including Ubuntu install/startup and desktop previews.
 
 ## Remaining AM-AI target-machine gates
 
