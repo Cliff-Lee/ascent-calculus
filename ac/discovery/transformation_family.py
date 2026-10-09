@@ -22,11 +22,14 @@ from ac.discovery.transformation_search import (
     _precompute,
     generate_transformation_atoms,
     iter_typed_transform_programs,
+    transformation_grammar_manifest,
 )
 
 
 FAMILY_SEARCH_FORMAT = "ascent-machine-transformation-family-search"
 FAMILY_SEARCH_VERSION = 1
+SUPPORTED_FAMILY_SEARCH_VERSIONS = (1, 2)
+FAMILY_CHECKPOINT_VERSION = 3
 MAX_FAMILY_SCENARIOS = 32
 MAX_FAMILY_CANDIDATES = 1_000_000
 MAX_FAMILY_ENUMERATION = 50_000_000
@@ -142,7 +145,11 @@ class TransformationFamilySearchSpec:
         }
         if not isinstance(raw, dict) or set(raw) != expected:
             raise ValueError("transformation-family fields do not match the version-1 schema")
-        if raw["format"] != FAMILY_SEARCH_FORMAT or type(raw["version"]) is not int or raw["version"] != FAMILY_SEARCH_VERSION:
+        if (
+            raw["format"] != FAMILY_SEARCH_FORMAT
+            or type(raw["version"]) is not int
+            or raw["version"] not in SUPPORTED_FAMILY_SEARCH_VERSIONS
+        ):
             raise ValueError("unsupported transformation-family format or version")
         if not isinstance(raw["scenarios"], list):
             raise ValueError("family scenarios must be an array")
@@ -252,14 +259,15 @@ def run_worker_search(job, context) -> dict:
         raise ValueError("transformation-family worker requires a family-search specification")
 
     saved = dict(job.checkpoint)
-    if saved.get("family_search_version") != FAMILY_SEARCH_VERSION:
+    if saved.get("family_checkpoint_version") != FAMILY_CHECKPOINT_VERSION:
         saved = {}
     prep_state = saved or {
-        "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "next_candidate_index": 0,
         "examined": 0,
         "exact_candidate_count": 0,
         "exact_candidates": [],
+        "finite_behavior_groups": {},
         "ranked_candidates": [],
         "scenario_match_counts": [0] * len(spec.scenarios),
     }
@@ -309,6 +317,7 @@ def run_worker_search(job, context) -> dict:
     examined = int(saved.get("examined", start_index))
     exact_count = int(saved.get("exact_candidate_count", 0))
     exact_candidates = list(saved.get("exact_candidates", []))
+    finite_behavior_groups = dict(saved.get("finite_behavior_groups", {}))
     ranked_candidates = [
         (
             row["matching_scenario_count"],
@@ -365,6 +374,27 @@ def run_worker_search(job, context) -> dict:
                 scenario_match_counts[scenario_index] += 1
                 matching_scenarios.append(scenario.fingerprint)
         match_count = len(matching_scenarios)
+        finite_map_fingerprints = [
+            scenario_result["evaluation"].get("finite_map_fingerprint")
+            for scenario_result in scenario_results
+        ]
+        finite_family_fingerprint = None
+        finite_family_scenario_maps = None
+        if match_count == len(spec.scenarios) and all(finite_map_fingerprints):
+            finite_family_scenario_maps = [
+                {
+                    "scenario_fingerprint": scenario.fingerprint,
+                    "finite_map_fingerprint": finite_map_fingerprint,
+                }
+                for scenario, finite_map_fingerprint in zip(spec.scenarios, finite_map_fingerprints)
+            ]
+            finite_family_payload = [
+                [entry["scenario_fingerprint"], entry["finite_map_fingerprint"]]
+                for entry in finite_family_scenario_maps
+            ]
+            finite_family_fingerprint = sha256(json.dumps(
+                finite_family_payload, sort_keys=True, separators=(",", ":"),
+            ).encode("utf-8")).hexdigest()
         signature = transform.signature
         row = {
             "program": repr(transform),
@@ -380,16 +410,23 @@ def run_worker_search(job, context) -> dict:
             "matching_scenario_count": match_count,
             "matching_scenarios": matching_scenarios,
             "bijection_on_every_scenario": match_count == len(spec.scenarios),
+            "finite_family_map_fingerprint": finite_family_fingerprint,
+            "finite_family_scenario_maps": finite_family_scenario_maps,
             "scenario_results": scenario_results,
             "proof_status": "not_proved",
         }
-        example_preview = _example_map_preview(transform, datasets[0], spec.scenarios[0])
-        if example_preview is not None:
-            row["example_map_preview"] = example_preview
         next_index = index + 1
         examined += 1
         if match_count == len(spec.scenarios):
             exact_count += 1
+            if finite_family_fingerprint is not None:
+                group = finite_behavior_groups.setdefault(finite_family_fingerprint, {
+                    "finite_family_map_fingerprint": finite_family_fingerprint,
+                    "candidate_count": 0,
+                    "example_program": row["program"],
+                    "scenario_maps": finite_family_scenario_maps,
+                })
+                group["candidate_count"] += 1
             exact_candidates.append(row)
             exact_candidates.sort(key=lambda candidate: (candidate["cost"], candidate["program"]))
             exact_candidates = exact_candidates[:keep]
@@ -397,13 +434,30 @@ def run_worker_search(job, context) -> dict:
         ranked_candidates.sort(key=lambda item: (-item[0], -item[1], item[2]["cost"], item[2]["program"]))
         ranked_candidates = ranked_candidates[:keep]
 
+        retained = any(candidate is row for candidate in exact_candidates) or any(
+            item[2] is row for item in ranked_candidates
+        )
+        if retained:
+            scenario_map_previews = [
+                {
+                    "scenario_index": scenario_index,
+                    "scenario_fingerprint": scenario.fingerprint,
+                    "example_map": _example_map_preview(transform, data, scenario),
+                }
+                for scenario_index, (scenario, data) in enumerate(zip(spec.scenarios, datasets))
+            ]
+            row["scenario_map_previews"] = scenario_map_previews
+            if scenario_map_previews and scenario_map_previews[0]["example_map"] is not None:
+                row["example_map_preview"] = scenario_map_previews[0]["example_map"]
+
         if examined % interval == 0 or (start_index == 0 and next_index == 1):
             checkpoint_state = {
-                "family_search_version": FAMILY_SEARCH_VERSION,
+                "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
                 "next_candidate_index": next_index,
                 "examined": examined,
                 "exact_candidate_count": exact_count,
                 "exact_candidates": exact_candidates,
+                "finite_behavior_groups": finite_behavior_groups,
                 "ranked_candidates": [item[2] for item in ranked_candidates],
                 "scenario_match_counts": scenario_match_counts,
             }
@@ -425,11 +479,12 @@ def run_worker_search(job, context) -> dict:
         and not candidate_space_exhausted
     )
     final_state = {
-        "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "next_candidate_index": next_index,
         "examined": examined,
         "exact_candidate_count": exact_count,
         "exact_candidates": exact_candidates,
+        "finite_behavior_groups": finite_behavior_groups,
         "ranked_candidates": [item[2] for item in ranked_candidates],
         "scenario_match_counts": scenario_match_counts,
     }
@@ -443,7 +498,11 @@ def run_worker_search(job, context) -> dict:
     return {
         "specification_fingerprint": spec.fingerprint,
         "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "grammar_version": spec.grammar_version,
+        "grammar_manifest": transformation_grammar_manifest(
+            spec.grammar, grammar_version=spec.grammar_version,
+        ),
         "scenario_count": len(spec.scenarios),
         "scenario_specifications": [
             {
@@ -475,6 +534,15 @@ def run_worker_search(job, context) -> dict:
         "scenario_match_counts": scenario_match_counts,
         "exact_candidate_count": exact_count,
         "exact_candidates": exact_candidates,
+        "finite_behavior_group_count": len(finite_behavior_groups),
+        "finite_behavior_groups": sorted(
+            finite_behavior_groups.values(),
+            key=lambda group: (-group["candidate_count"], group["finite_family_map_fingerprint"]),
+        ),
+        "finite_behavior_scope": (
+            "Fingerprints identify identical complete maps only over the listed finite class and degree-offset windows; "
+            "they do not establish equivalence outside those windows."
+        ),
         "ranked_candidates": [item[2] for item in ranked_candidates],
         "status": "finite_cross_scenario_search",
         "proof_status": "not_proved",

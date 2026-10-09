@@ -120,6 +120,26 @@ def _candidate_rows(job):
     return rows
 
 
+def _scenario_map_previews(row):
+    """Return scenario-indexed map previews, including legacy first-map rows."""
+    if not isinstance(row, dict):
+        return ()
+    previews = row.get("scenario_map_previews")
+    if isinstance(previews, (list, tuple)):
+        return tuple(
+            item for item in previews
+            if isinstance(item, dict) and isinstance(item.get("example_map"), dict)
+        )
+    legacy = row.get("example_map_preview")
+    if isinstance(legacy, dict):
+        return ({
+            "scenario_index": 0,
+            "scenario_fingerprint": legacy.get("scenario_fingerprint"),
+            "example_map": legacy,
+        },)
+    return ()
+
+
 def _failure_text(failure):
     if not failure:
         return ""
@@ -141,6 +161,31 @@ def _candidate_has_failure(row):
         if isinstance(evaluation, dict) and isinstance(evaluation.get("first_failure") or evaluation.get("counterexample"), dict):
             return True
     return False
+
+
+def _scenario_evidence_lines(row):
+    """Format the candidate's finite result and map sample for every scenario."""
+    previews_by_scenario = {
+        item.get("scenario_index"): item.get("example_map")
+        for item in _scenario_map_previews(row)
+    }
+    lines = []
+    for item in row.get("scenario_results", ()):
+        status = "MATCH" if item.get("finite_match") else "does not match"
+        scenario_index = item.get("scenario_index")
+        display_index = scenario_index + 1 if isinstance(scenario_index, int) else "?"
+        lines.append(f"\nScenario {display_index}: {item.get('source_class')} → {item.get('target_class')} · degrees n{item.get('source_offset', 0):+d} → n{item.get('target_offset', 0):+d} · {status} through base n={item.get('verified_through', '?')}")
+        evaluation = item.get("evaluation", {})
+        failure = evaluation.get("first_failure")
+        if failure:
+            lines.append(_failure_text(failure))
+        preview = previews_by_scenario.get(scenario_index)
+        if preview:
+            lines.append(f"Sample map at base n={preview['base_degree']}: {preview['source']['values']} → {preview['output']['values']}")
+            lines.append(f"Position map: {preview['position_map']} · value map: {preview['value_map']} · created positions: {preview['created_positions']}")
+            if preview.get("block_trace"):
+                lines.append(f"Block trace: {preview['block_trace']}")
+    return lines
 
 
 class DiscoveryCampaignWindow:
@@ -566,13 +611,19 @@ class DiscoveryCampaignWindow:
             self.memory_label.configure(text="Per-round research memory is recorded when each deterministic search finishes.")
 
     def _show_candidate(self, row):
-        self.preview_button.configure(state="normal" if row and row.get("example_map_preview") else "disabled")
+        self.preview_button.configure(state="normal" if _scenario_map_previews(row) else "disabled")
         self.ask_ai_button.configure(state="normal" if row and self.ai_settings.enabled else "disabled")
         self.proof_plan_button.configure(state="normal" if row else "disabled")
         self.refine_button.configure(state="normal" if _candidate_has_failure(row) else "disabled")
         if not row:
             return
         lines = [row.get("program", ""), f"Cost {row.get('cost', '?')} · matches {row.get('matching_scenario_count', 0)}/{row.get('scenario_count', 0)} scenarios", "Finite result: not a proof."]
+        if row.get("finite_family_map_fingerprint"):
+            lines.append(
+                "Finite-family map fingerprint · "
+                + row["finite_family_map_fingerprint"]
+                + " · applies only to the searched windows."
+            )
         priority = row.get("research_priority")
         if priority:
             lines.append(
@@ -593,19 +644,7 @@ class DiscoveryCampaignWindow:
             lines.append("Priority components · " + " · ".join(breakdown))
             lines.extend("Why inspect · " + reason for reason in priority["reasons"])
             lines.extend("Uncertainty · " + note for note in priority["uncertainties"])
-        for item in row.get("scenario_results", ()):
-            status = "MATCH" if item.get("finite_match") else "does not match"
-            lines.append(f"\nScenario {item.get('scenario_index', '?') + 1}: {item.get('source_class')} → {item.get('target_class')} · degrees n{item.get('source_offset', 0):+d} → n{item.get('target_offset', 0):+d} · {status} through base n={item.get('verified_through', '?')}")
-            evaluation = item.get("evaluation", {})
-            failure = evaluation.get("first_failure")
-            if failure:
-                lines.append(_failure_text(failure))
-        preview = row.get("example_map_preview")
-        if preview:
-            lines.append(f"\nSample map at base n={preview['base_degree']}: {preview['source']['values']} → {preview['output']['values']}")
-            lines.append(f"Position map: {preview['position_map']} · value map: {preview['value_map']} · created positions: {preview['created_positions']}")
-            if preview.get("block_trace"):
-                lines.append(f"Block trace: {preview['block_trace']}")
+        lines.extend(_scenario_evidence_lines(row))
         self._set_detail("\n".join(lines))
 
     def _ai_settings_label(self):
@@ -771,8 +810,13 @@ class DiscoveryCampaignWindow:
     def preview_selected(self):
         selected = self.candidate_table.selection()
         row = self._candidate_by_iid.get(selected[0]) if selected else None
-        if row and row.get("example_map_preview"):
-            self.on_preview(row["example_map_preview"], row.get("program", "Generated candidate"))
+        previews = _scenario_map_previews(row)
+        if previews:
+            preview = previews[0]["example_map"]
+            scenario_index = previews[0].get("scenario_index")
+            scenario_label = scenario_index + 1 if isinstance(scenario_index, int) else 1
+            title = f"{row.get('program', 'Generated candidate')} · scenario {scenario_label}"
+            self.on_preview(preview, title)
             self.parent.bell()
 
     def export_selected(self):
