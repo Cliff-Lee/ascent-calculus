@@ -285,6 +285,47 @@ async function api(path, body=null) {
   return j;
 }
 
+async function runResearchJob(kind, specification, rootSelector, runSelector, cancelSelector, renderResult) {
+  const root=$(rootSelector), runButton=$(runSelector), cancelButton=$(cancelSelector);
+  let jobId=null;
+  runButton.disabled=true;
+  cancelButton.hidden=false;
+  cancelButton.disabled=true;
+  cancelButton.textContent='Cancel run';
+  cancelButton.onclick=async()=>{
+    if (!jobId) return;
+    cancelButton.disabled=true;
+    cancelButton.textContent='Cancelling…';
+    try { await api(`/api/jobs/${jobId}/cancel`,{}); }
+    catch(e) { root.innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  };
+  root.innerHTML='<div class="loading card">Starting the bounded engine run…</div>';
+  try {
+    let job=await api('/api/jobs',{kind,specification});
+    jobId=job.job_id;
+    cancelButton.disabled=false;
+    while (!['completed','cancelled','failed'].includes(job.status)) {
+      const progress=job.progress||{};
+      const detail=progress.degree
+        ? `Degree n=${progress.degree} · ${formatCount(progress.degree_objects_tested||0)} checked in this pass · ${formatCount(progress.total_objects_tested||0)} checked overall · ${progress.completed_degrees||0}/${progress.total_degrees||'?'} degrees complete.`
+        : `Run ${job.status}…`;
+      root.innerHTML=`<div class="loading card" aria-live="polite">${escapeHtml(detail)}</div>`;
+      await new Promise(resolve=>setTimeout(resolve,250));
+      job=await api(`/api/jobs/${jobId}`);
+    }
+    if (job.status==='failed') throw new Error(job.error?.detail||'The bounded experiment failed.');
+    renderResult(job.result);
+  } catch(e) {
+    root.innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`;
+  } finally {
+    runButton.disabled=false;
+    cancelButton.hidden=true;
+    cancelButton.disabled=true;
+    cancelButton.textContent='Cancel run';
+    cancelButton.onclick=null;
+  }
+}
+
 function metric(label, value) { return `<span class="metric">${label}<strong>${value}</strong></span>`; }
 function tokenHtml(p, mini=false, classes='') {
   const cls = mini ? 'minitoken' : 'token';
@@ -805,11 +846,8 @@ function currentExperimentRequest() {
   return {question,start:Number($('#experiment-start').value),stop:Number($('#experiment-stop').value),statistic:$('#experiment-statistic').value,condition,left:sideSpecification('left'),right:question==='compare'?sideSpecification('right'):null};
 }
 async function runExperiment(request=currentExperimentRequest()) {
-  $('#experiment-result').innerHTML='<div class="loading card">Running the bounded experiment against AC-Engine…</div>';
-  $('#experiment-run').disabled=true;
-  try { renderExperiment(await api('/api/experiment/run',request)); }
-  catch(e) { $('#experiment-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
-  finally { updateExperimentValidity(); }
+  await runResearchJob('experiment',request,'#experiment-result','#experiment-run','#experiment-cancel',renderExperiment);
+  updateExperimentValidity();
 }
 
 function savedExperiments() {
@@ -896,19 +934,21 @@ function renderExperiment(result) {
   const leftTitle=formatExperimentSide(spec.left), rightTitle=spec.right?formatExperimentSide(spec.right):'';
   const divergence=result.first_divergence;
   const statisticDivergence=result.first_statistic_divergence;
-  const badge=comparison?(divergence?'DIVERGENCE':statisticDivergence?'DISTRIBUTION DIFFERS':'MATCH'):'FINITE COUNT';
+  const incomplete=result.evidence?.status==='incomplete';
+  const badge=incomplete?'INCOMPLETE':comparison?(divergence?'DIVERGENCE':statisticDivergence?'DISTRIBUTION DIFFERS':'MATCH'):'FINITE COUNT';
+  const badgeClass=incomplete?'incomplete':divergence||statisticDivergence?'counterexample':'verified';
   let table='';
   if (comparison) {
     table=`<div class="experiment-table-wrap"><table class="experiment-table"><thead><tr><th>n</th><th>${leftTitle}</th><th>${rightTitle}</th><th>Difference</th>${spec.statistic!=='none'?'<th>Distribution</th>':''}<th>Explore</th></tr></thead><tbody>${result.rows.map(row=>`<tr class="${!row.counts_match?'diverged-row':''}"><th scope="row">${row.n}</th><td>${formatCount(row.left_count)}</td><td>${formatCount(row.right_count)}</td><td class="difference ${row.difference===0?'zero':'nonzero'}">${row.difference>0?'+':''}${formatCount(row.difference)}</td>${spec.statistic!=='none'?`<td><span class="distribution-status ${row.distributions_match?'same':'different'}">${row.distributions_match?'Same':'Different'}</span></td>`:''}<td class="result-actions">${spec.statistic!=='none'?`<button class="text-button" data-show-distribution="${row.n}">Show buckets</button>`:''}<button class="text-button" data-object-side="left" data-object-n="${row.n}">Browse first</button><button class="text-button" data-object-side="right" data-object-n="${row.n}">Browse second</button></td></tr>`).join('')}</tbody></table></div>`;
   } else {
     table=`<div class="experiment-table-wrap"><table class="experiment-table"><thead><tr><th>n</th><th>${leftTitle}</th>${spec.statistic!=='none'?'<th>Statistic groups</th>':''}<th>Explore</th></tr></thead><tbody>${result.rows.map(row=>`<tr><th scope="row">${row.n}</th><td>${formatCount(row.left_count)}</td>${spec.statistic!=='none'?`<td>${row.left_distribution.length}</td>`:''}<td><button class="text-button" data-object-side="left" data-object-n="${row.n}">Browse members</button></td></tr>`).join('')}</tbody></table></div>`;
   }
-  const takeaway=divergence?`At n=${divergence.n}, the counts are ${formatCount(divergence.left_count)} and ${formatCount(divergence.right_count)}.`:comparison&&statisticDivergence?`The total counts match, but the ${escapeHtml(result.statistic_label.toLowerCase())} distributions first differ at n=${statisticDivergence.n}.`:result.notice;
+  const takeaway=incomplete?`Cancelled during n=${result.evidence.cancelled_at_degree}. Rows shown are complete degrees only.`:divergence?`At n=${divergence.n}, the counts are ${formatCount(divergence.left_count)} and ${formatCount(divergence.right_count)}.`:comparison&&statisticDivergence?`The total counts match, but the ${escapeHtml(result.statistic_label.toLowerCase())} distributions first differ at n=${statisticDivergence.n}.`:result.notice;
   const relation=divergence?'≠':'=';
   const canFindWitnesses=divergence && spec.left.family===spec.right.family && divergence.left_degree===divergence.right_degree;
   const divergenceAction=canFindWitnesses?`<div class="discovery-actions"><button class="secondary" id="find-unmatched">Find exact unmatched words at n=${divergence.n}</button><span class="small muted">AC-Engine will search this finite degree and show class-membership witnesses.</span></div><div id="divergence-witnesses"></div>`:'';
   const refinementActions=comparison?`<div class="refinement-actions"><span class="small muted">Strengthen the comparison:</span>${[['ascents','ascents'],['ascent_runs','ascent runs'],['run_lengths','run-length profile'],['maximum','maximum'],['multiplicity_partition','multiplicity profile'],['first_occurrence_positions','first-occurrence positions'],['last_occurrence_positions','last-occurrence positions'],['run_start_positions','run-start positions']].map(([value,label])=>`<button class="text-button" data-refine-stat="${value}">By ${label}</button>`).join('')}</div>`:'';
-  $('#experiment-result').innerHTML=`<section class="experiment-result card"><div class="experiment-result-top"><div><span class="result-kicker">BOUNDED RESULT</span><span class="status-chip ${divergence||statisticDivergence?'counterexample':'verified'}">${badge}</span></div><h2>${escapeHtml(result.headline)}</h2><p class="result-equation">${leftTitle}${comparison?` <span aria-hidden="true">${relation}</span> ${rightTitle}`:''}</p><p class="result-takeaway">${escapeHtml(takeaway)}</p></div>${table}<div id="experiment-distribution"></div>${refinementActions}${divergenceAction}<div id="experiment-object-browser"></div><p class="finite-note">Finite evidence for this requested range; not a proof for all degrees.</p><details class="experiment-metadata"><summary>Reproducibility details</summary><div><span><b>Scanned objects</b>${formatCount(result.tested_objects)}</span><span><b>Runtime</b>${result.runtime_seconds}s</span><span><b>Refinement</b>${escapeHtml(result.statistic_label)}</span></div><pre>${escapeHtml(JSON.stringify(spec,null,2))}</pre></details></section>`;
+  $('#experiment-result').innerHTML=`<section class="experiment-result card"><div class="experiment-result-top"><div><span class="result-kicker">BOUNDED RESULT</span><span class="status-chip ${badgeClass}">${badge}</span></div><h2>${escapeHtml(result.headline)}</h2><p class="result-equation">${leftTitle}${comparison?` <span aria-hidden="true">${relation}</span> ${rightTitle}`:''}</p><p class="result-takeaway">${escapeHtml(takeaway)}</p></div>${table}<div id="experiment-distribution"></div>${refinementActions}${divergenceAction}<div id="experiment-object-browser"></div><p class="finite-note">Finite evidence for this requested range; not a proof for all degrees.</p><details class="experiment-metadata"><summary>Reproducibility details</summary><div><span><b>Scanned objects</b>${formatCount(result.tested_objects)}</span><span><b>Runtime</b>${result.runtime_seconds}s</span><span><b>Refinement</b>${escapeHtml(result.statistic_label)}</span><span><b>Execution</b>${escapeHtml(result.evidence?.status||'finite')}</span></div><pre>${escapeHtml(JSON.stringify(spec,null,2))}</pre></details></section>`;
   $$('#experiment-result [data-object-side]').forEach(button=>button.addEventListener('click',()=>openObjectBrowser(button.dataset.objectSide,Number(button.dataset.objectN),0)));
   $$('#experiment-result [data-show-distribution]').forEach(button=>button.addEventListener('click',()=>showDistributionDetails(Number(button.dataset.showDistribution))));
   $$('#experiment-result [data-refine-stat]').forEach(button=>button.addEventListener('click',()=>refineExperiment(button.dataset.refineStat)));
@@ -928,9 +968,7 @@ async function refineExperiment(statistic) {
   const request={...activeExperiment.specification,statistic};
   $('#experiment-statistic').value=statistic;
   updateExperimentSentence();
-  $('#experiment-result').innerHTML='<div class="loading card">Re-running the same experiment with this refinement…</div>';
-  try { renderExperiment(await api('/api/experiment/run',request)); }
-  catch(e) { $('#experiment-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
+  await runResearchJob('experiment',request,'#experiment-result','#experiment-run','#experiment-cancel',renderExperiment);
 }
 
 async function openObjectBrowser(side,n,offset=0,filters=null) {
@@ -1019,9 +1057,10 @@ function transformFailure(row, inverse) {
 }
 function renderTransformExperiment(data) {
   const rows=data.rows;
+  const incomplete=data.evidence?.status==='incomplete';
   const everyRowPasses=rows.every(row=>row.all_sources_land_in_target&&row.injective&&row.surjective&&(!data.inverse||row.inverse_successes===row.source_count)&&(!data.statistic||row.statistic_failures===0));
   const firstFailure=rows.find(row=>transformFailure(row,Boolean(data.inverse)));
-  const headline=everyRowPasses?`Finite checks pass through n=${rows[rows.length-1].n}`:`First failed check at n=${firstFailure?.n??rows[0].n}`;
+  const headline=incomplete?`Cancelled during n=${data.evidence.cancelled_at_degree}`:everyRowPasses?`Finite checks pass through n=${rows[rows.length-1]?.n??'?'}`:`First failed check at n=${firstFailure?.n??rows[0]?.n??'?'}`;
   const rowHtml=rows.map(row=>{
     const match=row.all_sources_land_in_target&&row.injective&&row.surjective&&(!data.inverse||row.inverse_successes===row.source_count)&&(!data.statistic||row.statistic_failures===0);
     const inverseText=data.inverse?`${formatCount(row.inverse_successes)}/${formatCount(row.source_count)}`:'not defined';
@@ -1031,7 +1070,9 @@ function renderTransformExperiment(data) {
   }).join('');
   const parameterText=data.parameter===null||data.parameter===undefined?'':data.transformation==='insert_position'?` at cut ${data.parameter}`:` at position ${data.parameter}`;
   const transformLabel=`${data.transformation}${parameterText}`;
-  $('#tx-result').innerHTML=`<section class="transform-result card"><div class="experiment-result-top"><span class="result-kicker">FINITE TRANSFORMATION AUDIT</span><span class="status-chip ${everyRowPasses?'verified':'counterexample'}">${everyRowPasses?'CHECKS PASS':'CHECK FAILED'}</span><h2>${escapeHtml(headline)}</h2><p class="result-equation">${escapeHtml(transformLabel)}${data.value===null||data.value===undefined?'':` · value ${data.value}`}${data.inverse?` · inverse candidate ${escapeHtml(data.inverse)}`:''}</p><p class="result-takeaway">${escapeHtml(data.notice)}</p></div><div class="experiment-table-wrap"><table class="experiment-table"><thead><tr><th>Source → target degree</th><th>Sources</th><th>Cayley outputs</th><th>In target</th><th>Distinct images</th><th>Collisions</th><th>Target coverage</th><th>Inverse recovery</th><th>Statistic</th><th>Trace</th></tr></thead><tbody>${rowHtml}</tbody></table></div><div id="tx-diagnostic"></div><details class="experiment-metadata"><summary>Exact specification and runtime</summary><div><span><b>Runtime</b>${data.runtime_seconds}s</span><span><b>Maximum source degree</b>10</span><span><b>Claim status</b>Finite computation only</span></div><pre>${escapeHtml(JSON.stringify(data.specification,null,2))}</pre></details><p class="finite-note">This is a bounded audit. It cannot establish an all-degree bijection theorem.</p></section>`;
+  const chipClass=incomplete?'incomplete':everyRowPasses?'verified':'counterexample';
+  const chipText=incomplete?'INCOMPLETE':everyRowPasses?'CHECKS PASS':'CHECK FAILED';
+  $('#tx-result').innerHTML=`<section class="transform-result card"><div class="experiment-result-top"><span class="result-kicker">FINITE TRANSFORMATION AUDIT</span><span class="status-chip ${chipClass}">${chipText}</span><h2>${escapeHtml(headline)}</h2><p class="result-equation">${escapeHtml(transformLabel)}${data.value===null||data.value===undefined?'':` · value ${data.value}`}${data.inverse?` · inverse candidate ${escapeHtml(data.inverse)}`:''}</p><p class="result-takeaway">${escapeHtml(data.notice)}</p></div><div class="experiment-table-wrap"><table class="experiment-table"><thead><tr><th>Source → target degree</th><th>Sources</th><th>Cayley outputs</th><th>In target</th><th>Distinct images</th><th>Collisions</th><th>Target coverage</th><th>Inverse recovery</th><th>Statistic</th><th>Trace</th></tr></thead><tbody>${rowHtml}</tbody></table></div><div id="tx-diagnostic"></div><details class="experiment-metadata"><summary>Exact specification and runtime</summary><div><span><b>Runtime</b>${data.runtime_seconds}s</span><span><b>Maximum source degree</b>10</span><span><b>Claim status</b>${escapeHtml(data.evidence?.status||'finite')}</span></div><pre>${escapeHtml(JSON.stringify(data.specification,null,2))}</pre></details><p class="finite-note">This is a bounded audit. It cannot establish an all-degree bijection theorem.</p></section>`;
   $$('#tx-result [data-tx-detail]').forEach(button=>button.addEventListener('click',()=>{
     const row=rows.find(item=>item.n===Number(button.dataset.txDetail));
     const failure=transformFailure(row,Boolean(data.inverse));
@@ -1067,11 +1108,7 @@ $('#tx-run').addEventListener('click',async()=>{
   const request={transformation,start:Number(range[1]),stop:Number(range[2]),statistic:$('#tx-statistic').value,source:txSide('source'),target:txSide('target')};
   if (['prefix_lift','inverse_prefix_lift','insert_position','delete_position'].includes(transformation)) request.parameter=Number($('#tx-parameter').value);
   if (['insert_position','delete_position'].includes(transformation)) request.value=Number($('#tx-value').value);
-  $('#tx-run').disabled=true;
-  $('#tx-result').innerHTML='<div class="loading card">Applying the selected map to the bounded source class…</div>';
-  try { renderTransformExperiment(await api('/api/transform-experiment/run',request)); }
-  catch(e) { $('#tx-result').innerHTML=`<div class="error-box">${escapeHtml(e.message)}</div>`; }
-  finally { $('#tx-run').disabled=false; }
+  await runResearchJob('transformation',request,'#tx-result','#tx-run','#tx-cancel',renderTransformExperiment);
 });
 restoreDraft();
 renderPatternLane('left'); renderPatternLane('right');

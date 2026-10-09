@@ -267,7 +267,7 @@
         </details>
 
         <div class="experiment-sentence" id="experiment-sentence" aria-live="polite"></div>
-        <div class="composer-actions"><span id="experiment-validation-summary" class="muted small">Checking pattern definitions…</span><button id="experiment-run" class="primary" disabled>Run experiment</button></div>
+        <div class="composer-actions"><span id="experiment-validation-summary" class="muted small">Checking pattern definitions…</span><div class="job-buttons"><button id="experiment-cancel" class="secondary" hidden disabled>Cancel run</button><button id="experiment-run" class="primary" disabled>Run experiment</button></div></div>
       </div>
       <div class="finite-warning">A completed bounded comparison is finite evidence only. Matching through n=k does not prove equality for all degrees.</div>
       <div id="experiment-result" aria-live="polite"></div>
@@ -288,7 +288,7 @@
           <label>Target pattern<input id="tx-target-pattern" placeholder="e.g. 2212" /></label>
           <label>Degree range<input id="tx-range" value="1–6" aria-label="Degree range, use start-stop such as 1-6" /><small id="tx-degree-effect">Use start-stop, such as 1-6. This transformation check is capped at 10.</small></label>
           <label>Check statistic<select id="tx-statistic"><option value="none">No statistic</option><option value="ascents" selected>Ascent count</option><option value="ascent_runs">Ascent-run count</option><option value="run_lengths">Run-length profile</option><option value="maximum">Maximum</option><option value="distinct_values">Distinct values</option><option value="multiplicity_partition">Multiplicity profile</option><option value="first_occurrence_positions">First-occurrence positions</option><option value="last_occurrence_positions">Last-occurrence positions</option><option value="run_start_positions">Run-start positions</option></select></label>
-          <button id="tx-run" class="primary">Run transformation experiment</button>
+          <div class="job-buttons"><button id="tx-cancel" class="secondary" hidden disabled>Cancel run</button><button id="tx-run" class="primary">Run transformation experiment</button></div>
         </div>
         <div id="tx-result" aria-live="polite"></div>
       </details>

@@ -2,7 +2,7 @@
 
 Date: 2026-10-09
 
-Status: **executor foundation implemented; browser job lifecycle remains open**
+Status: **executor and browser job lifecycle implemented; visual review remains open**
 
 ## Scope completed
 
@@ -13,6 +13,12 @@ Status: **executor foundation implemented; browser job lifecycle remains open**
   progress without blocking the interface.
 - Class-wide transformation audits use the same progress callback and
   cancellation contract.
+- Browser clients can start count or transformation jobs with `POST /api/jobs`,
+  poll progress/results with `GET /api/jobs/{job_id}`, and request cancellation
+  with `POST /api/jobs/{job_id}/cancel`. Both browser experiment panels use the
+  job lifecycle and show checked-object and completed-degree progress.
+- The local job manager bounds active runs and retained results, and reports
+  worker failures as structured job state.
 - Cancellation stops at bounded batches. A partially enumerated degree is
   discarded; only fully completed degree rows are returned.
 - Count, comparison, and transformation results include an
@@ -22,16 +28,17 @@ Status: **executor foundation implemented; browser job lifecycle remains open**
 
 ## Validation
 
-- GUI experiment, transformation, and GUI-1 compatibility tests: **45/45 pass**.
+- GUI experiment, transformation, job lifecycle, and GUI-1 compatibility tests:
+  **48/48 pass**.
 - Default modified `2122` versus modified `2212` comparison through degree 11:
   **1,248,595** objects on each side; all degree counts match; elapsed **14.749 s**.
 - Python compilation and `git diff --check`: pass.
+- Browser JavaScript syntax check: pass.
 - The full repository suite was started but did not complete within the available
   run window, so this checkpoint does not claim a full-suite pass.
 
-## Open GUI-3B work
+## Remaining GUI-3B work
 
-The browser endpoint currently waits for a run to finish before returning JSON.
-The next executor slice should add a cancellable run lifecycle for browser
-clients (start, progress polling, cancel, final finite result) while keeping all
-enumeration and pattern semantics in the Python engine.
+Review the desktop and browser progress/cancel interactions visually at the
+target window sizes. Preserve the current rule that cancellation returns only
+complete degree rows and a finite `incomplete` result record.
