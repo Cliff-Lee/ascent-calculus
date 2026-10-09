@@ -422,6 +422,13 @@ Linux package check on 2026-10-09:
 - This checks package construction and payload, not a visible desktop launch on
   the target Ubuntu machine.
 
+The release workflow now includes every `test_am_ai*.py` module and the N11
+dossier checks in its focused regression job. Its macOS, Windows, and Ubuntu
+artifact labels have been aligned with the current `0.1.0a34` package version.
+The workflow YAML parses successfully; the local AM-AI1–AI10, research-state,
+and dossier regression checks all pass. The workflow itself still needs its
+normal GitHub Actions run after this change is pushed.
+
 To run the paired challenge on the Ubuntu machine, after confirming the model
 is local in Ollama, use:
 

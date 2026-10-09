@@ -36,6 +36,8 @@ jobs:
           tests/test_research_state.py
           tests/test_e11_proof_extraction.py
           tests/test_e9_local_repair.py
+          tests/test_am_ai*.py
+          tests/test_am_n11_dossiers.py
 
   macos-arm64:
     needs: test
@@ -51,7 +53,7 @@ jobs:
       - name: Upload tested macOS app for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-macos-arm64-a27
+          name: AscentCalculus-macos-arm64-a34
           path: |
             dist/AscentCalculus-macos-arm64/*.dmg
             dist/AscentCalculus-macos-arm64/*.zip
@@ -100,7 +102,7 @@ jobs:
       - name: Upload tested Windows installer for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-windows-x64-a27
+          name: AscentCalculus-windows-x64-a34
           path: dist/AscentCalculus-windows-x64/*
           if-no-files-found: error
           retention-days: 14
@@ -174,7 +176,7 @@ jobs:
       - name: Upload tested Ubuntu package for device testing
         uses: actions/upload-artifact@v4
         with:
-          name: AscentCalculus-ubuntu-amd64-a27
+          name: AscentCalculus-ubuntu-amd64-a34
           path: dist/AscentCalculus-ubuntu-24.04-amd64/*
           if-no-files-found: error
           retention-days: 14
