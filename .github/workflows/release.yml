@@ -36,7 +36,16 @@ jobs:
           tests/test_research_state.py
           tests/test_e11_proof_extraction.py
           tests/test_e9_local_repair.py
-          tests/test_am_ai*.py
+          tests/test_am_ai1_provider.py
+          tests/test_am_ai2_ollama.py
+          tests/test_am_ai3_settings.py
+          tests/test_am_ai4_provenance.py
+          tests/test_am_ai5_significance.py
+          tests/test_am_ai6_experiment_design.py
+          tests/test_am_ai7_refinement.py
+          tests/test_am_ai8_proof_assistance.py
+          tests/test_am_ai9_overnight_campaign.py
+          tests/test_am_ai10_benchmark.py
           tests/test_am_n11_dossiers.py
 
   macos-arm64:
