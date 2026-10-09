@@ -40,8 +40,8 @@ program descriptions without changing search ranking or claiming equivalence
 outside the listed finite class and degree-offset windows. Proof status remains
 `not_proved`.
 
-The family checkpoint version is now 2 so an interrupted run cannot resume
-with incomplete behavior-group counts from the older checkpoint schema. A
+The finite group counts are kept in a separately versioned checkpoint so an
+interrupted run cannot resume with incomplete behavior-group counts. A
 focused regression uses three distinct exact programs that collapse to one
 finite behavior group, checks the bounded-scope language, and resumes from a
 completed checkpoint. The local T1/T2 focused suite passed, as did
@@ -50,6 +50,20 @@ completed checkpoint. The local T1/T2 focused suite passed, as did
 GitHub Actions run #44 passed all three regression runners and all three
 platform package jobs. Ubuntu install, launch, and desktop preview checks
 passed; Windows installer smoke checks and the macOS package build passed.
+
+## T3 — Auditable behavior vectors and schema-safe checkpoints
+
+**Status: implementation added; hosted validation pending.** Each finite
+behavior group now includes the scenario fingerprint and finite-map
+fingerprint for every component of its combined family fingerprint. That
+lets a researcher inspect exactly which bounded scenario maps define a group
+without treating the combined hash as a proof.
+
+Saved family-search questions retain schema version 1; the interim version-2
+form is also accepted. The resumable checkpoint now has its own version,
+separate from the saved-question schema, so future progress-state changes do
+not silently change the experiment format. Regression checks cover both
+specification versions, the scenario-level vector, and checkpoint resume.
 
 ## Remaining AM-AI target-machine gates
 
