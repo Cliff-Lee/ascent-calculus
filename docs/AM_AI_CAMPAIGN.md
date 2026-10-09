@@ -410,6 +410,18 @@ Offline validation completed on 2026-10-09:
   `git diff --check` passed. A raw `unittest discover` still cannot import the
   eight pytest-dependent modules here; they are not counted as passing.
 
+Linux package check on 2026-10-09:
+
+- `scripts/build_ubuntu.sh` built the Ubuntu amd64 `.deb` and wheel as version
+  `0.1.0a34`. The package metadata includes `python3-tk`.
+- After extraction, the packaged desktop `--startup-check` and worker `--help`
+  passed with the available runtime Python, and the launcher and desktop entry
+  were present. The container's `/usr/bin/python3` lacks `tkinter`, so the
+  system-interpreter launcher could not be exercised here; an installed target
+  should receive Tk through the declared package dependency.
+- This checks package construction and payload, not a visible desktop launch on
+  the target Ubuntu machine.
+
 To run the paired challenge on the Ubuntu machine, after confirming the model
 is local in Ollama, use:
 
