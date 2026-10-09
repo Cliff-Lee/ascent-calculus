@@ -248,6 +248,7 @@ class DesktopWorkbench:
         self.focused_side = "left"
         self.rules = {"left": [], "right": []}
         self.saved_result = None
+        self._cancel_event = None
         self._save_timer = None
         self._worker_messages: queue.Queue = queue.Queue()
         self.state = read_state()
@@ -462,6 +463,9 @@ class DesktopWorkbench:
         HoverTip(self.witness_button, "Find exact sequence witnesses at the first degree where counts differ. Available when both classes use the same family and degree.")
         self.run_button = tk.Button(result_top, text="▶   Run bounded test", command=self.run, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 10, "bold"), padx=15, pady=10)
         self.run_button.grid(row=0, column=2, rowspan=2, sticky="e")
+        self.cancel_button = tk.Button(result_top, text="Cancel", command=self._cancel_run, relief="flat", bg="#fff0e9", fg=RED, activebackground="#ffe0d6", cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=11, pady=8)
+        self.cancel_button.grid(row=0, column=3, rowspan=2, sticky="e", padx=(8, 0))
+        self.cancel_button.grid_remove()
         self.result_subtitle = tk.Label(result_top, text="Matching finite counts are evidence through n, not a proof for all degrees.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9))
         self.result_subtitle.grid(row=1, column=0, sticky="w", pady=(4, 0))
         self.progress = ttk.Progressbar(results, mode="indeterminate", style="Horizontal.TProgressbar")
@@ -906,17 +910,30 @@ class DesktopWorkbench:
             messagebox.showerror("Check the experiment", str(exc), parent=self.root)
             return
         self.run_button.configure(state="disabled", text="Testing…")
+        self._cancel_event = threading.Event()
+        self.cancel_button.configure(state="normal", text="Cancel")
+        self.cancel_button.grid()
         self.header_status.configure(text="COMPUTING LOCALLY")
         self.progress.grid()
         self.progress.start(12)
         self.result_headline.configure(text="Enumerating sequences…")
         self.witness_button.grid_remove()
         self.footer.configure(text="The exact engine is running in the background. You can keep the experiment window open.")
-        threading.Thread(target=self._run_worker, args=(spec,), daemon=True).start()
+        threading.Thread(target=self._run_worker, args=(spec, self._cancel_event), daemon=True).start()
 
-    def _run_worker(self, spec):
+    def _cancel_run(self):
+        if self._cancel_event is not None:
+            self.cancel_button.configure(state="disabled", text="Cancelling…")
+            self.footer.configure(text="Stopping after the current small batch. Completed degree rows will be kept.", fg=AMBER)
+            self._cancel_event.set()
+
+    def _run_worker(self, spec, cancel_event):
         try:
-            result = run_experiment(spec)
+            result = run_experiment(
+                spec,
+                progress=lambda update: self._worker_messages.put(("progress", spec, update)),
+                cancel_event=cancel_event,
+            )
             self._worker_messages.put(("ok", spec, result))
         except Exception as exc:
             self._worker_messages.put(("error", str(exc), None))
@@ -1017,9 +1034,20 @@ class DesktopWorkbench:
         try:
             while True:
                 kind, first, result = self._worker_messages.get_nowait()
+                if kind == "progress":
+                    update = result
+                    if update.get("phase") not in {"starting", "complete", "cancelled"}:
+                        self.footer.configure(
+                            text=f"Degree n={update['degree']} · {update['degree_objects_tested']:,} objects checked in this pass · {update['total_objects_tested']:,} checked overall.",
+                            fg=MUTED,
+                        )
+                    continue
                 self.progress.stop()
                 self.progress.grid_remove()
                 self.run_button.configure(state="normal", text="▶   Run bounded test")
+                self.cancel_button.grid_remove()
+                self.cancel_button.configure(state="normal", text="Cancel")
+                self._cancel_event = None
                 self.header_status.configure(text="LOCAL · FINITE TESTS")
                 if kind in {"witness_ok", "witness_error"}:
                     self.witness_button.configure(state="normal", text="Find a differing word")
@@ -1053,6 +1081,10 @@ class DesktopWorkbench:
             self.table.insert("", "end", values=(row["n"], f"{left:,}", f"{right:,}", f"{difference:+,}", status), tags=(tag,))
         self.result_headline.configure(text=result["headline"], fg=GREEN_DARK if result["all_counts_match"] else (RED if result["first_divergence"] else INK))
         self.result_subtitle.configure(text=f"Tested {result['tested_objects']:,} generated objects in {result['runtime_seconds']:.3f}s · finite computation only")
+        evidence = result.get("evidence", {})
+        if evidence.get("status") == "incomplete":
+            self.footer.configure(text=f"Incomplete: cancelled during n={evidence['cancelled_at_degree']}. Only completed degrees are shown.", fg=AMBER)
+            return
         if result["first_divergence"]:
             n = result["first_divergence"]["n"]
             self.footer.configure(text=f"Counterexample degree: n={n}. This refutes equality of these finite counts at that degree.", fg=RED)
@@ -1061,7 +1093,7 @@ class DesktopWorkbench:
         elif result["all_counts_match"]:
             self.footer.configure(text=f"Counts agree for every tested degree from {result['specification']['start']} to {result['specification']['stop']}. This is finite evidence, not an all-degree proof.", fg=GREEN_DARK)
         else:
-            self.footer.configure(text="Single-class count complete.", fg=MUTED)
+            self.footer.configure(text="Single-class count complete. Finite computation only.", fg=MUTED)
 
     def _current_draft(self):
         return {"left_family": _family_key(self.left_lane.family.get()), "right_family": _family_key(self.right_lane.family.get()), "left_rules": json.dumps(self.rules["left"]), "right_rules": json.dumps(self.rules["right"]), "start": self.start_var.get(), "stop": self.stop_var.get(), "statistic": self._stat_key()}

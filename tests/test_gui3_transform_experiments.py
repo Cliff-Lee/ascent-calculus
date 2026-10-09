@@ -1,4 +1,5 @@
 import pytest
+from threading import Event
 
 from ac.gui.transform_experiments import run_transform_experiment
 
@@ -14,6 +15,8 @@ def test_hat_audits_as_a_finite_bijection_from_ordinary_to_modified_through_degr
         "source": _side("ordinary"), "target": _side("modified"),
     })
     assert result["finite_only"] is True
+    assert result["evidence"]["status"] == "verified"
+    assert result["evidence"]["schema"] == "ac.finite-result.v1"
     for row in result["rows"]:
         assert row["source_count"] == row["target_count"]
         assert row["cayley_outputs"] == row["source_count"]
@@ -35,6 +38,28 @@ def test_reverse_reports_a_target_class_failure_and_a_reproducible_witness():
     assert row["first_target_failure"] == {"source": [1, 2], "output": [2, 1]}
     assert row["injective"] is True
     assert row["surjective"] is False
+    assert result["evidence"]["status"] == "counterexample"
+
+
+def test_transform_experiment_can_be_cancelled_without_recording_partial_degree():
+    cancellation = Event()
+    updates = []
+
+    def stop_after_first_degree(update):
+        updates.append(update)
+        if update["phase"] == "degree_complete" and update["degree"] == 1:
+            cancellation.set()
+
+    result = run_transform_experiment({
+        "transformation": "reverse", "start": 1, "stop": 4,
+        "source": _side("ordinary"), "target": _side("ordinary"),
+    }, progress=stop_after_first_degree, cancel_event=cancellation)
+
+    assert [row["n"] for row in result["rows"]] == [1]
+    assert result["evidence"]["status"] == "incomplete"
+    assert result["evidence"]["complete"] is False
+    assert result["evidence"]["cancelled_at_degree"] == 2
+    assert updates[-1]["phase"] == "cancelled"
 
 
 def test_source_pattern_restrictions_are_applied_before_the_transformation():

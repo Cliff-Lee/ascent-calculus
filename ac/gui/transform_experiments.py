@@ -21,6 +21,8 @@ from .experiments import (
     FAMILY_GENERATORS,
     FAMILY_LIMITS,
     STATISTICS,
+    _cancel_requested,
+    _emit_progress,
     _matches,
     _statistic,
     parse_experiment,
@@ -154,13 +156,25 @@ def _apply_inverse(name, word, parameter, value):
     return _apply(INVERSES[name], word, parameter, value)
 
 
-def run_transform_experiment(raw: dict) -> dict:
+def run_transform_experiment(raw: dict, *, progress=None, cancel_event=None) -> dict:
     """Apply one existing transformation to a bounded source class and audit it."""
     name, spec, statistic, parameter, value = _parse(raw)
     inverse_name = INVERSES.get(name)
     started = perf_counter()
     rows = []
+    cancelled = False
+    total_degrees = spec.stop - spec.start + 1
+    current_n = spec.start
+    total_tested = 0
+    _emit_progress(progress, phase="starting", degree=current_n, completed_degrees=0,
+                   total_degrees=total_degrees, degree_tested=0, total_tested=0)
     for n in range(spec.start, spec.stop + 1):
+        current_n = n
+        _emit_progress(progress, phase="degree", degree=n, completed_degrees=len(rows),
+                       total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
+        if _cancel_requested(cancel_event):
+            cancelled = True
+            break
         source_count = valid_outputs = target_hits = collisions = inverse_successes = 0
         statistic_preserved = statistic_failures = 0
         images: set[tuple[tuple[int, ...], int]] = set()
@@ -170,7 +184,16 @@ def run_transform_experiment(raw: dict) -> dict:
         target_predicate = FAMILY_PREDICATES[spec.right.family]
         source_degree = n + spec.left.degree_offset
         target_degree = n + spec.right.degree_offset
+        universe_scanned = 0
         for source in FAMILY_GENERATORS[spec.left.family](source_degree):
+            universe_scanned += 1
+            if universe_scanned == 1 or universe_scanned % 256 == 0:
+                _emit_progress(progress, phase="source", degree=n, completed_degrees=len(rows),
+                               total_degrees=total_degrees, degree_tested=universe_scanned,
+                               total_tested=total_tested + universe_scanned)
+                if _cancel_requested(cancel_event):
+                    cancelled = True
+                    break
             if not _matches(source, spec.left.rules):
                 continue
             source_count += 1
@@ -233,13 +256,28 @@ def run_transform_experiment(raw: dict) -> dict:
                     if first_inverse_failure is None:
                         first_inverse_failure = {"source": list(source.values), "output": list(output.values), "reason": f"{type(exc).__name__}: {exc}"}
 
+        if cancelled:
+            break
+
         target_count = 0
+        target_scanned = 0
         for target in FAMILY_GENERATORS[spec.right.family](target_degree):
+            target_scanned += 1
+            if target_scanned == 1 or target_scanned % 256 == 0:
+                _emit_progress(progress, phase="target", degree=n, completed_degrees=len(rows),
+                               total_degrees=total_degrees,
+                               degree_tested=universe_scanned + target_scanned,
+                               total_tested=total_tested + universe_scanned + target_scanned)
+                if _cancel_requested(cancel_event):
+                    cancelled = True
+                    break
             if _matches(target, spec.right.rules):
                 target_count += 1
                 target_key = _key(target)
                 target_keys.add(target_key)
                 target_order.append(target_key)
+        if cancelled:
+            break
         target_coverage = sum(key in images for key in target_keys)
         missing_key = next((key for key in target_order if key not in images), None)
         missing_target = list(missing_key[0]) if missing_key is not None else None
@@ -268,7 +306,10 @@ def run_transform_experiment(raw: dict) -> dict:
             "first_inverse_failure": first_inverse_failure,
             "first_statistic_failure": first_statistic_failure,
         })
-    return {
+        total_tested += universe_scanned + target_scanned
+        _emit_progress(progress, phase="degree_complete", degree=n, completed_degrees=len(rows),
+                       total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
+    result = {
         "transformation": name,
         "parameter": parameter,
         "value": value,
@@ -290,6 +331,28 @@ def run_transform_experiment(raw: dict) -> dict:
             "target": _serial_side(spec.right),
         },
     }
+    has_counterexample = any(
+        not row["all_sources_land_in_target"]
+        or not row["injective"]
+        or not row["surjective"]
+        or (row["inverse_successes"] is not None and row["inverse_successes"] != row["source_count"])
+        or (row["statistic_failures"] is not None and row["statistic_failures"] > 0)
+        for row in rows
+    )
+    result["evidence"] = {
+        "schema": "ac.finite-result.v1",
+        "status": "incomplete" if cancelled else ("counterexample" if has_counterexample else "verified"),
+        "finite_only": True,
+        "completed_degrees": [row["n"] for row in rows],
+        "requested_degrees": {"start": spec.start, "stop": spec.stop},
+        "complete": not cancelled,
+        "cancelled_at_degree": current_n if cancelled else None,
+        "objects_tested": total_tested,
+    }
+    _emit_progress(progress, phase="cancelled" if cancelled else "complete", degree=current_n,
+                   completed_degrees=len(rows), total_degrees=total_degrees,
+                   degree_tested=0, total_tested=total_tested)
+    return result
 
 
 def _json_value(value):

@@ -55,6 +55,10 @@ STATISTICS = {
 GENERIC_PATTERN_MAX_DEGREE = 12
 
 
+class _RunCancelled(Exception):
+    """Internal control flow used to return a well-formed partial result."""
+
+
 @dataclass(frozen=True)
 class PatternRule:
     mode: Literal["avoid", "contain"]
@@ -277,25 +281,83 @@ def _json_distribution(counter: Counter) -> list[dict]:
     ]
 
 
-def _count_side(side: ExperimentSide, degree: int, statistic: Statistic, condition: StructuralCondition | None = None):
+def _cancel_requested(cancel_event) -> bool:
+    return bool(cancel_event is not None and cancel_event.is_set())
+
+
+def _emit_progress(progress, *, phase, degree, completed_degrees, total_degrees, degree_tested, total_tested):
+    if progress is not None:
+        progress({
+            "phase": phase,
+            "degree": degree,
+            "completed_degrees": completed_degrees,
+            "total_degrees": total_degrees,
+            "degree_objects_tested": degree_tested,
+            "total_objects_tested": total_tested,
+        })
+
+
+def _count_side(
+    side: ExperimentSide,
+    degree: int,
+    statistic: Statistic,
+    condition: StructuralCondition | None = None,
+    *,
+    progress=None,
+    cancel_event=None,
+    phase="left",
+    completed_degrees=0,
+    total_degrees=1,
+    total_tested=0,
+):
     generator = FAMILY_GENERATORS[side.family]
     count = 0
     tested = 0
     distribution = _new_distribution()
     for word in generator(degree):
         tested += 1
+        if tested == 1 or tested % 256 == 0:
+            _emit_progress(
+                progress, phase=phase, degree=degree,
+                completed_degrees=completed_degrees, total_degrees=total_degrees,
+                degree_tested=tested, total_tested=total_tested + tested,
+            )
+            if _cancel_requested(cancel_event):
+                raise _RunCancelled
         if _matches(word, side.rules, condition):
             count += 1
             if statistic != "none":
                 distribution[_statistic(word, statistic)] += 1
+    if _cancel_requested(cancel_event):
+        raise _RunCancelled
     return count, tested, distribution
 
 
-def _count_pair_same_universe(left: ExperimentSide, right: ExperimentSide, degree: int, statistic: Statistic, condition: StructuralCondition | None = None):
+def _count_pair_same_universe(
+    left: ExperimentSide,
+    right: ExperimentSide,
+    degree: int,
+    statistic: Statistic,
+    condition: StructuralCondition | None = None,
+    *,
+    progress=None,
+    cancel_event=None,
+    completed_degrees=0,
+    total_degrees=1,
+    total_tested=0,
+):
     count_left = count_right = tested = 0
     dist_left, dist_right = _new_distribution(), _new_distribution()
     for word in FAMILY_GENERATORS[left.family](degree):
         tested += 1
+        if tested == 1 or tested % 256 == 0:
+            _emit_progress(
+                progress, phase="compare", degree=degree,
+                completed_degrees=completed_degrees, total_degrees=total_degrees,
+                degree_tested=tested, total_tested=total_tested + tested,
+            )
+            if _cancel_requested(cancel_event):
+                raise _RunCancelled
         if _matches(word, left.rules, condition):
             count_left += 1
             if statistic != "none":
@@ -304,6 +366,8 @@ def _count_pair_same_universe(left: ExperimentSide, right: ExperimentSide, degre
             count_right += 1
             if statistic != "none":
                 dist_right[_statistic(word, statistic)] += 1
+    if _cancel_requested(cancel_event):
+        raise _RunCancelled
     return (count_left, tested, dist_left), (count_right, 0, dist_right)
 
 
@@ -521,17 +585,34 @@ def find_unmatched_objects(raw: dict, n: int) -> dict:
     }
 
 
-def run_experiment(raw: dict) -> dict:
-    """Run a bounded count or class comparison and return a compact result."""
+def run_experiment(raw: dict, *, progress=None, cancel_event=None) -> dict:
+    """Run a bounded experiment, optionally reporting progress and cancellation."""
     spec = parse_experiment(raw)
     rows = []
     total_tested = 0
     started = perf_counter()
+    cancelled = False
+    total_degrees = spec.stop - spec.start + 1
+    current_n = spec.start
+    _emit_progress(progress, phase="starting", degree=current_n, completed_degrees=0,
+                   total_degrees=total_degrees, degree_tested=0, total_tested=0)
 
     for n in range(spec.start, spec.stop + 1):
+        current_n = n
+        completed = len(rows)
         left_n = n + spec.left.degree_offset
         if spec.right is None:
-            left_count, tested, left_dist = _count_side(spec.left, left_n, spec.statistic, spec.condition)
+            _emit_progress(progress, phase="degree", degree=n, completed_degrees=completed,
+                           total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
+            try:
+                left_count, tested, left_dist = _count_side(
+                    spec.left, left_n, spec.statistic, spec.condition, progress=progress,
+                    cancel_event=cancel_event, phase="count", completed_degrees=completed,
+                    total_degrees=total_degrees, total_tested=total_tested,
+                )
+            except _RunCancelled:
+                cancelled = True
+                break
             total_tested += tested
             rows.append({
                 "n": n,
@@ -539,17 +620,39 @@ def run_experiment(raw: dict) -> dict:
                 "left_count": left_count,
                 "left_distribution": _json_distribution(left_dist) if spec.statistic != "none" else None,
             })
+            _emit_progress(progress, phase="degree_complete", degree=n, completed_degrees=len(rows),
+                           total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
             continue
 
         right_n = n + spec.right.degree_offset
+        _emit_progress(progress, phase="degree", degree=n, completed_degrees=completed,
+                       total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
         if spec.left.family == spec.right.family and left_n == right_n:
-            (left_count, tested, left_dist), (right_count, _, right_dist) = _count_pair_same_universe(
-                spec.left, spec.right, left_n, spec.statistic, spec.condition
-            )
+            try:
+                (left_count, tested, left_dist), (right_count, _, right_dist) = _count_pair_same_universe(
+                    spec.left, spec.right, left_n, spec.statistic, spec.condition,
+                    progress=progress, cancel_event=cancel_event, completed_degrees=completed,
+                    total_degrees=total_degrees, total_tested=total_tested,
+                )
+            except _RunCancelled:
+                cancelled = True
+                break
             total_tested += tested
         else:
-            left_count, left_tested, left_dist = _count_side(spec.left, left_n, spec.statistic, spec.condition)
-            right_count, right_tested, right_dist = _count_side(spec.right, right_n, spec.statistic, spec.condition)
+            try:
+                left_count, left_tested, left_dist = _count_side(
+                    spec.left, left_n, spec.statistic, spec.condition, progress=progress,
+                    cancel_event=cancel_event, phase="left", completed_degrees=completed,
+                    total_degrees=total_degrees, total_tested=total_tested,
+                )
+                right_count, right_tested, right_dist = _count_side(
+                    spec.right, right_n, spec.statistic, spec.condition, progress=progress,
+                    cancel_event=cancel_event, phase="right", completed_degrees=completed,
+                    total_degrees=total_degrees, total_tested=total_tested + left_tested,
+                )
+            except _RunCancelled:
+                cancelled = True
+                break
             total_tested += left_tested + right_tested
 
         difference = left_count - right_count
@@ -570,14 +673,18 @@ def run_experiment(raw: dict) -> dict:
                 "distributions_match": left_serial == right_serial,
             })
         rows.append(row)
+        _emit_progress(progress, phase="degree_complete", degree=n, completed_degrees=len(rows),
+                       total_degrees=total_degrees, degree_tested=0, total_tested=total_tested)
 
     first_divergence = next((row for row in rows if not row["counts_match"]), None) if spec.right else None
     first_statistic_divergence = (
         next((row for row in rows if not row.get("distributions_match", True)), None)
         if spec.right and spec.statistic != "none" else None
     )
-    all_match = spec.right is not None and first_divergence is None
-    if spec.right is None:
+    all_match = spec.right is not None and not cancelled and first_divergence is None
+    if cancelled:
+        headline = f"Cancelled before completing n={current_n}"
+    elif spec.right is None:
         headline = f"Counted {rows[-1]['left_count']:,} objects at n={rows[-1]['n']}"
     elif all_match:
         if spec.statistic == "none":
@@ -591,7 +698,11 @@ def run_experiment(raw: dict) -> dict:
     else:
         headline = f"First divergence at n={first_divergence['n']}"
 
-    return {
+    evidence_status = "incomplete" if cancelled else (
+        "counterexample" if first_divergence is not None or first_statistic_divergence is not None
+        else "verified"
+    )
+    result = {
         "question": spec.question,
         "headline": headline,
         "all_counts_match": all_match if spec.right else None,
@@ -614,6 +725,20 @@ def run_experiment(raw: dict) -> dict:
             "right": _serial_side(spec.right) if spec.right else None,
         },
     }
+    result["evidence"] = {
+        "schema": "ac.finite-result.v1",
+        "status": evidence_status,
+        "finite_only": True,
+        "completed_degrees": [row["n"] for row in rows],
+        "requested_degrees": {"start": spec.start, "stop": spec.stop},
+        "complete": not cancelled,
+        "cancelled_at_degree": current_n if cancelled else None,
+        "objects_tested": total_tested,
+    }
+    _emit_progress(progress, phase="cancelled" if cancelled else "complete", degree=current_n,
+                   completed_degrees=len(rows), total_degrees=total_degrees,
+                   degree_tested=0, total_tested=total_tested)
+    return result
 
 
 def _serial_side(side: ExperimentSide) -> dict:
