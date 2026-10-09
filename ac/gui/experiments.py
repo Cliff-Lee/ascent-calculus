@@ -17,6 +17,7 @@ from typing import Literal
 from ac.core.word import ChainWord
 from ac.generate.universes import ascent_sequences, modified_via_hat, revised_sequences
 from ac.patterns.classical import ClassicalPattern
+from ac.discovery.statistics import STATISTICS, statistic_value
 
 
 Family = Literal["ordinary", "modified", "revised"]
@@ -40,18 +41,6 @@ FAMILY_GENERATORS = {
     "revised": revised_sequences,
 }
 FAMILY_LIMITS = {"ordinary": 11, "modified": 11, "revised": 7}
-STATISTICS = {
-    "none": "Overall count",
-    "ascents": "Number of ascents",
-    "ascent_runs": "Number of ascent runs",
-    "run_start_positions": "Ascent-run start positions",
-    "run_lengths": "Ascent-run lengths",
-    "maximum": "Maximum value",
-    "distinct_values": "Number of distinct values",
-    "multiplicity_partition": "Multiplicity partition",
-    "first_occurrence_positions": "First-occurrence positions",
-    "last_occurrence_positions": "Last-occurrence positions",
-}
 GENERIC_PATTERN_MAX_DEGREE = 12
 
 
@@ -243,25 +232,7 @@ def _run_blocks(word: ChainWord) -> list[list[int]]:
 
 
 def _statistic(word: ChainWord, name: Statistic):
-    if name == "ascents":
-        return len(word.up_edges)
-    if name == "ascent_runs":
-        return len(word.run_starts)
-    if name == "run_start_positions":
-        return tuple(sorted(word.run_starts))
-    if name == "run_lengths":
-        return tuple(len(block) for block in _run_blocks(word))
-    if name == "maximum":
-        return max(word.values, default=0)
-    if name == "distinct_values":
-        return len(word.first_positions)
-    if name == "multiplicity_partition":
-        return word.integer_partition
-    if name == "first_occurrence_positions":
-        return tuple(sorted(word.first_positions))
-    if name == "last_occurrence_positions":
-        return tuple(sorted(word.last_positions))
-    return None
+    return statistic_value(word, name)
 
 
 def _new_distribution() -> Counter:

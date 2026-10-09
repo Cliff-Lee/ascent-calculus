@@ -20,9 +20,14 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from typing import Any
 
-from ac.gui.experiments import FAMILY_LIMITS, STATISTICS, find_unmatched_objects, run_experiment
+from ac.gui.experiments import FAMILY_LIMITS, STATISTICS, find_unmatched_objects, parse_experiment, run_experiment
 from ac.gui.research_state import read_state, write_state
+from ac.discovery.wilf import search_wilf_matches
+from ac.gui.map_search import exportable_map_report, run_map_search
+from ac.gui.discovery_window import DiscoveryCampaignWindow
 from ac.core.word import ChainWord
+from ac.classes.theories import is_ascent_sequence, is_modified, is_revised
+from ac.algebra.block_bijections import increasing_blocks, Modified111ToRevised111, Revised111ToModified111Inverse
 from ac.transform import (
     complement, hat, inverse_hat, inverse_prefix_lift, prefix_lift, reverse,
     restrict_positions, insert_position,
@@ -69,6 +74,8 @@ TRANSFORM_DESCRIPTIONS = {
     "inverse_prefix_lift": "Click a first-occurrence pivot to undo its lift. Example: L₂⁻¹(3,1,2) = 2,1,2.",
     "insert_position": "Click a cut to insert the chosen existing value after it. Cut 1 in 1,2,1 with value 2 gives 1,2,2,1.",
     "delete_position": "Click a position to remove it. In 1,2,2,1, deleting position 3 gives 1,2,1.",
+    "modified111_block_map": "Packman's map for modified 111-avoiders: sort increasing blocks by the repeated-value tree, reverse-complement each block, and insert the new maximum twice. Example: 1,2,2,1 → 3,1,2,3,2,1.",
+    "revised111_block_inverse": "Inverse of the modified/revised 111 block map. It removes the two distinguished maxima, reverse-complements the blocks, and restores the modified block order.",
 }
 PATTERNS = ("2122", "2212", "3121", "221", "121", "211")
 
@@ -106,8 +113,8 @@ def _open_startup_log() -> Path | None:
         return None
 
 
-def _side(family: str, rules: list[dict[str, Any]]) -> dict[str, Any]:
-    return {"family": family, "degree_offset": 0, "rules": rules}
+def _side(family: str, rules: list[dict[str, Any]], degree_offset: int = 0) -> dict[str, Any]:
+    return {"family": family, "degree_offset": degree_offset, "rules": rules}
 
 
 def _family_key(value: str) -> str:
@@ -115,6 +122,18 @@ def _family_key(value: str) -> str:
         if value == label:
             return key
     return value
+
+
+def _is_paper_map_spec(spec: dict) -> bool:
+    left, right = spec.get("left", {}), spec.get("right", {})
+    return (
+        left.get("family") == "modified"
+        and right.get("family") == "revised"
+        and int(left.get("degree_offset", 0)) == 0
+        and int(right.get("degree_offset", 0)) == 2
+        and left.get("rules") == [{"mode": "avoid", "pattern": [1, 1, 1]}]
+        and right.get("rules") == [{"mode": "avoid", "pattern": [1, 1, 1]}]
+    )
 
 
 class HoverTip:
@@ -192,6 +211,14 @@ class DropLane(tk.Frame):
         self.family.grid(row=1, column=0, sticky="w", padx=14, pady=(0, 9))
         self.family.bind("<<ComboboxSelected>>", lambda _e: self.app.changed())
         HoverTip(self.family, lambda: self.app.family_description(self.family.get()))
+        shift = tk.Frame(self, bg=PANEL)
+        shift.grid(row=1, column=1, sticky="e", padx=12, pady=(0, 9))
+        tk.Label(shift, text="degree n +", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8)).pack(side="left", padx=(0, 5))
+        self.degree_offset = tk.StringVar(value="0")
+        self.degree_offset_box = ttk.Spinbox(shift, from_=-10, to=10, width=4, textvariable=self.degree_offset, command=self.app.changed)
+        self.degree_offset_box.pack(side="left")
+        self.degree_offset.trace_add("write", lambda *_: self.app.changed())
+        HoverTip(self.degree_offset_box, "Degree shift relative to the reference n. Set Class B to +2 to compare objects of length n+2.")
         self.count = tk.Label(self, text="0 pattern rules", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9))
         self.count.grid(row=0, column=1, sticky="e", padx=14)
         self.chips = tk.Frame(self, bg=PANEL)
@@ -250,9 +277,12 @@ class DesktopWorkbench:
         self.saved_result = None
         self._save_timer = None
         self._worker_messages: queue.Queue = queue.Queue()
+        self.research_worker = None
+        self.discovery_window = None
         self.state = read_state()
         self._style()
         self._build()
+        self.root.protocol("WM_DELETE_WINDOW", self.close)
         self._restore_draft()
         self._refresh_conjecture()
         self.root.after(120, self._poll_worker)
@@ -293,7 +323,7 @@ class DesktopWorkbench:
         nav = tk.Frame(body, bg=BG)
         nav.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 12))
         self.nav_buttons = {}
-        for key, label in (("conjecture", "Conjecture engine"), ("transform", "Transform visualizer")):
+        for key, label in (("conjecture", "Test a conjecture"), ("discover", "Discover"), ("transform", "Inspect a transform")):
             button = tk.Button(nav, text=label, command=lambda k=key: self._show_view(k), relief="flat", bd=0, padx=14, pady=8, cursor="hand2", font=("TkDefaultFont", 9, "bold"))
             button.pack(side="left", padx=(0, 6))
             self.nav_buttons[key] = button
@@ -304,6 +334,7 @@ class DesktopWorkbench:
         content.rowconfigure(0, weight=1)
         self.main_rail = self._build_palette(content)
         self.main_work = self._build_workspace(content)
+        self.discover_view = self._build_wilf_view(content)
         self.transform_view = self._build_transform_view(content)
         self._show_view("conjecture")
 
@@ -411,6 +442,7 @@ class DesktopWorkbench:
         composer_top.grid(row=0, column=0, sticky="ew", padx=12, pady=(8, 4))
         tk.Label(composer_top, text="CONJECTURE COMPOSER", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9, "bold")).pack(side="left", padx=4, pady=(5, 4))
         tk.Button(composer_top, text="Load 2122 ↔ 2212 example", command=self.load_example, relief="flat", bg="#f0f4f1", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).pack(side="right")
+        tk.Button(composer_top, text="Paper map · M111 → R111, n+2", command=self.load_paper_bijection, relief="flat", bg="#e8f2ec", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=5).pack(side="right", padx=(0, 6))
         sides = tk.Frame(composer, bg=PANEL)
         sides.grid(row=1, column=0, sticky="ew", padx=12)
         sides.columnconfigure(0, weight=1, uniform="side")
@@ -460,20 +492,23 @@ class DesktopWorkbench:
         self.witness_button.grid(row=0, column=1, rowspan=2, sticky="e", padx=(8, 8))
         self.witness_button.grid_remove()
         HoverTip(self.witness_button, "Find exact sequence witnesses at the first degree where counts differ. Available when both classes use the same family and degree.")
+        self.map_search_button = tk.Button(result_top, text="Find a map", command=self._find_maps, relief="flat", bg="#edf3ef", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=11, pady=8)
+        self.map_search_button.grid(row=0, column=2, rowspan=2, sticky="e", padx=(0, 8))
+        HoverTip(self.map_search_button, "Search a bounded grammar of known transformations and structural recipes for a map between these exact classes. Composition search reports finite evidence and counterexamples.")
         self.run_button = tk.Button(result_top, text="▶   Run bounded test", command=self.run, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 10, "bold"), padx=15, pady=10)
-        self.run_button.grid(row=0, column=2, rowspan=2, sticky="e")
+        self.run_button.grid(row=0, column=3, rowspan=2, sticky="e")
         self.result_subtitle = tk.Label(result_top, text="Matching finite counts are evidence through n, not a proof for all degrees.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9))
         self.result_subtitle.grid(row=1, column=0, sticky="w", pady=(4, 0))
         self.progress = ttk.Progressbar(results, mode="indeterminate", style="Horizontal.TProgressbar")
         self.progress.grid(row=1, column=0, sticky="ew", padx=16, pady=(4, 9))
         self.progress.grid_remove()
-        columns = ("n", "left", "right", "difference", "status")
+        columns = ("n", "left_degree", "left", "right_degree", "right", "difference", "status")
         table_frame = tk.Frame(results, bg=PANEL)
         table_frame.grid(row=2, column=0, sticky="nsew", padx=15, pady=(0, 8))
         table_frame.rowconfigure(0, weight=1)
         table_frame.columnconfigure(0, weight=1)
         self.table = ttk.Treeview(table_frame, columns=columns, show="headings", selectmode="browse")
-        for key, title, width, anchor in (("n", "DEGREE n", 95, "center"), ("left", "CLASS A", 160, "e"), ("right", "CLASS B", 160, "e"), ("difference", "A − B", 145, "e"), ("status", "RESULT", 180, "w")):
+        for key, title, width, anchor in (("n", "REFERENCE n", 92, "center"), ("left_degree", "A DEGREE", 86, "center"), ("left", "CLASS A", 135, "e"), ("right_degree", "B DEGREE", 86, "center"), ("right", "CLASS B", 135, "e"), ("difference", "A − B", 112, "e"), ("status", "RESULT", 170, "w")):
             self.table.heading(key, text=title)
             self.table.column(key, width=width, anchor=anchor, stretch=key == "status")
         self.table.grid(row=0, column=0, sticky="nsew")
@@ -520,16 +555,282 @@ class DesktopWorkbench:
 
     def _show_view(self, view):
         if view == "conjecture":
+            self.discover_view.grid_remove()
             self.transform_view.grid_remove()
             self.main_rail.grid(row=0, column=0, sticky="nsew", padx=(0, 18))
             self.main_work.grid(row=0, column=1, sticky="nsew")
+        elif view == "discover":
+            self.main_rail.grid_remove()
+            self.main_work.grid_remove()
+            self.transform_view.grid_remove()
+            self.discover_view.grid(row=0, column=0, columnspan=2, sticky="nsew")
         else:
             self.main_rail.grid_remove()
             self.main_work.grid_remove()
+            self.discover_view.grid_remove()
             self.transform_view.grid(row=0, column=0, columnspan=2, sticky="nsew")
         for key, button in self.nav_buttons.items():
             selected = key == view
             button.configure(bg=GREEN if selected else "#e8eeea", fg="white" if selected else INK, activebackground=GREEN if selected else MINT)
+
+    def _ensure_research_worker(self):
+        from ac.discovery.worker import PersistentWorker
+        if self.research_worker is None:
+            self.research_worker = PersistentWorker()
+        return self.research_worker.start()
+
+    def _open_discovery_campaign(self):
+        if self.discovery_window is None or not self.discovery_window.window.winfo_exists():
+            self.discovery_window = DiscoveryCampaignWindow(
+                self.root,
+                ensure_worker=self._ensure_research_worker,
+                on_preview=self._load_discovery_preview,
+            )
+        self.discovery_window.show()
+
+    def _load_discovery_preview(self, preview, program):
+        source_data, output_data = preview["source"], preview["output"]
+        source = ChainWord.of(source_data["values"], height=source_data["height"])
+        output = ChainWord.of(output_data["values"], height=output_data["height"])
+        detail = (
+            f"Generated candidate: {program}\n"
+            f"One stored application from scenario {preview['scenario_fingerprint'][:12]} "
+            f"at base n={preview['base_degree']} (degree {preview['source_degree']} → {preview['target_degree']})."
+        )
+        if preview.get("block_trace"):
+            detail += f"\nBlock trace: {preview['block_trace']}"
+        self.transform_word_var.set(" ".join(map(str, source.values)))
+        self._last_transform = (
+            source, output, "generated_candidate", detail,
+            tuple(preview["position_map"]),
+            None if preview["value_map"] is None else tuple(preview["value_map"]),
+            tuple(preview["created_positions"]),
+        )
+        self._redraw_transform()
+        self._show_view("transform")
+
+    def close(self):
+        if self.research_worker is not None and self.research_worker.is_alive:
+            stopped = self.research_worker.stop(timeout=20)
+            if not stopped:
+                _log("research_worker_forced_stop", pid=self.research_worker.pid)
+        if self.root.winfo_exists():
+            self.root.destroy()
+
+    def _run_wilf_search(self):
+        if self.wilf_run_button["state"] == "disabled":
+            return
+        try:
+            start, stop = int(self.wilf_start_var.get()), int(self.wilf_stop_var.get())
+            pattern_length = int(self.wilf_length_var.get())
+            if self.wilf_shift_var.get():
+                offsets = (-2, -1, 0, 1, 2)
+            else:
+                offsets = (0,)
+            request = {
+                "source_family": self.wilf_source_var.get(),
+                "target_family": self.wilf_target_var.get(),
+                "pattern_length": pattern_length,
+                "start": start,
+                "stop": stop,
+                "offsets": offsets,
+            }
+            # Run the validator in the foreground so invalid bounds are
+            # explained before a worker is started.
+            source_limit = min(FAMILY_LIMITS[request["source_family"]], {2: 11, 3: 9, 4: 8}[pattern_length])
+            if not 1 <= start <= stop <= source_limit:
+                raise ValueError(f"Length-{pattern_length} pattern scans are bounded to reference degrees 1–{source_limit} for this source family.")
+        except (KeyError, TypeError, ValueError) as exc:
+            messagebox.showerror("Check the scan settings", str(exc), parent=self.root)
+            return
+        self.wilf_run_button.configure(state="disabled", text="Searching…")
+        self.header_status.configure(text="SEARCHING PATTERN CLASSES")
+        self.wilf_progress.grid()
+        self.wilf_progress.start(12)
+        self.wilf_summary.configure(text="Scanning each family degree once and comparing pattern-count signatures…")
+        self.wilf_runtime.configure(text="This may take a little while for longer patterns and higher degrees.")
+        self.wilf_open_button.configure(state="disabled")
+        for row in self.wilf_table.get_children():
+            self.wilf_table.delete(row)
+        self.wilf_match_by_iid.clear()
+        threading.Thread(target=self._wilf_worker, args=(request,), daemon=True).start()
+
+    def _wilf_worker(self, request):
+        try:
+            report = search_wilf_matches(**request, keep=250)
+            self._worker_messages.put(("wilf_ok", report, None))
+        except Exception as exc:
+            self._worker_messages.put(("wilf_error", str(exc), None))
+
+    @staticmethod
+    def _pattern_label(values):
+        return "⟨" + ", ".join(map(str, values)) + "⟩"
+
+    def _show_wilf_report(self, report):
+        self._wilf_report = report
+        self._wilf_stale = False
+        self.wilf_match_by_iid.clear()
+        for iid in self.wilf_table.get_children():
+            self.wilf_table.delete(iid)
+        for index, item in enumerate(report["shown"]):
+            if item["all_match"]:
+                evidence = f"all {item['stop'] - item['start'] + 1} degrees · through n={item['stop']}"
+                divergence = "—"
+            else:
+                evidence = f"same through n={item['matched_through']}"
+                divergence = f"n={item['first_divergence']}"
+            offset = int(item["degree_offset"])
+            relation = "n → n" if offset == 0 else f"n → n{offset:+d}"
+            iid = self.wilf_table.insert("", "end", iid=f"wilf-{index}", values=(
+                self._pattern_label(item["left_pattern"]),
+                self._pattern_label(item["right_pattern"]),
+                relation,
+                evidence,
+                divergence,
+            ), tags=("match" if item["all_match"] else "diverge",))
+            self.wilf_match_by_iid[iid] = item
+        self.wilf_table.tag_configure("match", foreground=GREEN_DARK)
+        self.wilf_table.tag_configure("diverge", foreground=AMBER)
+        exact = report["candidate_matches"]
+        near = report["candidate_near_matches"]
+        family_pair = f"{self._display_family(report['source_family'])} → {self._display_family(report['target_family'])}"
+        self.wilf_summary.configure(text=f"{family_pair}: {exact:,} count matches through the full tested range · {near:,} additional pairs have an early match then diverge")
+        self.wilf_runtime.configure(text=f"{report['pattern_classes']} pattern classes per side · {report['pairs_examined']:,} nontrivial comparisons retained · {report['tested_objects']:,} generated objects · {report['runtime_seconds']:.3f}s")
+        self.wilf_note.configure(text=report["notice"] + " Select a row to load its exact families, patterns, degree relation, and tested range into the conjecture tester.")
+        self.wilf_open_button.configure(state="disabled")
+
+    def _load_selected_wilf_match(self):
+        if getattr(self, "_wilf_stale", False):
+            return
+        selection = self.wilf_table.selection()
+        if not selection:
+            return
+        item = self.wilf_match_by_iid.get(selection[0])
+        if not item:
+            return
+        report = getattr(self, "_wilf_report", {})
+        self._load_experiment_spec({
+            "question": "compare",
+            "start": item["start"],
+            "stop": item["stop"],
+            "statistic": "none",
+            "left": {
+                "family": report.get("source_family", self.wilf_source_var.get()),
+                "degree_offset": 0,
+                "rules": [{"mode": "avoid", "pattern": item["left_pattern"]}],
+            },
+            "right": {
+                "family": report.get("target_family", self.wilf_target_var.get()),
+                "degree_offset": item["degree_offset"],
+                "rules": [{"mode": "avoid", "pattern": item["right_pattern"]}],
+            },
+        })
+        self._show_view("conjecture")
+
+    def _load_experiment_spec(self, spec):
+        for side, lane in (("left", self.left_lane), ("right", self.right_lane)):
+            side_spec = spec.get(side, {})
+            lane.family.set(FAMILY_CHOICES.get(side_spec.get("family", "modified"), "Modified"))
+            lane.degree_offset.set(str(side_spec.get("degree_offset", 0)))
+            self.rules[side] = list(side_spec.get("rules", []))
+            lane.render()
+        self.start_var.set(str(spec.get("start", 1)))
+        self.stop_var.set(str(spec.get("stop", 8)))
+        self.stat_var.set(STATISTICS.get(spec.get("statistic", "none"), STATISTICS["none"]))
+        self.changed()
+
+    def _build_wilf_view(self, parent):
+        view = tk.Frame(parent, bg=BG)
+        view.grid(row=0, column=0, columnspan=2, sticky="nsew")
+        view.columnconfigure(0, weight=1)
+        view.rowconfigure(2, weight=1)
+        intro = tk.Frame(view, bg=BG)
+        intro.grid(row=0, column=0, sticky="ew", pady=(0, 12))
+        tk.Label(intro, text="Discover patterns and transformations", bg=BG, fg=INK, font=("TkDefaultFont", 21, "bold")).pack(anchor="w")
+        tk.Label(intro, text="Find count matches, then test generated maps across class and degree-offset grids. Every result keeps its finite bounds and proof status.", bg=BG, fg=MUTED, font=("TkDefaultFont", 10)).pack(anchor="w", pady=(4, 0))
+
+        controls = tk.Frame(view, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        controls.grid(row=1, column=0, sticky="ew", pady=(0, 12))
+        for column in range(8):
+            controls.columnconfigure(column, weight=1 if column in {1, 3} else 0)
+        tk.Label(controls, text="SOURCE FAMILY", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=0, column=0, sticky="w", padx=(14, 5), pady=(12, 3))
+        self.wilf_source_var = tk.StringVar(value="modified")
+        self.wilf_source_box = ttk.Combobox(controls, state="readonly", width=13, textvariable=self.wilf_source_var, values=FAMILIES)
+        self.wilf_source_box.grid(row=0, column=1, sticky="ew", padx=(0, 12), pady=(12, 3))
+        HoverTip(self.wilf_source_box, "The sequence family for the first avoidance class.")
+        tk.Label(controls, text="TARGET FAMILY", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(12, 3))
+        self.wilf_target_var = tk.StringVar(value="modified")
+        self.wilf_target_box = ttk.Combobox(controls, state="readonly", width=13, textvariable=self.wilf_target_var, values=FAMILIES)
+        self.wilf_target_box.grid(row=0, column=3, sticky="ew", padx=(0, 12), pady=(12, 3))
+        HoverTip(self.wilf_target_box, "The sequence family for the second avoidance class. Choose another family to scan cross-family matches.")
+        tk.Label(controls, text="PATTERN LENGTH", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=0, column=4, sticky="w", padx=(0, 5), pady=(12, 3))
+        self.wilf_length_var = tk.StringVar(value="3")
+        self.wilf_length_box = ttk.Combobox(controls, state="readonly", width=5, textvariable=self.wilf_length_var, values=("2", "3", "4"))
+        self.wilf_length_box.grid(row=0, column=5, sticky="w", padx=(0, 12), pady=(12, 3))
+        HoverTip(self.wilf_length_box, "Search every Cayley pattern of this length. Length 3 is a quick first scan; length 4 tests a larger catalogue.")
+        self.wilf_shift_var = tk.IntVar(value=0)
+        shift_check = tk.Checkbutton(controls, text="also scan shifts −2…+2", variable=self.wilf_shift_var, bg=PANEL, fg=INK, activebackground=PANEL, selectcolor=PANEL, font=("TkDefaultFont", 9), cursor="hand2")
+        shift_check.grid(row=1, column=0, columnspan=2, sticky="w", padx=12, pady=(4, 5))
+        HoverTip(shift_check, "Compare source degree n with target degrees n+d for d from −2 to +2. This includes ordinary Wilf equivalence at d=0 and shifted equinumeracy candidates.")
+        tk.Label(controls, text="REFERENCE n", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).grid(row=1, column=2, sticky="w", padx=(0, 5), pady=(4, 5))
+        self.wilf_start_var = tk.StringVar(value="1")
+        ttk.Spinbox(controls, from_=1, to=11, width=4, textvariable=self.wilf_start_var).grid(row=1, column=3, sticky="w", padx=(0, 3), pady=(4, 5))
+        tk.Label(controls, text="to", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8)).grid(row=1, column=3, sticky="w", padx=(43, 0), pady=(4, 5))
+        self.wilf_stop_var = tk.StringVar(value="6")
+        ttk.Spinbox(controls, from_=1, to=11, width=4, textvariable=self.wilf_stop_var).grid(row=1, column=3, sticky="w", padx=(60, 0), pady=(4, 5))
+        for variable in (self.wilf_source_var, self.wilf_target_var, self.wilf_length_var, self.wilf_start_var, self.wilf_stop_var, self.wilf_shift_var):
+            variable.trace_add("write", lambda *_: self._mark_wilf_stale())
+        self.wilf_run_button = tk.Button(controls, text="Search pattern classes", command=self._run_wilf_search, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=12, pady=7)
+        self.wilf_run_button.grid(row=0, column=6, rowspan=2, sticky="e", padx=14, pady=8)
+        self.wilf_progress = ttk.Progressbar(controls, mode="indeterminate", style="Horizontal.TProgressbar")
+        self.wilf_progress.grid(row=2, column=0, columnspan=7, sticky="ew", padx=14, pady=(0, 9))
+        self.wilf_progress.grid_remove()
+
+        results = tk.Frame(view, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        results.grid(row=2, column=0, sticky="nsew")
+        results.columnconfigure(0, weight=1)
+        results.rowconfigure(2, weight=1)
+        top = tk.Frame(results, bg=PANEL)
+        top.grid(row=0, column=0, sticky="ew", padx=15, pady=(13, 4))
+        top.columnconfigure(0, weight=1)
+        self.wilf_summary = tk.Label(top, text="Choose a pattern length and degree range, then search the catalogue.", bg=PANEL, fg=INK, font=("TkDefaultFont", 12, "bold"), anchor="w", justify="left")
+        self.wilf_summary.grid(row=0, column=0, sticky="ew")
+        self.wilf_note = tk.Label(results, text="Results are bounded count matches, not proofs and not bijections. Use a row to open the exact comparison in the conjecture tester.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), anchor="w", justify="left", wraplength=1100)
+        self.wilf_note.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 8))
+        table_frame = tk.Frame(results, bg=PANEL)
+        table_frame.grid(row=2, column=0, sticky="nsew", padx=12, pady=(0, 8))
+        table_frame.rowconfigure(0, weight=1)
+        table_frame.columnconfigure(0, weight=1)
+        self.wilf_table = ttk.Treeview(table_frame, columns=("left", "right", "shift", "evidence", "divergence"), show="headings", selectmode="browse")
+        for key, title, width, anchor in (("left", "SOURCE AVOIDS", 155, "center"), ("right", "TARGET AVOIDS", 155, "center"), ("shift", "DEGREE RELATION", 145, "center"), ("evidence", "COUNTS AGREE", 190, "w"), ("divergence", "FIRST DIFFERENCE", 155, "center")):
+            self.wilf_table.heading(key, text=title)
+            self.wilf_table.column(key, width=width, anchor=anchor, stretch=key in {"evidence", "divergence"})
+        self.wilf_table.grid(row=0, column=0, sticky="nsew")
+        scroll = ttk.Scrollbar(table_frame, orient="vertical", command=self.wilf_table.yview)
+        scroll.grid(row=0, column=1, sticky="ns")
+        self.wilf_table.configure(yscrollcommand=scroll.set)
+        self.wilf_table.bind("<Double-Button-1>", lambda _event: self._load_selected_wilf_match())
+        self.wilf_table.bind("<<TreeviewSelect>>", self._wilf_selection_changed)
+        self.wilf_match_by_iid = {}
+        actions = tk.Frame(results, bg="#f8faf8")
+        actions.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 12))
+        self.wilf_open_button = tk.Button(actions, text="Open selected match in conjecture tester", command=self._load_selected_wilf_match, state="disabled", relief="flat", bg="#e8f2ec", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=11, pady=7)
+        self.wilf_open_button.pack(side="left", padx=5, pady=5)
+        self.wilf_runtime = tk.Label(actions, text="Pattern scans run locally and reuse each generated family degree.", bg="#f8faf8", fg=MUTED, font=("TkDefaultFont", 9))
+        self.wilf_runtime.pack(side="left", padx=10)
+        tk.Button(actions, text="Search transformations across classes…", command=self._open_discovery_campaign, relief="flat", bg=GREEN, fg="white", activebackground=GREEN_DARK, activeforeground="white", cursor="hand2", font=("TkDefaultFont", 9, "bold"), padx=11, pady=7).pack(side="right", padx=5, pady=5)
+        return view
+
+    def _wilf_selection_changed(self, _event=None):
+        selected = bool(self.wilf_table.selection()) and not getattr(self, "_wilf_stale", False)
+        self.wilf_open_button.configure(state="normal" if selected else "disabled")
+
+    def _mark_wilf_stale(self):
+        if not getattr(self, "_wilf_report", None):
+            return
+        self._wilf_stale = True
+        self.wilf_open_button.configure(state="disabled")
+        self.wilf_summary.configure(text="Scan settings changed · rerun to refresh these results.")
 
     def _build_transform_view(self, parent):
         view = tk.Frame(parent, bg=BG)
@@ -556,6 +857,8 @@ class DesktopWorkbench:
             "Hat map": "hat", "Inverse hat map": "inverse_hat",
             "Prefix lift Lᵢ": "prefix_lift", "Inverse prefix lift Lᵢ": "inverse_prefix_lift",
             "Insert position": "insert_position", "Delete position": "delete_position",
+            "Modified 111 block bijection": "modified111_block_map",
+            "Inverse revised 111 block map": "revised111_block_inverse",
         }
         names = tuple(self.transform_labels)
         self.transform_name_var = tk.StringVar(value="prefix_lift")
@@ -653,6 +956,10 @@ class DesktopWorkbench:
                 if not 1 <= parameter <= len(source):
                     raise ValueError("Position to delete must be within the word.")
                 result = restrict_positions(source, [i for i in range(1, len(source) + 1) if i != parameter]); detail = f"Delete position {parameter}; later positions shift left."
+            elif name == "modified111_block_map":
+                result = Modified111ToRevised111().apply(source); detail = TRANSFORM_DESCRIPTIONS[name]
+            elif name == "revised111_block_inverse":
+                result = Revised111ToModified111Inverse().apply(source); detail = TRANSFORM_DESCRIPTIONS[name]
             else:
                 raise ValueError("Choose a supported transform.")
             if result is not None:
@@ -690,13 +997,26 @@ class DesktopWorkbench:
             value_map_label = ", ".join(f"{i}→{j if j is not None else 'deleted'}" for i, j in enumerate(vmap, start=1))
         vmap_text = "value map: " + value_map_label
         self.transform_summary.configure(text=f"{name.replace('_', ' ').title()} · {detail}   Result: {list(output.values)} (length {len(output)}, height {output.height}). Amber marks changed or newly inserted entries.", bg=MINT, fg=GREEN_DARK)
-        self.transform_mapping.configure(text=f"{pmap_text}\n{vmap_text}" + (f"\nNew positions: {', '.join(map(str, created))}" if created else ""))
+        def word_roles(label, word):
+            def positions(values):
+                return ", ".join(map(str, sorted(values))) or "—"
+            blocks = " | ".join(" ".join(map(str, block.values)) for block in increasing_blocks(word)) or "—"
+            flags = (
+                f"ordinary {is_ascent_sequence(word)} · modified {is_modified(word)} · "
+                f"revised {is_revised(word)} · Cayley {word.is_cayley} · avoids 111 {word.avoids_constant_pattern(3)}"
+            )
+            return (
+                f"{label}: new/first {positions(word.first_positions)} · Asctop {positions(word.ascent_tops)} · "
+                f"Ascbot {positions(word.ascent_bottoms)} · increasing blocks {blocks}\n{flags}"
+            )
+        role_text = f"{word_roles('BEFORE', source)}\n{word_roles('AFTER', output)}"
+        self.transform_mapping.configure(text=f"{pmap_text}\n{vmap_text}" + (f"\nNew positions: {', '.join(map(str, created))}" if created else "") + f"\n\n{role_text}\n\nNode colours: green=new, blue=repeated, amber=changed or inserted. Position tags: N=new, T=Asctop, B=Ascbot.")
 
     def _draw_sequence(self, canvas, word, created, selectable=False):
         canvas.delete("all")
         width = max(canvas.winfo_width(), 320)
         height = max(canvas.winfo_height(), 210)
-        left, right, top, bottom = 42, width - 30, 24, height - 38
+        left, right, top, bottom = 42, width - 30, 24, height - 54
         max_value = max(word.height, 1)
         xstep = (right - left) / max(len(word) - 1, 1)
         ystep = (bottom - top) / max(max_value - 1, 1)
@@ -714,7 +1034,8 @@ class DesktopWorkbench:
             color = GREEN if word.values[index] < word.values[index + 1] else ("#bb7951" if word.values[index] > word.values[index + 1] else "#9aa69f")
             canvas.create_line(x1, y1, x2, y2, fill=color, width=2, arrow="last", arrowshape=(7, 8, 3))
         for index, ((x, y), value) in enumerate(zip(points, word.values), start=1):
-            fill = AMBER if index in created else GREEN
+            fill = AMBER if index in created else GREEN if index in word.first_positions else "#587d91"
+            role_codes = "".join(code for code, positions in (("N", word.first_positions), ("T", word.ascent_tops), ("B", word.ascent_bottoms)) if index in positions)
             tags = (f"position-{index}",) if selectable else ()
             oval = canvas.create_oval(x - 14, y - 14, x + 14, y + 14, fill=fill, outline="white", width=2, tags=tags)
             text_id = canvas.create_text(x, y, text=str(value), fill="white", font=("TkDefaultFont", 10, "bold"), tags=tags)
@@ -723,10 +1044,12 @@ class DesktopWorkbench:
                     canvas.tag_bind(item, "<Enter>", lambda _e: canvas.configure(cursor="hand2"))
                     canvas.tag_bind(item, "<Leave>", lambda _e: canvas.configure(cursor=""))
                     canvas.tag_bind(item, "<Button-1>", lambda _e, position=index: self._select_visual_position(position))
-            canvas.create_text(x, bottom + 23, text=f"{index}", fill=MUTED, font=("TkDefaultFont", 9))
+            canvas.create_text(x, bottom + 22, text=f"{index}", fill=MUTED, font=("TkDefaultFont", 8))
+            canvas.create_text(x, bottom + 36, text=role_codes, fill=GREEN_DARK if "N" in role_codes else "#60737b", font=("TkDefaultFont", 6 if len(role_codes) > 2 else 7, "bold"))
         if not word.values:
             canvas.create_text(width / 2, height / 2, text="empty word", fill=MUTED, font=("TkDefaultFont", 10, "italic"))
         canvas.create_text(12, 13, text="value level ↑", anchor="w", fill=MUTED, font=("TkDefaultFont", 8))
+        canvas.create_text(width - 8, 13, text="N new · T Asctop · B Ascbot", anchor="e", fill=MUTED, font=("TkDefaultFont", 7))
 
     def _select_visual_position(self, position):
         name = self.transform_labels.get(self.transform_name_var.get(), "")
@@ -817,6 +1140,8 @@ class DesktopWorkbench:
     def load_example(self):
         self.left_lane.family.set(FAMILY_CHOICES["modified"])
         self.right_lane.family.set(FAMILY_CHOICES["modified"])
+        self.left_lane.degree_offset.set("0")
+        self.right_lane.degree_offset.set("0")
         self.rules["left"] = [{"mode": "avoid", "pattern": [2, 1, 2, 2]}]
         self.rules["right"] = [{"mode": "avoid", "pattern": [2, 2, 1, 2]}]
         self.start_var.set("1")
@@ -827,6 +1152,17 @@ class DesktopWorkbench:
         self.right_lane.render()
         self.changed()
         self.footer.configure(text="Example loaded: compare Modified 2122-avoiders with Modified 2212-avoiders through degree 9.", fg=GREEN_DARK)
+
+    def load_paper_bijection(self):
+        self._load_experiment_spec({
+            "question": "compare",
+            "start": 1,
+            "stop": 5,
+            "statistic": "none",
+            "left": {"family": "modified", "degree_offset": 0, "rules": [{"mode": "avoid", "pattern": [1, 1, 1]}]},
+            "right": {"family": "revised", "degree_offset": 2, "rules": [{"mode": "avoid", "pattern": [1, 1, 1]}]},
+        })
+        self.footer.configure(text="Loaded the paper’s shifted class-count conjecture. Next, test the n → n+2 counts or audit the explicit block bijection.", fg=GREEN_DARK)
 
     def remove_rule(self, side, index):
         del self.rules[side][index]
@@ -846,15 +1182,22 @@ class DesktopWorkbench:
         def describe(side):
             lane = self.left_lane if side == "left" else self.right_lane
             family = self._display_family(_family_key(lane.family.get()))
+            try:
+                offset = int(lane.degree_offset.get())
+            except ValueError:
+                offset = 0
             rules = self.rules[side]
             if not rules:
-                return f"all {family} ascent sequences"
-            parts = [f"{r['mode']} ⟨{', '.join(map(str, r['pattern']))}⟩" for r in rules]
-            return f"{family} ascent sequences that " + " and ".join(parts)
+                class_text = f"all {family} ascent sequences"
+            else:
+                parts = [f"{r['mode']} ⟨{', '.join(map(str, r['pattern']))}⟩" for r in rules]
+                class_text = f"{family} ascent sequences that " + " and ".join(parts)
+            degree = f"n{offset:+d}" if offset else "n"
+            return f"{class_text} at degree {degree}"
         stat = self._stat_key()
         suffix = " by total count" if stat == "none" else f" by {STATISTICS.get(stat, stat)} distribution"
         if stop >= start:
-            self.question_text.configure(text=f"Test whether {describe('left')} and {describe('right')} have equal counts{suffix} for every n = {start}, …, {stop}.")
+            self.question_text.configure(text=f"Test whether {describe('left')} and {describe('right')} have equal counts{suffix} for reference n = {start}, …, {stop}.")
 
     def changed(self):
         if hasattr(self, "left_lane"):
@@ -889,10 +1232,16 @@ class DesktopWorkbench:
         if not 1 <= start <= stop <= 11:
             raise ValueError("Choose 1 ≤ start ≤ stop ≤ 11.")
         left_family, right_family = _family_key(self.left_lane.family.get()), _family_key(self.right_lane.family.get())
-        for label, family in (("Class A", left_family), ("Class B", right_family)):
-            if stop > FAMILY_LIMITS[family]:
-                raise ValueError(f"{label} generation is bounded to degree {FAMILY_LIMITS[family]} for {family} sequences.")
-        return {"question": "compare", "start": start, "stop": stop, "statistic": self._stat_key(), "left": _side(left_family, self.rules["left"]), "right": _side(right_family, self.rules["right"])}
+        try:
+            left_offset = int(self.left_lane.degree_offset.get())
+            right_offset = int(self.right_lane.degree_offset.get())
+        except ValueError as exc:
+            raise ValueError("Degree shifts must be whole numbers, such as 0 or +2.") from exc
+        if not -10 <= left_offset <= 10 or not -10 <= right_offset <= 10:
+            raise ValueError("Degree shifts must be between −10 and +10.")
+        spec = {"question": "compare", "start": start, "stop": stop, "statistic": self._stat_key(), "left": _side(left_family, self.rules["left"], left_offset), "right": _side(right_family, self.rules["right"], right_offset)}
+        parse_experiment(spec)
+        return spec
 
     def _stat_key(self):
         return next((key for key, label in STATISTICS.items() if label == self.stat_var.get()), "none")
@@ -920,6 +1269,223 @@ class DesktopWorkbench:
             self._worker_messages.put(("ok", spec, result))
         except Exception as exc:
             self._worker_messages.put(("error", str(exc), None))
+
+    def _find_maps(self):
+        try:
+            spec = self._spec()
+        except ValueError as exc:
+            messagebox.showerror("Check the conjecture", str(exc), parent=self.root)
+            return
+        self.map_search_button.configure(state="disabled", text="Searching…")
+        self.header_status.configure(text="SEARCHING MAP CANDIDATES")
+        self._open_map_search_window(spec)
+        self._start_map_search(spec, max_steps=1)
+
+    def _open_map_search_window(self, spec):
+        dialog = tk.Toplevel(self.root)
+        self.map_search_window = dialog
+        dialog.title("Search for a transformation")
+        dialog.transient(self.root)
+        dialog.configure(bg=BG)
+        dialog.geometry("950x610")
+        dialog.minsize(760, 480)
+        dialog.columnconfigure(0, weight=1)
+        dialog.rowconfigure(2, weight=1)
+        left = spec["left"]
+        right = spec["right"]
+        shift = int(right.get("degree_offset", 0)) - int(left.get("degree_offset", 0))
+        tk.Label(dialog, text="Find a plausible map", bg=BG, fg=INK, font=("TkDefaultFont", 18, "bold")).grid(row=0, column=0, sticky="w", padx=18, pady=(16, 3))
+        def class_label(side):
+            rules = " and ".join(f"{rule['mode']} ⟨{', '.join(map(str, rule['pattern']))}⟩" for rule in side.get("rules", []))
+            return f"{self._display_family(side['family'])}" + (f" sequences that {rules}" if rules else " sequences")
+        summary = (
+            f"{class_label(left)} at degrees n{left.get('degree_offset', 0):+d} → "
+            f"{class_label(right)} at degrees n{right.get('degree_offset', 0):+d} · net map shift {shift:+d} · "
+            f"reference n={spec['start']}–{spec['stop']}"
+        )
+        tk.Label(dialog, text=summary, bg=BG, fg=MUTED, font=("TkDefaultFont", 9), anchor="w", justify="left", wraplength=900).grid(row=1, column=0, sticky="ew", padx=18, pady=(0, 9))
+        content = tk.Frame(dialog, bg=PANEL, highlightthickness=1, highlightbackground=LINE)
+        content.grid(row=2, column=0, sticky="nsew", padx=14, pady=(0, 12))
+        content.columnconfigure(0, weight=1)
+        content.rowconfigure(2, weight=1)
+        self.map_search_summary = tk.Label(content, text="Testing single transformations and registered structural recipes…", bg=PANEL, fg=INK, font=("TkDefaultFont", 11, "bold"), anchor="w")
+        self.map_search_summary.grid(row=0, column=0, sticky="ew", padx=14, pady=(12, 5))
+        self.map_search_notice = tk.Label(content, text="A search result is a finite computation. It does not establish a general theorem.", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 9), anchor="w", wraplength=880, justify="left")
+        self.map_search_notice.grid(row=1, column=0, sticky="ew", padx=14, pady=(0, 8))
+        table_frame = tk.Frame(content, bg=PANEL)
+        table_frame.grid(row=2, column=0, sticky="nsew", padx=12, pady=(0, 8))
+        table_frame.rowconfigure(0, weight=1)
+        table_frame.columnconfigure(0, weight=1)
+        self.map_search_table = ttk.Treeview(table_frame, columns=("recipe", "cost", "tested", "result"), show="headings", selectmode="browse")
+        for key, title, width, anchor in (("recipe", "CANDIDATE RECIPE", 380, "w"), ("cost", "COST", 70, "center"), ("tested", "TESTED THROUGH", 130, "center"), ("result", "FIRST FAILURE / STATUS", 250, "w")):
+            self.map_search_table.heading(key, text=title)
+            self.map_search_table.column(key, width=width, anchor=anchor, stretch=key in {"recipe", "result"})
+        self.map_search_table.grid(row=0, column=0, sticky="nsew")
+        scroll = ttk.Scrollbar(table_frame, orient="vertical", command=self.map_search_table.yview)
+        scroll.grid(row=0, column=1, sticky="ns")
+        self.map_search_table.configure(yscrollcommand=scroll.set)
+        self.map_search_table.bind("<<TreeviewSelect>>", self._map_search_selection_changed)
+        self.map_search_details = tk.Label(content, text="Select a candidate to inspect its operation and the first failure witness.", bg="#f7faf7", fg=MUTED, font=("TkFixedFont", 9), anchor="w", justify="left", wraplength=900, padx=12, pady=9)
+        self.map_search_details.grid(row=3, column=0, sticky="ew", padx=12, pady=(0, 8))
+        actions = tk.Frame(content, bg=PANEL)
+        actions.grid(row=4, column=0, sticky="ew", padx=12, pady=(0, 12))
+        tk.Label(actions, text="Preview on word", bg=PANEL, fg=MUTED, font=("TkDefaultFont", 8, "bold")).pack(side="left", padx=(2, 6))
+        self.map_search_word_var = tk.StringVar(value="1 2 2 1" if _is_paper_map_spec(spec) else "")
+        self.map_search_word_entry = ttk.Entry(actions, textvariable=self.map_search_word_var, width=24)
+        self.map_search_word_entry.pack(side="left", padx=(0, 7))
+        HoverTip(self.map_search_word_entry, "Enter a source word to inspect the selected candidate map. For the paper block map, try 1 2 2 1.")
+        self.map_preview_button = tk.Button(actions, text="Preview selected map", command=self._preview_selected_map, state="disabled", relief="flat", bg="#e8f2ec", fg=GREEN_DARK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=6)
+        self.map_preview_button.pack(side="left", padx=(0, 6))
+        self.map_compose_button = tk.Button(actions, text="Search 2-step compositions", command=lambda: self._start_map_search(spec, max_steps=2), state="disabled", relief="flat", bg="#f0f4f1", fg=INK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=6)
+        self.map_compose_button.pack(side="left", padx=(0, 6))
+        self.map_export_button = tk.Button(actions, text="Export JSON", command=self._export_map_search, state="disabled", relief="flat", bg="#f0f4f1", fg=INK, activebackground=MINT, cursor="hand2", font=("TkDefaultFont", 8, "bold"), padx=9, pady=6)
+        self.map_export_button.pack(side="left", padx=(0, 6))
+        self.map_search_progress = ttk.Progressbar(actions, mode="indeterminate", style="Horizontal.TProgressbar", length=130)
+        self.map_search_progress.pack(side="right", padx=4)
+        self.map_search_progress.stop()
+        self.map_search_progress.pack_forget()
+        self.map_search_evaluations = {}
+        self.map_search_button.configure(state="disabled")
+
+    def _start_map_search(self, spec, *, max_steps):
+        if max_steps == 2 and int(spec["stop"]) + int(spec["left"].get("degree_offset", 0)) > 6:
+            messagebox.showinfo("Reduce the range", "Two-step composition searches are bounded to source degree 6. Reduce the conjecture range, then try again.", parent=self.map_search_window)
+            return
+        self.map_search_button.configure(state="disabled")
+        self.map_export_button.configure(state="disabled")
+        if max_steps == 2:
+            self.map_compose_button.configure(state="disabled", text="Searching compositions…")
+        else:
+            self.map_search_summary.configure(text="Testing single transformations and registered structural recipes…")
+        self.map_search_progress.pack(side="right", padx=4)
+        self.map_search_progress.start(12)
+        threading.Thread(target=self._map_search_worker, args=(spec, max_steps), daemon=True).start()
+
+    def _map_search_worker(self, spec, max_steps):
+        try:
+            report = run_map_search(spec, max_cost=4 if max_steps == 1 else 5, max_steps=max_steps, keep=20)
+            self._worker_messages.put(("map_ok", report, None))
+        except Exception as exc:
+            self._worker_messages.put(("map_error", str(exc), None))
+
+    def _show_map_search_report(self, report):
+        if not getattr(self, "map_search_window", None) or not self.map_search_window.winfo_exists():
+            return
+        self.map_search_progress.stop()
+        self.map_search_progress.pack_forget()
+        self.map_search_report = report
+        self.map_export_button.configure(state="normal")
+        self.map_search_evaluations.clear()
+        for iid in self.map_search_table.get_children():
+            self.map_search_table.delete(iid)
+        candidates = []
+        seen = set()
+        visible_exact = report["exact"][:100]
+        for item in visible_exact + report["ranked"]:
+            key = item["expression"]
+            if key in seen:
+                continue
+            seen.add(key)
+            candidates.append(item)
+        for index, item in enumerate(candidates):
+            failure = item["failure"]
+            if item["exact"]:
+                result = f"PASS through n={report['source_through']}"
+                tag = "match"
+            else:
+                result = f"{failure['kind'].replace('_', ' ')} at n={failure['n']}"
+                tag = "diverge"
+            iid = self.map_search_table.insert("", "end", iid=f"map-{index}", values=(item["name"], item["cost"], f"n={item['verified_through']}", result), tags=(tag,))
+            self.map_search_evaluations[iid] = item
+        self.map_search_table.tag_configure("match", foreground=GREEN_DARK)
+        self.map_search_table.tag_configure("diverge", foreground=AMBER)
+        exact_count = len(report["exact"])
+        if exact_count:
+            shown = f" Showing the first 100; export includes the full list." if exact_count > 100 else ""
+            target_through = report["source_through"] + report["degree_shift"]
+            self.map_search_summary.configure(text=f"Found {exact_count} exact finite map{'s' if exact_count != 1 else ''} through n={report['source_through']} → n={target_through}.{shown}")
+        elif report["shift_compatible_programs"] == 0:
+            self.map_search_summary.configure(text=f"No current recipe has the required net length shift {report['degree_shift']:+d}.")
+        else:
+            self.map_search_summary.configure(text=f"No exact map found in {report['shift_compatible_programs']:,} shift-compatible candidate programs.")
+        grammar = "The generated block grammar varies boundaries, repeated-value parents, block order, and block maps; +1 searches try one new maximum and +2 searches try a new-maximum pair."
+        reference = " The registered paper map or inverse is also included as a reference candidate." if report["paper_recipe_available"] else ""
+        self.map_search_notice.configure(text=report["notice"] + " " + grammar + reference)
+        self.map_compose_button.configure(state="normal", text="Search 2-step compositions")
+        self._map_search_selection_changed()
+
+    def _export_map_search(self):
+        report = getattr(self, "map_search_report", None)
+        if report is None:
+            return
+        path = filedialog.asksaveasfilename(
+            parent=self.map_search_window,
+            title="Export bounded map-search record",
+            defaultextension=".json",
+            initialfile="ascent-map-search.json",
+            filetypes=(("JSON research record", "*.json"), ("All files", "*")),
+        )
+        if not path:
+            return
+        try:
+            with open(path, "w", encoding="utf-8") as handle:
+                json.dump(exportable_map_report(report), handle, ensure_ascii=False, indent=2)
+                handle.write("\n")
+        except OSError as exc:
+            messagebox.showerror("Export failed", str(exc), parent=self.map_search_window)
+            return
+        self.map_search_notice.configure(text=f"Exported the finite map-search record to {path}. The record includes the class specification, search grammar, candidates, failures, and tested degree bound.")
+
+    def _map_search_selection_changed(self, _event=None):
+        selection = self.map_search_table.selection()
+        item = self.map_search_evaluations.get(selection[0]) if selection else None
+        self.map_preview_button.configure(state="normal" if item else "disabled")
+        if not item:
+            return
+        failure = item["failure"]
+        detail = item["expression"]
+        if failure:
+            detail += f"\nFirst failure: {failure['kind']} at n={failure['n']}"
+            if failure["source"] is not None:
+                detail += f"\nSource: {failure['source']}"
+            if failure["output"] is not None:
+                detail += f"\nOutput: {failure['output']}"
+            if failure["detail"]:
+                detail += f"\n{failure['detail']}"
+        else:
+            detail += f"\nFinite bijection test passed through n={item['verified_through']} → n={item['verified_through'] + int(self.map_search_report['degree_shift'])}."
+        probe = item.get("probe")
+        if probe:
+            detail += f"\nAt source n={probe['n']} → target n={probe['target_n']}: {probe['source_count']} source, {probe['target_count']} target; target hits {probe['target_fraction']:.1%}; injective images {probe['injectivity_fraction']:.1%}."
+        self.map_search_details.configure(text=detail)
+
+    def _preview_selected_map(self):
+        selection = self.map_search_table.selection()
+        if not selection:
+            return
+        item = self.map_search_evaluations.get(selection[0])
+        if not item:
+            return
+        try:
+            values = tuple(int(value) for value in self.map_search_word_var.get().replace(",", " ").split())
+            if not values or any(value < 1 for value in values):
+                raise ValueError("Enter positive values separated by spaces or commas")
+            source = ChainWord.of(values)
+            result = item["_transform"].apply(source)
+            self.transform_word_var.set(" ".join(map(str, source.values)))
+            self._last_transform = (
+                source,
+                result.output,
+                item["name"],
+                "Candidate recipe selected by a bounded class-wide search.",
+                result.position_map,
+                result.value_map,
+                result.created_positions,
+            )
+            self._redraw_transform()
+            self._show_view("transform")
+        except (ValueError, IndexError, TypeError) as exc:
+            messagebox.showerror("Map is not defined on this word", str(exc), parent=self.map_search_window)
 
     def _find_witnesses(self):
         result = self.saved_result
@@ -1017,6 +1583,30 @@ class DesktopWorkbench:
         try:
             while True:
                 kind, first, result = self._worker_messages.get_nowait()
+                if kind in {"wilf_ok", "wilf_error"}:
+                    self.wilf_progress.stop()
+                    self.wilf_progress.grid_remove()
+                    self.wilf_run_button.configure(state="normal", text="Search pattern classes")
+                    self.header_status.configure(text="LOCAL · FINITE TESTS")
+                    if kind == "wilf_error":
+                        self.wilf_summary.configure(text="Search could not run")
+                        self.wilf_runtime.configure(text=first)
+                    else:
+                        self._show_wilf_report(first)
+                    continue
+                if kind in {"map_ok", "map_error"}:
+                    self.map_search_button.configure(state="normal", text="Find a map")
+                    self.header_status.configure(text="LOCAL · FINITE TESTS")
+                    if getattr(self, "map_search_window", None) and self.map_search_window.winfo_exists():
+                        if kind == "map_error":
+                            self.map_search_progress.stop()
+                            self.map_search_progress.pack_forget()
+                            self.map_search_summary.configure(text="Map search could not run")
+                            self.map_search_notice.configure(text=first)
+                            self.map_compose_button.configure(state="normal", text="Search 2-step compositions")
+                        else:
+                            self._show_map_search_report(first)
+                    continue
                 self.progress.stop()
                 self.progress.grid_remove()
                 self.run_button.configure(state="normal", text="▶   Run bounded test")
@@ -1050,7 +1640,7 @@ class DesktopWorkbench:
             stat_match = row.get("distributions_match", True)
             status = ("COUNT + STAT MATCH" if stat_match else "STATISTIC DIVERGENCE") if matches and result["statistic"] != "none" else ("MATCH" if matches else "DIVERGENCE")
             tag = "match" if matches and stat_match else "diverge"
-            self.table.insert("", "end", values=(row["n"], f"{left:,}", f"{right:,}", f"{difference:+,}", status), tags=(tag,))
+            self.table.insert("", "end", values=(row["n"], row["left_degree"], f"{left:,}", row["right_degree"], f"{right:,}", f"{difference:+,}", status), tags=(tag,))
         self.result_headline.configure(text=result["headline"], fg=GREEN_DARK if result["all_counts_match"] else (RED if result["first_divergence"] else INK))
         self.result_subtitle.configure(text=f"Tested {result['tested_objects']:,} generated objects in {result['runtime_seconds']:.3f}s · finite computation only")
         if result["first_divergence"]:
@@ -1064,7 +1654,7 @@ class DesktopWorkbench:
             self.footer.configure(text="Single-class count complete.", fg=MUTED)
 
     def _current_draft(self):
-        return {"left_family": _family_key(self.left_lane.family.get()), "right_family": _family_key(self.right_lane.family.get()), "left_rules": json.dumps(self.rules["left"]), "right_rules": json.dumps(self.rules["right"]), "start": self.start_var.get(), "stop": self.stop_var.get(), "statistic": self._stat_key()}
+        return {"left_family": _family_key(self.left_lane.family.get()), "right_family": _family_key(self.right_lane.family.get()), "left_degree_offset": self.left_lane.degree_offset.get(), "right_degree_offset": self.right_lane.degree_offset.get(), "left_rules": json.dumps(self.rules["left"]), "right_rules": json.dumps(self.rules["right"]), "start": self.start_var.get(), "stop": self.stop_var.get(), "statistic": self._stat_key()}
 
     def _restore_draft(self):
         draft = self.state.get("draft", {})
@@ -1074,6 +1664,7 @@ class DesktopWorkbench:
             family = draft.get(f"{side}_family")
             if family in FAMILIES:
                 lane.family.set(FAMILY_CHOICES[family])
+            lane.degree_offset.set(str(draft.get(f"{side}_degree_offset", "0")))
             rules = draft.get(f"{side}_rules", "[]")
             if isinstance(rules, str):
                 try:
@@ -1136,6 +1727,8 @@ class DesktopWorkbench:
         spec = item.get("specification", {})
         self.left_lane.family.set(FAMILY_CHOICES.get(spec.get("left", {}).get("family", "modified"), "Modified"))
         self.right_lane.family.set(FAMILY_CHOICES.get(spec.get("right", {}).get("family", "modified"), "Modified"))
+        self.left_lane.degree_offset.set(str(spec.get("left", {}).get("degree_offset", 0)))
+        self.right_lane.degree_offset.set(str(spec.get("right", {}).get("degree_offset", 0)))
         self.rules["left"] = spec.get("left", {}).get("rules", [])
         self.rules["right"] = spec.get("right", {}).get("rules", [])
         self.start_var.set(str(spec.get("start", 1))); self.stop_var.set(str(spec.get("stop", 8)))
@@ -1173,6 +1766,8 @@ class DesktopWorkbench:
 def _startup_check() -> None:
     """Check frozen imports and a small engine run without opening a window."""
     from ac.gui.experiments import run_experiment
+    from ac.gui.map_search import run_map_search
+    from ac.discovery.wilf import search_wilf_matches
     from ac.gui.research_state import read_state
 
     assert isinstance(read_state(), dict)
@@ -1183,7 +1778,24 @@ def _startup_check() -> None:
     })
     if len(result["rows"]) != 3:
         raise RuntimeError("engine smoke test returned an incomplete degree range")
-    _log("startup_check_passed", engine_rows=len(result["rows"]))
+
+    paper_spec = {
+        "question": "compare", "start": 1, "stop": 3, "statistic": "none",
+        "left": {"family": "modified", "degree_offset": 0, "rules": [{"mode": "avoid", "pattern": [1, 1, 1]}]},
+        "right": {"family": "revised", "degree_offset": 2, "rules": [{"mode": "avoid", "pattern": [1, 1, 1]}]},
+    }
+    shifted = run_experiment(paper_spec)
+    if any(row["left_count"] != row["right_count"] for row in shifted["rows"]):
+        raise RuntimeError("shifted M111/R111 example failed its count smoke test")
+
+    wilf = search_wilf_matches("modified", "revised", pattern_length=3, start=1, stop=3, offsets=(2,), keep=1000)
+    if not any(row["all_match"] and row["left_pattern"] == [1, 1, 1] and row["right_pattern"] == [1, 1, 1] for row in wilf["shown"]):
+        raise RuntimeError("shifted Wilf catalogue did not include the M111/R111 example")
+
+    maps = run_map_search(paper_spec, max_cost=4, max_steps=1, keep=5)
+    if not any(candidate["name"].startswith("Blocks · increasing runs · parent: first prior block · safe up") for candidate in maps["exact"]):
+        raise RuntimeError("bounded map search did not regenerate the paper block recipe")
+    _log("startup_check_passed", engine_rows=len(result["rows"]), shifted_rows=len(shifted["rows"]), map_candidates=maps["candidate_programs"])
 
 
 def _window_smoke_check() -> None:
@@ -1294,6 +1906,26 @@ def _window_smoke_check() -> None:
     if app.transform_word_var.get() != "1 2" or app.transform_name_var.get() != "Reverse positions" or not app._last_transform:
         root.destroy()
         raise RuntimeError("witness did not load into the graphical transform visualizer")
+
+    app.load_paper_bijection()
+    paper_spec = app._spec()
+    if paper_spec["left"]["degree_offset"] != 0 or paper_spec["right"]["degree_offset"] != 2:
+        root.destroy()
+        raise RuntimeError("paper-map preset did not configure the n to n+2 degree shift")
+    paper_result = run_experiment(paper_spec)
+    if any(row["left_count"] != row["right_count"] for row in paper_result["rows"]):
+        root.destroy()
+        raise RuntimeError("paper-map preset did not produce the expected finite count match")
+    app.transform_name_var.set("Modified 111 block bijection")
+    app.transform_word_var.set("1 2 2 1")
+    app.apply_transform()
+    root.update()
+    if not app._last_transform or app._last_transform[1].values != (3, 1, 2, 3, 2, 1):
+        root.destroy()
+        raise RuntimeError("paper block map did not render its published example")
+    if "Ascbot" not in app.transform_mapping.cget("text") or "Asctop" not in app.transform_mapping.cget("text"):
+        root.destroy()
+        raise RuntimeError("transform visualization omitted ascent-top/bottom roles")
     _log("window_mapped", toolkit="tkinter")
     root.after(800, root.destroy)
     root.mainloop()

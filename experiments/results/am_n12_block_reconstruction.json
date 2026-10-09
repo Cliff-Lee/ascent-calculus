@@ -1,0 +1,152 @@
+{
+  "benchmark": "modified-111-avoiders-to-revised-111-avoiders",
+  "benchmark_fingerprint": "8b79b4140b0fdd8e4f735cf289da2065b3c28e67e7330c1f443b3bbc52187179",
+  "benchmark_question": {
+    "candidate_catalogue_count": 108,
+    "candidate_catalogue_fingerprint": "a9ebc1fb011a6bb1c181f3f7606c83bd1eddd1cf6b6b24811311c2044cde8092",
+    "degrees": {
+      "start": 1,
+      "stop": 4
+    },
+    "format": "ascent-machine-am-n12-block-reconstruction",
+    "maximum_cost": 4,
+    "source": {
+      "family": "modified",
+      "rules": [
+        {
+          "mode": "avoid",
+          "pattern": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "source_offset": 0,
+    "target": {
+      "family": "revised",
+      "rules": [
+        {
+          "mode": "avoid",
+          "pattern": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "target_offset": 2,
+    "version": 1
+  },
+  "candidates_tested": 108,
+  "classification": "reconstruction_from_seeded_operations",
+  "classification_note": "The named target map was not supplied, but its structural ingredients are present in the seeded block grammar. This is a reconstruction from seeded operations, not blind discovery.",
+  "count_vectors_match": true,
+  "finite_bijection_candidates": [
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='increasing_runs', parent_rule='first_prior_block', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='increasing_runs', parent_rule='last_prior_block', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='increasing_runs', parent_rule='none', block_order='minimum_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='increasing_runs', parent_rule='none', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='first_prior_block', block_order='safe_down', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='first_prior_block', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='last_prior_block', block_order='safe_down', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='last_prior_block', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='none', block_order='minimum_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='none', block_order='safe_down', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='none', block_order='safe_up', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    },
+    {
+      "cost": 3,
+      "program": "BlockSchemaT(segmentation='monotone_runs', parent_rule='none', block_order='stable', block_map='reverse_complement', extension='max_pair_around_first')",
+      "verified_through": 4
+    }
+  ],
+  "format": "ascent-machine-am-n12-block-reconstruction",
+  "held_out_degrees": [
+    5
+  ],
+  "near_miss_count": 96,
+  "proof_status": "not_proved",
+  "runtime_seconds": 0.609611,
+  "search_guidance": {
+    "degree_window": [
+      1,
+      4
+    ],
+    "grammar": "all generated block schemas with expected net length shift +2",
+    "grammar_size": 108,
+    "maximum_cost": 4,
+    "reference_map_provided": false,
+    "seeded_candidate": null,
+    "seeded_operations": [
+      "increasing_runs",
+      "reverse_complement",
+      "max_pair_around_first"
+    ],
+    "source_family": "modified",
+    "source_offset": 0,
+    "source_rule": "avoid 111",
+    "target_family": "revised",
+    "target_offset": 2,
+    "target_rule": "avoid 111"
+  },
+  "source_counts": [
+    1,
+    2,
+    4,
+    10
+  ],
+  "source_objects_per_candidate": 17,
+  "target_counts": [
+    1,
+    2,
+    4,
+    10
+  ],
+  "version": 1
+}

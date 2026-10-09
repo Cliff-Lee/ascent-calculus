@@ -381,3 +381,45 @@ Version a27 adds a macOS LaunchServices smoke test against the app inside the mo
 DMG. The check verifies that an ordinary app launch maps its main window, keeps it alive,
 and records startup timing before closing automatically. The a26 binary passed direct
 startup and window checks, but the user's Apple Silicon launch still needs confirmation.
+
+## GUI-4 — Conjecture discovery and map search (implementation complete; visual review open)
+
+The native workbench now connects finite class comparisons, Wilf scans, transformation
+synthesis, and structural inspection in one research loop:
+
+- Each class lane has its own degree offset. The composer restates the exact `n+d` question
+  and retains both degrees in its results. A preset loads the paper's
+  `M_n(111) → R_{n+2}(111)` comparison.
+- The Wilf scanner compares every Cayley avoidance pattern of length 2–4 across selected
+  families. It can scan shifts `−2…+2`, reports complete count vectors and first
+  divergences, and opens a result in the conjecture tester. A count match is not a map.
+- **Find a map** first tests single operations and generated block recipes, then offers
+  two-operation compositions. The operation set includes reverse, complement,
+  standardization, compression, hat and inverse hat, fixed prefix lifts, selector-driven
+  sweep lifts, and a finite block grammar. The grammar varies four block-boundary rules,
+  three repeated-value parent rules, five block orders, three local block maps, and a
+  shift-specific extension: none, one new maximum, or a new-maximum pair. This produces
+  108 generated recipes for each supported shift `0`, `+1`, and `+2`; the registered
+  modified/revised map and its partial inverse provide the `−2` reference case.
+- Candidate reports show their readable recipe, cost, tested range, probe counts,
+  injectivity and target coverage, and first failure witness. Search reports export as
+  JSON with the exact class specification, grammar limits, candidates, failures, and
+  finite evidence. The table caps visible exact candidates at 100; the export keeps all.
+- The transform view marks first occurrences (`N`), ascent tops (`T`), ascent bottoms
+  (`B`), changed/new entries, increasing blocks, position/value maps, and ordinary,
+  modified, revised, Cayley, and `111`-avoidance classifications before and after a map.
+
+For the paper classes through source degree 5, the two-step search tested 5,075 normalized
+programs, retained 1,417 with net shift `+2`, and found 31 finite passes in about 7.2
+seconds in this environment. These are candidate maps that passed the enumerated range;
+they are not all-degree proofs and some may be behaviorally redundant on small ranges.
+One-step searches are bounded to source degree 8 and two-step searches to degree 6,
+subject to the family and pattern bounds. The count composer accepts other valid offsets,
+but automatic map search currently needs a transformation with the matching net shift.
+Statistic-fibre-preserving map search is not yet a synthesis constraint.
+
+Focused engine, GUI experiment, transformation, Wilf, block-map, block-grammar, and map
+search checks passed **57/57** by direct invocation; Python compilation and the desktop
+startup check also pass. The standard `pytest` package is not installed in this runtime,
+and no display server is available for native-window visual inspection, so packaged
+layout/interaction review remains open.

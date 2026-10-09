@@ -1,0 +1,170 @@
+{
+  "candidate_budget": 12,
+  "class_object_budget": 50000,
+  "enumeration_budget": 100000,
+  "evaluation_budget": 500000,
+  "format": "ascent-machine-transformation-family-search",
+  "scenarios": [
+    {
+      "degrees": {
+        "start": 1,
+        "stop": 3
+      },
+      "format": "ascent-machine-transformation-search",
+      "grammar": {
+        "boolean_selector_algebra": true,
+        "candidate_budget": 12,
+        "class_object_budget": 250000,
+        "enumeration_budget": 1000000,
+        "evaluation_budget": 10000000,
+        "expansion_budget": 10000,
+        "inserted_value_bound": 3,
+        "max_atoms": 25000,
+        "max_cost": 3,
+        "max_selectors": 4000,
+        "max_steps": 2,
+        "occurrence_rank": 3,
+        "operations": [
+          "block_schemas",
+          "canonicalize",
+          "hat_sweeps",
+          "insert_existing_values",
+          "insert_fresh_maximum",
+          "prefix_lifts",
+          "selector_restrictions",
+          "selector_sweeps",
+          "symmetry"
+        ],
+        "position_bound": 6,
+        "selectors": [
+          "asc_bottom",
+          "asc_top",
+          "desc_bottom",
+          "desc_top",
+          "first",
+          "last",
+          "raw_asc_bottom",
+          "raw_asc_top",
+          "raw_desc_bottom",
+          "raw_desc_top",
+          "repeat",
+          "run_end",
+          "run_start",
+          "scope_first",
+          "scope_last"
+        ]
+      },
+      "grammar_version": "ac-definition-grammar-v2",
+      "source": {
+        "family": "modified",
+        "rules": [
+          {
+            "mode": "avoid",
+            "pattern": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "source_offset": 0,
+      "target": {
+        "family": "revised",
+        "rules": [
+          {
+            "mode": "avoid",
+            "pattern": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "target_offset": 0,
+      "version": 1
+    },
+    {
+      "degrees": {
+        "start": 1,
+        "stop": 3
+      },
+      "format": "ascent-machine-transformation-search",
+      "grammar": {
+        "boolean_selector_algebra": true,
+        "candidate_budget": 12,
+        "class_object_budget": 250000,
+        "enumeration_budget": 1000000,
+        "evaluation_budget": 10000000,
+        "expansion_budget": 10000,
+        "inserted_value_bound": 3,
+        "max_atoms": 25000,
+        "max_cost": 3,
+        "max_selectors": 4000,
+        "max_steps": 2,
+        "occurrence_rank": 3,
+        "operations": [
+          "block_schemas",
+          "canonicalize",
+          "hat_sweeps",
+          "insert_existing_values",
+          "insert_fresh_maximum",
+          "prefix_lifts",
+          "selector_restrictions",
+          "selector_sweeps",
+          "symmetry"
+        ],
+        "position_bound": 6,
+        "selectors": [
+          "asc_bottom",
+          "asc_top",
+          "desc_bottom",
+          "desc_top",
+          "first",
+          "last",
+          "raw_asc_bottom",
+          "raw_asc_top",
+          "raw_desc_bottom",
+          "raw_desc_top",
+          "repeat",
+          "run_end",
+          "run_start",
+          "scope_first",
+          "scope_last"
+        ]
+      },
+      "grammar_version": "ac-definition-grammar-v2",
+      "source": {
+        "family": "modified",
+        "rules": [
+          {
+            "mode": "avoid",
+            "pattern": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "source_offset": 0,
+      "target": {
+        "family": "revised",
+        "rules": [
+          {
+            "mode": "avoid",
+            "pattern": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "target_offset": 2,
+      "version": 1
+    }
+  ],
+  "version": 1
+}

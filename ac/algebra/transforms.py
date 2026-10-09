@@ -5,6 +5,7 @@ from typing import Iterable
 
 from ac.core.word import ChainWord
 from ac.logic.selectors import PositionCutSelector, PositionSelector
+from ac.logic.snapshot import PositionCutSnapshot, snapshot
 from ac.transform.basic import (
     TransformResult,
     complement,
@@ -133,6 +134,7 @@ class RestrictT(Transformation):
 class RestrictSelectedT(Transformation):
     selector: PositionSelector
     signature = TransformSignature(delta_length=None, delta_height=0, partial=False)
+    search_cost = 2
 
     def apply(self, word: ChainWord) -> TransformResult:
         positions = sorted(int(p) for p in self.selector.evaluate(word))
@@ -160,9 +162,54 @@ class InsertSelectedT(Transformation):
     selector: PositionCutSelector
     value: int
     signature = TransformSignature(delta_length=None, delta_height=0, partial=True)
+    search_cost = 3
 
     def apply(self, word: ChainWord) -> TransformResult:
         return insert_at_selected_cuts(word, self.selector, self.value)
+
+
+@dataclass(frozen=True)
+class InsertFreshMaximumT(Transformation):
+    """Insert a new maximum value at every selected source cut.
+
+    Selection uses snapshot semantics. If no cut is selected, the word is left
+    unchanged and no empty level is added. Otherwise all inserted entries share
+    the one newly created value level ``height + 1``.
+    """
+
+    selector: PositionCutSelector
+    signature = TransformSignature(delta_length=None, delta_height=None, partial=True)
+    search_cost = 3
+
+    def apply(self, word: ChainWord) -> TransformResult:
+        selected = snapshot(word, self.selector)
+        if not isinstance(selected, PositionCutSnapshot):
+            raise TypeError("selector did not produce a position-cut snapshot")
+        cuts = tuple(sorted({int(cut) for cut in selected.cuts}))
+        if any(cut < 0 or cut > len(word) for cut in cuts):
+            raise ValueError("position cut outside source word")
+        new_ids = word.fresh_position_ids(len(cuts))
+        cut_to_id = dict(zip(cuts, new_ids))
+        maximum = word.height + 1
+        values: list[int] = []
+        position_ids: list[int] = []
+        created_positions: list[int] = []
+        if 0 in cut_to_id:
+            values.append(maximum)
+            position_ids.append(cut_to_id[0])
+            created_positions.append(len(values))
+        for index, (value, position_id) in enumerate(zip(word.values, word.position_ids), start=1):
+            values.append(value)
+            position_ids.append(position_id)
+            if index in cut_to_id:
+                values.append(maximum)
+                position_ids.append(cut_to_id[index])
+                created_positions.append(len(values))
+        height = word.height + (1 if cuts else 0)
+        output = ChainWord(tuple(values), height=height, position_ids=tuple(position_ids))
+        position_map = tuple(i + sum(cut < i for cut in cuts) for i in range(1, len(word) + 1))
+        value_map = tuple(range(1, word.height + 1)) if cuts else tuple(range(1, word.height + 1))
+        return TransformResult(output, position_map, value_map, tuple(created_positions), new_ids)
 
 
 @dataclass(frozen=True)
@@ -348,6 +395,10 @@ def Restrict(positions) -> RestrictT:
 
 def RestrictSelected(selector: PositionSelector) -> RestrictSelectedT:
     return RestrictSelectedT(selector)
+
+
+def InsertFreshMaximum(selector: PositionCutSelector) -> InsertFreshMaximumT:
+    return InsertFreshMaximumT(selector)
 
 
 def Compress() -> CompressLevelsT:

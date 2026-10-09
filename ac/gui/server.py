@@ -16,6 +16,7 @@ from .viewmodel import (
 )
 from .experiments import browse_objects, find_unmatched_objects, run_experiment, validate_pattern
 from .transform_experiments import run_transform_experiment
+from .research_state import read_state, write_state
 
 
 STATIC = files("ac.gui.static")
@@ -34,6 +35,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def _body(self):
         size = int(self.headers.get("Content-Length", "0"))
+        if size > 1_000_000:
+            raise ValueError("Request body is too large")
         data = self.rfile.read(size) if size else b"{}"
         return json.loads(data.decode("utf-8"))
 
@@ -41,6 +44,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/api/status":
             return self._json({"status": research_status(), "contract": interface_contract()})
+        if path == "/api/research-state":
+            return self._json(read_state())
         if path in {"/", "/index.html"}:
             target = STATIC.joinpath("index.html")
         elif path.startswith("/static/"):
@@ -93,6 +98,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(find_unmatched_objects(body.get("specification", {}), body.get("n", 1)))
             if path == "/api/transform-experiment/run":
                 return self._json(run_transform_experiment(body))
+            if path == "/api/research-state":
+                return self._json(write_state(body))
             self.send_error(404)
         except Exception as exc:
             self._json({"error": type(exc).__name__, "detail": str(exc)}, status=400)

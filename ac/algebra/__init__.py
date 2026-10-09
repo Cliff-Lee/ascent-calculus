@@ -11,6 +11,7 @@ from ac.algebra.transforms import (
     CompressLevelsT,
     StandardizeT,
     InsertSelectedT,
+    InsertFreshMaximumT,
     HatT,
     InverseHatT,
     SweepLiftT,
@@ -21,6 +22,7 @@ from ac.algebra.transforms import (
     Linv,
     Restrict,
     RestrictSelected,
+    InsertFreshMaximum,
     Compress,
     Std,
     Hat,
@@ -47,6 +49,24 @@ from ac.algebra.lift_transport import (
     LiftCapacity,
     check_lift_restriction_law,
     check_capacity_shift_law,
+)
+from ac.algebra.block_bijections import (
+    IncreasingBlock,
+    increasing_blocks,
+    Modified111ToRevised111,
+    Revised111ToModified111Inverse,
+    Modified111BlockBijection,
+)
+from ac.algebra.block_schemas import (
+    BlockPiece,
+    BlockSchemaT,
+    SEGMENTATIONS,
+    PARENT_RULES,
+    BLOCK_ORDERS,
+    BLOCK_MAPS,
+    BLOCK_EXTENSIONS,
+    enumerate_block_schemas,
+    generate_block_schemas,
 )
 
 __all__ = [name for name in globals() if not name.startswith("_")]

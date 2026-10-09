@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ascent Calculus — Learn and Explore</title>
+  <title>Ascent Engine — Test a conjecture</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
@@ -11,51 +11,32 @@
     <div class="brand">
       <div class="mark">AC</div>
       <div>
-        <h1>Ascent Calculus</h1>
-        <p>Learn and explore ascent sequences</p>
+        <h1>Ascent Engine</h1>
+        <p>Explore ascent-sequence conjectures</p>
       </div>
     </div>
-    <div id="overall-status" class="status-chip open">OPEN</div>
   </header>
 
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Workbench navigation">
-      <div class="sidebar-kicker">YOUR WORKSPACE</div>
+    <aside class="sidebar" aria-label="Engine tools">
       <nav class="tabs sidebar-nav" aria-label="Workbench sections" role="tablist" aria-orientation="vertical">
-        <div class="nav-group-label" role="presentation">LEARN</div>
-        <button class="tab nav-item active" id="tab-learn" data-tab="learn" role="tab" aria-controls="panel-learn" aria-selected="true" tabindex="0">
-          <span class="nav-number">01</span><span class="nav-copy"><b>Foundations</b><small>Definitions and examples</small></span>
+        <button class="tab nav-item active" id="tab-lab" data-tab="lab" role="tab" aria-controls="panel-lab" aria-selected="true" tabindex="0">
+          <span class="nav-number">01</span><span class="nav-copy"><b>Conjectures</b><small>Test a question</small></span>
         </button>
-        <div class="nav-group-label research-label" role="presentation">WORKBENCH</div>
         <button class="tab nav-item" id="tab-inspector" data-tab="inspector" role="tab" aria-controls="panel-inspector" aria-selected="false" tabindex="-1">
-          <span class="nav-number">02</span><span class="nav-copy"><b>Sequence inspector</b><small>Explore a word</small></span>
+          <span class="nav-number">02</span><span class="nav-copy"><b>Inspect</b><small>Explore a word</small></span>
         </button>
         <button class="tab nav-item" id="tab-trace" data-tab="trace" role="tab" aria-controls="panel-trace" aria-selected="false" tabindex="-1">
-          <span class="nav-number">03</span><span class="nav-copy"><b>Transformation trace</b><small>Follow each move</small></span>
-        </button>
-        <button class="tab nav-item" id="tab-lab" data-tab="lab" role="tab" aria-controls="panel-lab" aria-selected="false" tabindex="-1">
-          <span class="nav-number">04</span><span class="nav-copy"><b>Experiment builder</b><small>Ask a bounded question</small></span>
+          <span class="nav-number">03</span><span class="nav-copy"><b>Trace</b><small>Follow a map</small></span>
         </button>
         <button class="tab nav-item" id="tab-status" data-tab="status" role="tab" aria-controls="panel-status" aria-selected="false" tabindex="-1">
-          <span class="nav-number">05</span><span class="nav-copy"><b>Research status</b><small>Evidence and open work</small></span>
+          <span class="nav-number">04</span><span class="nav-copy"><b>Evidence</b><small>Limits and status</small></span>
         </button>
       </nav>
-      <div class="sidebar-note">
-        <span class="sidebar-note-icon" aria-hidden="true">i</span>
-        <p><strong>Evidence stays explicit.</strong><br />A finite check is not a proof for every degree.</p>
-      </div>
     </aside>
 
     <main id="main-content">
-    <section class="research-banner" id="research-banner">
-      <div>
-        <strong>Current theorem status:</strong>
-        <span id="overall-detail">Loading research status…</span>
-      </div>
-      <button class="ghost" data-panel="status">Research status</button>
-    </section>
-
-    <section class="panel active" id="panel-learn" role="tabpanel" aria-labelledby="tab-learn" tabindex="0">
+    <section class="panel" id="panel-learn" role="region" aria-label="Ascent-sequence definitions" tabindex="0" aria-hidden="true">
       <div class="learn-hero">
         <div class="hero-copy">
           <span class="eyebrow">START HERE · A 5 MINUTE TOUR</span>
@@ -185,16 +166,36 @@
       </div>
     </section>
 
-    <section class="panel" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab" tabindex="0">
+    <section class="panel active" id="panel-lab" role="tabpanel" aria-labelledby="tab-lab" tabindex="0" aria-hidden="false">
       <div class="panel-head">
         <div>
-          <h2>Research experiment</h2>
-          <p>Build a mathematical question from ascent-sequence families, pattern restrictions, and a degree range. The engine runs the exact specification shown below.</p>
+          <span class="eyebrow">ASCENT-SEQUENCE RESEARCH</span>
+          <h2>Test a conjecture</h2>
+          <p>Describe two restricted families. The engine compares them degree by degree and shows the first difference.</p>
         </div>
+        <button class="text-button" data-panel="learn">Learn the definitions ↗</button>
       </div>
       <div class="experiment-presets" aria-label="Load an example experiment">
         <button class="preset-chip" data-experiment-preset="modified-pattern-pair">Modified 2122 vs 2212</button>
         <button class="preset-chip" data-experiment-preset="revised-shift">Revised 3121 vs ordinary 221</button>
+      </div>
+      <div class="research-palette" aria-label="Drag-and-drop experiment pieces">
+        <div class="palette-group"><span>Families</span>
+          <button type="button" class="palette-token family-token" draggable="true" data-family-chip="ordinary">Ordinary</button>
+          <button type="button" class="palette-token family-token" draggable="true" data-family-chip="modified">Modified</button>
+          <button type="button" class="palette-token family-token" draggable="true" data-family-chip="revised">Revised</button>
+        </div>
+        <div class="palette-group"><span>Rules</span>
+          <button type="button" class="palette-token mode-token" draggable="true" data-mode-chip="avoid">Avoid</button>
+          <button type="button" class="palette-token mode-token" draggable="true" data-mode-chip="contain">Contain</button>
+        </div>
+        <div class="palette-group"><span>Patterns</span>
+          <button type="button" class="palette-token pattern-token" draggable="true" data-pattern-chip="2122">2122</button>
+          <button type="button" class="palette-token pattern-token" draggable="true" data-pattern-chip="2212">2212</button>
+          <button type="button" class="palette-token pattern-token" draggable="true" data-pattern-chip="3121">3121</button>
+          <button type="button" class="palette-token pattern-token" draggable="true" data-pattern-chip="221">221</button>
+        </div>
+        <small>Drag pieces onto A or B. Click adds to the last focused family card; menus and text boxes also work.</small>
       </div>
       <div class="experiment-composer card">
         <div class="question-line">
@@ -208,31 +209,37 @@
           </div>
         </div>
         <div class="experiment-sides">
-          <article class="experiment-side" id="experiment-left-card">
-            <div class="side-heading"><span class="side-index">A</span><div><h3>First class</h3><p>Choose a family and its pattern restriction.</p></div></div>
+        <article class="experiment-side" id="experiment-left-card">
+            <div class="side-heading"><span class="side-index">A</span><div><h3>First family</h3></div></div>
             <label>Family
               <select id="experiment-left-family"><option value="ordinary">Ordinary ascent sequences</option><option value="modified" selected>Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select>
             </label>
+            <div class="family-drop" data-family-drop="left" tabindex="0">Drop a family here</div>
             <label>Restriction
               <select id="experiment-left-mode"><option value="avoid">Avoid every listed pattern</option><option value="contain">Contain every listed pattern</option><option value="none">No pattern restriction</option></select>
             </label>
+            <div class="mode-drop" data-mode-drop="left" tabindex="0">Drop Avoid or Contain here</div>
             <label class="pattern-entry-label" for="experiment-left-patterns">Patterns <small>one Cayley pattern per line</small></label>
             <textarea id="experiment-left-patterns" rows="2" spellcheck="false">2122</textarea>
+            <div class="pattern-drop" data-pattern-drop="left" role="group" aria-label="First family's pattern rules" tabindex="0">Drop patterns or a .txt file here</div>
             <div class="pattern-validation" id="experiment-left-validation" aria-live="polite"></div>
           </article>
 
           <div class="compare-connector" id="experiment-connector" aria-hidden="true"><span>compare with</span><b>↔</b></div>
 
           <article class="experiment-side" id="experiment-right-card">
-            <div class="side-heading"><span class="side-index">B</span><div><h3>Second class</h3><p>Compare against another family or restriction.</p></div></div>
+            <div class="side-heading"><span class="side-index">B</span><div><h3>Second family</h3></div></div>
             <label>Family
               <select id="experiment-right-family"><option value="ordinary">Ordinary ascent sequences</option><option value="modified" selected>Modified ascent sequences</option><option value="revised">Revised ascent sequences</option></select>
             </label>
+            <div class="family-drop" data-family-drop="right" tabindex="0">Drop a family here</div>
             <label>Restriction
               <select id="experiment-right-mode"><option value="avoid">Avoid every listed pattern</option><option value="contain">Contain every listed pattern</option><option value="none">No pattern restriction</option></select>
             </label>
+            <div class="mode-drop" data-mode-drop="right" tabindex="0">Drop Avoid or Contain here</div>
             <label class="pattern-entry-label" for="experiment-right-patterns">Patterns <small>one Cayley pattern per line</small></label>
             <textarea id="experiment-right-patterns" rows="2" spellcheck="false">2212</textarea>
+            <div class="pattern-drop" data-pattern-drop="right" role="group" aria-label="Second family's pattern rules" tabindex="0">Drop patterns or a .txt file here</div>
             <div class="pattern-validation" id="experiment-right-validation" aria-live="polite"></div>
           </article>
         </div>
@@ -267,9 +274,16 @@
         </details>
 
         <div class="experiment-sentence" id="experiment-sentence" aria-live="polite"></div>
-        <div class="composer-actions"><span id="experiment-validation-summary" class="muted small">Checking pattern definitions…</span><button id="experiment-run" class="primary" disabled>Run experiment</button></div>
+        <div class="composer-actions"><span id="experiment-validation-summary" class="muted small">Checking pattern definitions…</span><div class="primary-actions"><button id="save-experiment" class="secondary" disabled>Save test</button><button id="export-experiment" class="secondary" disabled>Export JSON</button><button id="experiment-run" class="primary" disabled>Run bounded test</button></div></div>
       </div>
-      <div class="finite-warning">A completed bounded comparison is finite evidence only. Matching through n=k does not prove equality for all degrees.</div>
+      <details class="saved-experiments">
+        <summary>Saved tests <span id="saved-experiment-count">0</span><small> · stored on this device</small></summary>
+        <p class="saved-autosave-note">The current draft is saved automatically. Export JSON to move a test to another device.</p>
+        <div id="saved-experiments-feedback" class="small muted" aria-live="polite"></div>
+        <div id="saved-experiment-list"></div>
+        <div class="saved-experiment-tools"><label class="secondary import-spec">Import experiment JSON<input id="import-experiment" type="file" accept=".json,application/json" /></label><span class="small muted">Saved tests contain the exact specification and finite result summary.</span></div>
+      </details>
+      <div class="finite-warning">A match through degree n is finite evidence, not an all-degree proof.</div>
       <div id="experiment-result" aria-live="polite"></div>
 
       <details class="transform-experiment-panel">
@@ -310,10 +324,11 @@
     <section class="panel" id="panel-status" role="tabpanel" aria-labelledby="tab-status" tabindex="0">
       <div class="panel-head">
         <div>
-          <h2>Proof status and obligations</h2>
-          <p>The same four result labels are used throughout the workbench.</p>
+          <h2>Evidence and limits</h2>
+          <p>Finite checks, proved results, counterexamples, and open obligations.</p>
         </div>
       </div>
+      <section class="research-banner" id="research-banner"><div><strong id="overall-status" class="status-chip open">OPEN</strong><span id="overall-detail">Loading research status…</span></div></section>
       <div class="legend">
         <span class="status-chip proved">PROVED</span>
         <span class="status-chip verified">VERIFIED THROUGH n</span>

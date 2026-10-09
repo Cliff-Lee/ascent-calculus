@@ -1,0 +1,133 @@
+{
+  "all_candidates_pass_training_window": true,
+  "any_candidate_passes_held_out_degrees": true,
+  "benchmark_fingerprint": "33a7e7a1b57771c609a9ab1bccb7fba862f7b7c07f705a784c817d49433f1bf2",
+  "candidate_results": [
+    {
+      "degree_results": [
+        {
+          "degree": 1,
+          "failure": null,
+          "held_out": false,
+          "source_count": 1,
+          "target_count": 1,
+          "verified_bijection": true
+        },
+        {
+          "degree": 2,
+          "failure": null,
+          "held_out": false,
+          "source_count": 2,
+          "target_count": 2,
+          "verified_bijection": true
+        },
+        {
+          "degree": 3,
+          "failure": null,
+          "held_out": false,
+          "source_count": 5,
+          "target_count": 5,
+          "verified_bijection": true
+        },
+        {
+          "degree": 4,
+          "failure": null,
+          "held_out": false,
+          "source_count": 15,
+          "target_count": 15,
+          "verified_bijection": true
+        },
+        {
+          "degree": 5,
+          "failure": null,
+          "held_out": false,
+          "source_count": 53,
+          "target_count": 53,
+          "verified_bijection": true
+        },
+        {
+          "degree": 6,
+          "failure": null,
+          "held_out": true,
+          "source_count": 217,
+          "target_count": 217,
+          "verified_bijection": true
+        },
+        {
+          "degree": 7,
+          "failure": null,
+          "held_out": true,
+          "source_count": 1014,
+          "target_count": 1014,
+          "verified_bijection": true
+        }
+      ],
+      "passes_held_out_degrees": true,
+      "passes_training_window": true,
+      "program": "SweepLiftT(selector=RawAscTop(), inverse_lift=False, direction='ltr')",
+      "verified_through_degree": 7
+    }
+  ],
+  "count_vectors_match": true,
+  "degree_counts": [
+    {
+      "degree": 1,
+      "held_out": false,
+      "source_count": 1,
+      "target_count": 1
+    },
+    {
+      "degree": 2,
+      "held_out": false,
+      "source_count": 2,
+      "target_count": 2
+    },
+    {
+      "degree": 3,
+      "held_out": false,
+      "source_count": 5,
+      "target_count": 5
+    },
+    {
+      "degree": 4,
+      "held_out": false,
+      "source_count": 15,
+      "target_count": 15
+    },
+    {
+      "degree": 5,
+      "held_out": false,
+      "source_count": 53,
+      "target_count": 53
+    },
+    {
+      "degree": 6,
+      "held_out": true,
+      "source_count": 217,
+      "target_count": 217
+    },
+    {
+      "degree": 7,
+      "held_out": true,
+      "source_count": 1014,
+      "target_count": 1014
+    }
+  ],
+  "format": "ascent-machine-am-n12-independent-validation",
+  "held_out_degrees": [
+    6,
+    7
+  ],
+  "independent_enumerator": "experiments.reference_ascent literal all-tuples definitions",
+  "interpretation": "The search result was checked against independently enumerated class sets, including held-out degrees. The transformation implementation is the generated selector sweep; finite verification is not a proof.",
+  "production_class_generators_imported": false,
+  "proof_status": "not_proved",
+  "search_classification": "blind_bounded_rediscovery",
+  "target_map_imported": false,
+  "training_degrees_rechecked": [
+    1,
+    5
+  ],
+  "validation_classification": "independent_all_tuples_enumeration_with_held_out_degrees",
+  "version": 1
+}
