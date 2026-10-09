@@ -85,7 +85,7 @@ platform package jobs, including Ubuntu install/startup and desktop previews.
 
 ## T5 — Scenario evidence in the research interface
 
-**Status: implementation added; hosted validation pending.** The candidate
+**Status: passed on 2026-10-09.** The candidate
 evidence panel now displays the bounded sample input/output for each scenario
 alongside its match or failure status. A finite-family fingerprint is shown
 with an explicit finite-window limitation. The preview action opens the first
@@ -94,7 +94,10 @@ the legacy preview remain readable.
 
 Focused UI-formatting tests cover multiple scenario previews and the legacy
 single-preview record. The release workflow now runs the AM-N10 UI regression
-alongside the AM-T tests.
+alongside the AM-T tests. Locally, the three UI checks were invoked directly
+because `pytest` is not installed; the hosted regression ran them under pytest.
+GitHub Actions run #52 passed all three regression runners and all three
+platform package jobs, including Ubuntu install/startup and desktop previews.
 
 ## Remaining AM-AI target-machine gates
 
