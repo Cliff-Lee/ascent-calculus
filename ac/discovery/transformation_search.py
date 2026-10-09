@@ -98,6 +98,39 @@ SELECTOR_IDS = (
     "run_start", "run_end",
 )
 
+TRANSFORMATION_OPERATION_DESCRIPTIONS = {
+    "symmetry": "Reverse words and apply value complement.",
+    "canonicalize": "Compress used levels and standardize selected values.",
+    "hat_sweeps": "Apply the hat map and its inverse.",
+    "prefix_lifts": "Apply bounded-position prefix lifts and inverse lifts.",
+    "selector_sweeps": "Sweep prefix lifts forward or backward over typed position selectors.",
+    "selector_restrictions": "Restrict a word to the positions selected by a typed selector.",
+    "insert_existing_values": "Insert a selected existing value at a typed cut.",
+    "insert_fresh_maximum": "Insert a new maximum at a typed cut.",
+    "block_schemas": "Generate the registered bounded block-schema transformations.",
+}
+
+TRANSFORMATION_SELECTOR_DESCRIPTIONS = {
+    "scope_first": "First position in the active positional scope.",
+    "scope_last": "Last position in the active positional scope.",
+    "first": "First occurrence of each value.",
+    "last": "Last occurrence of each value.",
+    "repeat": "Occurrences after the first occurrence of their value.",
+    "asc_top": "Positions that are ascent tops, including the conventional first position.",
+    "asc_bottom": "Positions that are ascent bottoms, including the conventional first position.",
+    "raw_asc_top": "Positions that are ascent tops, without the conventional first-position addition.",
+    "raw_asc_bottom": "Positions that are ascent bottoms, without the conventional first-position addition.",
+    "desc_top": "Positions that are descent tops, including the conventional first position.",
+    "desc_bottom": "Positions that are descent bottoms, including the conventional first position.",
+    "raw_desc_top": "Positions that are descent tops, without the conventional first-position addition.",
+    "raw_desc_bottom": "Positions that are descent bottoms, without the conventional first-position addition.",
+    "run_start": "First position of each maximal constant run.",
+    "run_end": "Last position of each maximal constant run.",
+}
+
+GRAMMAR_MANIFEST_FORMAT = "ascent-machine-transformation-grammar-manifest"
+GRAMMAR_MANIFEST_VERSION = 1
+
 
 @dataclass(frozen=True)
 class TransformationGrammarSpec:
@@ -200,6 +233,59 @@ class TransformationGrammarSpec:
             raw["candidate_budget"], raw["expansion_budget"], raw["class_object_budget"],
             raw["enumeration_budget"], raw["evaluation_budget"],
         )
+
+
+def transformation_grammar_manifest(
+    spec: TransformationGrammarSpec,
+    *,
+    grammar_version: str = GRAMMAR_VERSION,
+) -> dict:
+    """Describe the exact bounded vocabulary and limits used by a search.
+
+    The manifest is provenance metadata, not a completeness claim: it makes
+    enabled and disabled grammar components visible beside finite results.
+    """
+    if not isinstance(spec, TransformationGrammarSpec):
+        raise TypeError("spec must be a TransformationGrammarSpec")
+    if not isinstance(grammar_version, str) or grammar_version not in SUPPORTED_GRAMMAR_VERSIONS:
+        raise ValueError("grammar_version must be a supported transformation grammar version")
+    if grammar_version == PREVIOUS_GRAMMAR_VERSION and "block_schemas" in spec.operations:
+        raise ValueError("the previous grammar version does not support block schemas")
+    body = {
+        "format": GRAMMAR_MANIFEST_FORMAT,
+        "version": GRAMMAR_MANIFEST_VERSION,
+        "grammar_version": grammar_version,
+        "operations": [
+            {"id": identifier, "description": TRANSFORMATION_OPERATION_DESCRIPTIONS[identifier],
+             "enabled": identifier in spec.operations}
+            for identifier in OPERATION_IDS
+        ],
+        "selectors": [
+            {"id": identifier, "kind": "position",
+             "description": TRANSFORMATION_SELECTOR_DESCRIPTIONS[identifier],
+             "enabled": identifier in spec.selectors}
+            for identifier in SELECTOR_IDS
+        ],
+        "boolean_selector_algebra": spec.boolean_selector_algebra,
+        "bounds": {
+            "position_bound": spec.position_bound,
+            "occurrence_rank": spec.occurrence_rank,
+            "inserted_value_bound": spec.inserted_value_bound,
+            "max_selectors": spec.max_selectors,
+            "max_atoms": spec.max_atoms,
+            "max_cost": spec.max_cost,
+            "max_steps": spec.max_steps,
+            "candidate_budget": spec.candidate_budget,
+            "expansion_budget": spec.expansion_budget,
+            "class_object_budget": spec.class_object_budget,
+            "enumeration_budget": spec.enumeration_budget,
+            "evaluation_budget": spec.evaluation_budget,
+        },
+        "scope": "bounded_registered_operations_and_parameters; not a complete map grammar",
+    }
+    encoded = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    body["fingerprint"] = sha256(encoded.encode("utf-8")).hexdigest()
+    return body
 
 
 @dataclass(frozen=True)

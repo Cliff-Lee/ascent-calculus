@@ -22,6 +22,7 @@ from ac.discovery.transformation_search import (
     _precompute,
     generate_transformation_atoms,
     iter_typed_transform_programs,
+    transformation_grammar_manifest,
 )
 
 
@@ -444,6 +445,9 @@ def run_worker_search(job, context) -> dict:
         "specification_fingerprint": spec.fingerprint,
         "family_search_version": FAMILY_SEARCH_VERSION,
         "grammar_version": spec.grammar_version,
+        "grammar_manifest": transformation_grammar_manifest(
+            spec.grammar, grammar_version=spec.grammar_version,
+        ),
         "scenario_count": len(spec.scenarios),
         "scenario_specifications": [
             {
