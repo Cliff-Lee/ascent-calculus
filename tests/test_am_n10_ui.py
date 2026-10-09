@@ -2,6 +2,7 @@ from ac.discovery.specification import ClassSpec, DegreeWindow
 from ac.discovery.transformation_search import TransformationGrammarSpec
 from ac.discovery.transformation_family import TransformationFamilySearchSpec, run_worker_search
 from ac.gui.discovery_campaign import build_transformation_family_spec
+from ac.gui.discovery_window import _scenario_evidence_lines, _scenario_map_previews
 
 
 def test_discover_form_builds_separate_pattern_and_offset_grid():
@@ -79,3 +80,45 @@ def test_family_candidate_keeps_an_auditable_sample_map_for_preview():
     assert preview["source"]["values"] == preview["output"]["values"]
     assert preview["position_map"] == list(range(1, len(preview["source"]["values"]) + 1))
     assert preview["scenario_fingerprint"] == spec.scenarios[0].fingerprint
+
+
+def test_candidate_evidence_shows_map_examples_for_each_scenario():
+    def preview(index, source, output):
+        return {
+            "base_degree": 2,
+            "scenario_fingerprint": f"scenario-{index}",
+            "source": {"values": [source], "height": 1},
+            "output": {"values": [output], "height": 1},
+            "position_map": [1],
+            "value_map": [1],
+            "created_positions": [],
+        }
+
+    first, second = preview(0, 1, 1), preview(1, 1, 2)
+    row = {
+        "scenario_results": [
+            {"scenario_index": 0, "source_class": "A", "target_class": "B", "finite_match": True,
+             "source_offset": 0, "target_offset": 0, "verified_through": 2, "evaluation": {}},
+            {"scenario_index": 1, "source_class": "C", "target_class": "D", "finite_match": False,
+             "source_offset": 0, "target_offset": 1, "verified_through": 2, "evaluation": {}},
+        ],
+        "scenario_map_previews": [
+            {"scenario_index": 0, "scenario_fingerprint": "scenario-0", "example_map": first},
+            {"scenario_index": 1, "scenario_fingerprint": "scenario-1", "example_map": second},
+        ],
+    }
+
+    lines = _scenario_evidence_lines(row)
+    joined = "\n".join(lines)
+    assert joined.index("Scenario 1") < joined.index("Scenario 2")
+    assert "Sample map at base n=2: [1] → [1]" in joined
+    assert "Sample map at base n=2: [1] → [2]" in joined
+    assert [item["example_map"] for item in _scenario_map_previews(row)] == [first, second]
+
+
+def test_old_candidate_preview_remains_readable_as_scenario_one():
+    preview = {"base_degree": 1, "source": {"values": [1]}, "output": {"values": [1]}}
+    previews = _scenario_map_previews({"example_map_preview": preview})
+    assert len(previews) == 1
+    assert previews[0]["scenario_index"] == 0
+    assert previews[0]["example_map"] is preview
