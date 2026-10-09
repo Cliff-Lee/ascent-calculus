@@ -15,10 +15,12 @@ from .viewmodel import (
     trace_gap_swap_repair,
 )
 from .experiments import browse_objects, find_unmatched_objects, run_experiment, validate_pattern
+from .jobs import ExperimentJobManager, JobCapacityError
 from .transform_experiments import run_transform_experiment
 
 
 STATIC = files("ac.gui.static")
+JOBS = ExperimentJobManager()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -39,6 +41,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
+        if path.startswith("/api/jobs/"):
+            job_id = path.removeprefix("/api/jobs/")
+            try:
+                return self._json(JOBS.get(job_id))
+            except KeyError:
+                return self._json({"error": "not_found", "detail": "Experiment job not found"}, status=404)
         if path == "/api/status":
             return self._json({"status": research_status(), "contract": interface_contract()})
         if path in {"/", "/index.html"}:
@@ -64,6 +72,18 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         try:
             body = self._body()
+            if path == "/api/jobs":
+                try:
+                    job = JOBS.start(body.get("kind", "experiment"), body.get("specification", {}))
+                except JobCapacityError as exc:
+                    return self._json({"error": type(exc).__name__, "detail": str(exc)}, status=429)
+                return self._json(job, status=202)
+            if path.startswith("/api/jobs/") and path.endswith("/cancel"):
+                job_id = path.removeprefix("/api/jobs/").removesuffix("/cancel").strip("/")
+                try:
+                    return self._json(JOBS.cancel(job_id))
+                except KeyError:
+                    return self._json({"error": "not_found", "detail": "Experiment job not found"}, status=404)
             if path == "/api/inspect":
                 return self._json(inspect_word(body.get("word", "")))
             if path == "/api/trace":

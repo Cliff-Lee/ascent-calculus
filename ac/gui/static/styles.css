@@ -101,6 +101,7 @@ th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacin
 .status-chip.verified { color:#2856a8; background:#eaf1ff; border-color:#b8ccf2; }
 .status-chip.open { color:var(--open); background:var(--open-soft); border-color:#dcc5f5; }
 .status-chip.counterexample { color:var(--bad); background:var(--bad-soft); border-color:#f4b6b1; }
+.status-chip.incomplete { color:#805617; background:#fff5df; border-color:#ecd6a5; }
 .legend { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
 .claim-list { display:grid; grid-template-columns:repeat(2,minmax(280px,1fr)); gap:12px; }
 .claim { background:white; border:1px solid var(--line); border-radius:14px; padding:14px; }
@@ -380,6 +381,8 @@ footer { position:static; flex:none; padding:10px 24px; }
 .composer-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:14px; }
 .composer-actions .primary { min-width:155px; padding:12px 16px; }
 .composer-actions .primary:disabled { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
+.job-buttons { display:flex; align-items:center; gap:8px; }
+.job-buttons [hidden] { display:none; }
 .legacy-lab-panel { margin:16px 0; border:1px solid #dfe6e2; border-radius:14px; padding:13px 15px; background:#f2f4f1; }
 .transform-experiment-panel { margin:16px 0; border:1px solid #d8e4dc; border-radius:14px; padding:14px 16px; background:#f8faf7; }
 .transform-experiment-panel > summary { color:#315b4d; font-size:13px; font-weight:850; cursor:pointer; }

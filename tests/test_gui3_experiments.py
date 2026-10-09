@@ -1,4 +1,5 @@
 import pytest
+from threading import Event
 
 from ac.gui.experiments import browse_objects, find_unmatched_objects, parse_experiment, run_experiment, validate_pattern
 from ac.core.word import ChainWord
@@ -38,6 +39,49 @@ def test_experiment_model_represents_general_pattern_comparison():
     assert spec.left.family == "modified"
     assert [rule.pattern.values for rule in spec.left.rules] == [(2, 1, 2, 2), (1, 2, 2)]
     assert spec.statistic == "ascents"
+
+
+def test_finite_result_record_labels_success_and_counterexample_without_claiming_proof():
+    matching = run_experiment({
+        "question": "compare", "start": 1, "stop": 2,
+        "left": _side("ordinary"), "right": _side("ordinary"),
+    })
+    assert matching["evidence"] == {
+        "schema": "ac.finite-result.v1", "status": "verified", "finite_only": True,
+        "completed_degrees": [1, 2], "requested_degrees": {"start": 1, "stop": 2},
+        "complete": True, "cancelled_at_degree": None, "objects_tested": 3,
+    }
+    assert matching["evidence"]["status"] != "proved"
+
+    differing = run_experiment({
+        "question": "compare", "start": 1, "stop": 2,
+        "left": _side("ordinary", "avoid", "12"),
+        "right": _side("ordinary", "avoid", "21"),
+    })
+    assert differing["evidence"]["status"] == "counterexample"
+    assert differing["evidence"]["complete"] is True
+
+
+def test_cancellation_keeps_completed_degrees_and_marks_current_degree_incomplete():
+    cancellation = Event()
+    updates = []
+
+    def stop_after_first_degree(update):
+        updates.append(update)
+        if update["phase"] == "degree_complete" and update["degree"] == 1:
+            cancellation.set()
+
+    result = run_experiment({
+        "question": "compare", "start": 1, "stop": 4,
+        "left": _side("ordinary"), "right": _side("ordinary"),
+    }, progress=stop_after_first_degree, cancel_event=cancellation)
+
+    assert [row["n"] for row in result["rows"]] == [1]
+    assert result["evidence"]["status"] == "incomplete"
+    assert result["evidence"]["complete"] is False
+    assert result["evidence"]["cancelled_at_degree"] == 2
+    assert updates[-1]["phase"] == "cancelled"
+    assert all("degree_objects_tested" in update for update in updates)
 
 
 def test_generic_modified_2122_versus_2212_counts_match_through_degree_7():
