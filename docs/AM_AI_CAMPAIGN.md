@@ -25,7 +25,7 @@ complete supported mode. No candidate code from a model is executed.
 | AI7 | Closed-loop refinement | Offline implementation gate passed: exact engine failures can guide a linked, bounded follow-up plan; never self-certify a claim |
 | AI8 | Proof assistance | Organize proof obligations and candidate lemmas; preserve human review and separate proof text from machine verification |
 | AI9 | Overnight research | In progress: resumable AI-assisted search/refinement loop, global candidate/time budgets, cancellation, exact round provenance; broader soak and target-machine validation remain |
-| AI10 | Benchmarking, privacy, and release gate | Compare against non-AI search, test offline behavior and failure modes, document data flow, and validate packaged builds |
+| AI10 | Benchmarking, privacy, and release gate | In progress: AI10a offline paired-benchmark protocol and data-flow audit passed; live model comparison, target-Linux checks, and packaged release gate remain |
 
 ## AI1 — Provider architecture
 
@@ -360,3 +360,68 @@ Validation completed on 2026-10-09:
   on the target Linux machine remain untested. AM-AI9 still needs overnight
   soak/recovery testing and AM-AI10's independent benchmark, privacy, and
   release gate.
+
+## AI10a — Paired benchmark protocol and privacy inventory
+
+**Status: offline implementation gate passed; AM-AI10 remains open.** The new
+`experiments/am_ai10_benchmark.py` accepts an exact transformation-family spec,
+an overnight campaign report, or an exported research dossier. It always runs
+a deterministic baseline first. The default path is offline and does not
+construct an Ollama provider. `--with-ai` is an explicit opt-in that runs the
+same root question through the bounded overnight workflow using a named model.
+
+Both arms have the same total candidate cap. The baseline may spend the full cap
+on the original specification; the guided arm starts at the specification's
+own candidate budget and may spend the remainder on locally validated follow-up
+specifications. The report separates candidate counts and wall time, records
+both complete finite results and model locality, and compares exact map/scenario
+matches using a scenario fingerprint that omits operational budget fields but
+retains the classes, offsets, degree window, and transformation grammar. It
+compares retained exact-candidate records and reports total exact-candidate
+counts separately. It does not collapse results into a claim that the assistant
+found the “best” transformation. Every record says `proof_status: not_proved`.
+
+The data-flow inventory is in `docs/AM_AI_DATA_FLOW.md`. The runner stores no
+credentials, validates loopback-only routing through the existing Ollama
+adapter, and exports prompts/responses as part of the paired report when AI is
+enabled. A loopback API can still use a cloud model; locality must be selected
+or recorded as unknown.
+
+Offline validation completed on 2026-10-09:
+
+- Six AM-AI10 tests passed for exact spec/dossier loading, offline provider
+  isolation, explicit model selection, candidate-cap comparison, stable
+  scenario matches across different compute budgets, and paired-result
+  classification.
+- The AM-AI1–AM-AI10a suite passed **55 tests**. The supported repository
+  `unittest` suite passed **58 tests**; eight existing pytest-dependent modules
+  were excluded because pytest is unavailable in this environment.
+- `experiments/results/am_ai10_identity_control.json` records a positive
+  identity-map control: 8 candidates tested, 3 exact finite maps, through the
+  two same-class windows at offsets `(0,0)` and `(1,1)`. This is a harness
+  control, not a new mathematical discovery.
+- `experiments/results/am_ai10_refinement_challenge_baseline.json` records the
+  deterministic arm for modified `111`-avoiders versus revised `111`-avoiders,
+  with offsets `(0,0)` and `(0,+2)`: 24 candidates tested, no exact map, and
+  candidate space not exhausted. Its root spec cap is 12, leaving the paired
+  AI arm up to 12 candidates for a validated follow-up under the same total
+  cap of 24.
+- `compileall`, benchmark `--help`, JSON parsing for both recorded results, and
+  `git diff --check` passed. A raw `unittest discover` still cannot import the
+  eight pytest-dependent modules here; they are not counted as passing.
+
+To run the paired challenge on the Ubuntu machine, after confirming the model
+is local in Ollama, use:
+
+```bash
+python3 experiments/am_ai10_benchmark.py \
+  --spec experiments/benchmarks/am_ai10_refinement_challenge.json \
+  --candidate-budget 24 --with-ai --model qwen3.5:9b --model-locality local \
+  --max-refinements 1 --max-wall-seconds 3600 \
+  --output experiments/results/am_ai10_refinement_challenge_paired.json
+```
+
+That live paired result, an overnight soak on the target Linux machine, the
+visual desktop review, and the packaged-launch gate remain pending. The
+identity control stops before an AI call by design; use the challenge fixture
+for a refinement comparison.
