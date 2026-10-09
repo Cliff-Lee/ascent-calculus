@@ -415,9 +415,6 @@ def run_worker_search(job, context) -> dict:
             "scenario_results": scenario_results,
             "proof_status": "not_proved",
         }
-        example_preview = _example_map_preview(transform, datasets[0], spec.scenarios[0])
-        if example_preview is not None:
-            row["example_map_preview"] = example_preview
         next_index = index + 1
         examined += 1
         if match_count == len(spec.scenarios):
@@ -436,6 +433,22 @@ def run_worker_search(job, context) -> dict:
         ranked_candidates.append((match_count, verified_sum, row))
         ranked_candidates.sort(key=lambda item: (-item[0], -item[1], item[2]["cost"], item[2]["program"]))
         ranked_candidates = ranked_candidates[:keep]
+
+        retained = any(candidate is row for candidate in exact_candidates) or any(
+            item[2] is row for item in ranked_candidates
+        )
+        if retained:
+            scenario_map_previews = [
+                {
+                    "scenario_index": scenario_index,
+                    "scenario_fingerprint": scenario.fingerprint,
+                    "example_map": _example_map_preview(transform, data, scenario),
+                }
+                for scenario_index, (scenario, data) in enumerate(zip(spec.scenarios, datasets))
+            ]
+            row["scenario_map_previews"] = scenario_map_previews
+            if scenario_map_previews and scenario_map_previews[0]["example_map"] is not None:
+                row["example_map_preview"] = scenario_map_previews[0]["example_map"]
 
         if examined % interval == 0 or (start_index == 0 and next_index == 1):
             checkpoint_state = {
