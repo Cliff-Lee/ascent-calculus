@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import stat
 import tempfile
 import unittest
@@ -33,7 +34,8 @@ class AMAI3SettingsTests(unittest.TestCase):
         self.assertNotIn("api_key", document)
         self.assertNotIn("token", document)
         self.assertEqual(document["endpoint"], "http://localhost:11434")
-        self.assertEqual(permissions, 0o600)
+        if os.name == "posix":
+            self.assertEqual(permissions, 0o600)
 
     def test_invalid_version_or_nonlocal_endpoint_fails_clearly(self):
         with self.assertRaises(ValueError):

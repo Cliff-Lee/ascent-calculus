@@ -99,8 +99,8 @@ remote metadata when Ollama provides it and warns when the selected model is
 cloud or its inference location is unknown.
 
 **Status: implementation added; desktop visual review pending.** Settings
-round-trip, disabled defaults, local endpoint validation, protected file
-permissions, and bounded evidence packets have focused offline tests. The
+round-trip, disabled defaults, local endpoint validation, restrictive POSIX
+file permissions, and bounded evidence packets have focused offline tests. The
 window cannot be visually exercised in this headless container. The target
 Linux desktop should confirm the layout and make one request using a local
 model such as the user's `qwen3.5:9b` before AM-AI3 is marked fully passed.
