@@ -70,7 +70,7 @@ package jobs, including Ubuntu install/startup and desktop previews.
 
 ## T4 — Scenario-by-scenario map previews
 
-**Status: implementation added; hosted validation pending.** Retained
+**Status: passed on 2026-10-09.** Retained
 candidate rows now include one bounded input/output preview for each requested
 scenario, with its scenario fingerprint. The legacy first-scenario preview
 field remains available. Previews are generated only for retained exact or
@@ -79,6 +79,9 @@ independently of the full candidate budget.
 
 The T2/T3 regression now checks that all scenarios appear in exact-candidate
 previews and that the compatibility preview is the first item in that list.
+The T1–T4 local focused suite, `compileall`, and `git diff --check` passed.
+GitHub Actions run #49 passed all three regression runners and all three
+platform package jobs, including Ubuntu install/startup and desktop previews.
 
 ## Remaining AM-AI target-machine gates
 
