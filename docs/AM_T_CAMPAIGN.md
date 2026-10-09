@@ -12,7 +12,7 @@ or public fork of this repository.
 
 ## T1 — Search-scope manifest
 
-**Status: implemented; hosted CI pending.** Every transformation-family search
+**Status: passed on 2026-10-09.** Every transformation-family search
 result now includes a versioned, fingerprinted manifest describing all
 registered operations and selectors, which entries were enabled, and the
 active grammar and resource bounds. The manifest explicitly labels the search
@@ -26,7 +26,9 @@ Validation:
   family-search result.
 - python -m unittest -v tests.test_am_t1_transformation_manifest,
   compileall, and git diff --check passed locally.
-- The cross-platform focused regression will include the new test module.
+- GitHub Actions run #41 passed the new test on Windows, macOS, and Ubuntu.
+  All three platform package jobs passed as well, including Ubuntu install,
+  launch, and preview checks.
 
 ## Remaining AM-AI target-machine gates
 
