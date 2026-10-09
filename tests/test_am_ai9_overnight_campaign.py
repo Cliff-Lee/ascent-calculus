@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import tempfile
+import threading
 import time
 import unittest
 from types import SimpleNamespace
@@ -20,7 +21,7 @@ from ac.discovery.overnight_campaign import (
     run_overnight_campaign,
     validate_overnight_options,
 )
-from ac.discovery.worker import PauseRequested
+from ac.discovery.worker import PauseRequested, WorkerContext
 from ac.gui.discovery_campaign import build_transformation_family_spec
 
 
@@ -284,6 +285,70 @@ class AMAI9OvernightCampaignTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertEqual(result["overnight_campaign"]["stop_reason"], "refinement_budget")
         self.assertEqual(len(result["overnight_campaign"]["assistant_iterations"]), 1)
+
+    def test_sqlite_crash_recovery_reuses_checkpointed_response_without_duplicate_ai_call(self):
+        spec = _root_spec()
+        options = _options()
+        response = _design_response()
+        model_calls = []
+
+        class FakeAIService:
+            def __init__(self, _provider):
+                pass
+
+            def chat(self, _request, cancellation=None):
+                model_calls.append("requested")
+                return SimpleNamespace(text=json.dumps(response), structured_data=response, model="qwen3.5:9b")
+
+        with tempfile.TemporaryDirectory() as directory:
+            store = ResearchJobStore(Path(directory) / "research.sqlite3")
+            created = store.create_job(spec, handler=OVERNIGHT_HANDLER_ID, options=options)
+            first_job = store.claim_next("first-worker")
+            first_context = WorkerContext(store, first_job, "first-worker", threading.Event())
+
+            class CrashAfterResponse:
+                def __init__(self, delegate):
+                    self.delegate = delegate
+                    self.store = delegate.store
+
+                def checkpoint(self, state, progress=None):
+                    self.delegate.checkpoint(state, progress)
+                    if state.get("pending_ai_response") is not None:
+                        raise SystemExit("simulated process loss after response checkpoint")
+
+                def check_control(self):
+                    self.delegate.check_control()
+
+            search = lambda child_job, _context: _failure_result(child_job.question)
+            with patch("ac.discovery.overnight_campaign.run_worker_search", side_effect=search), \
+                 patch("ac.discovery.overnight_campaign._memory_record"), \
+                 patch("ac.discovery.overnight_campaign.OllamaProvider", return_value=object()), \
+                 patch("ac.discovery.overnight_campaign.AIService", FakeAIService):
+                with self.assertRaisesRegex(SystemExit, "simulated process loss"):
+                    run_overnight_campaign(first_job, CrashAfterResponse(first_context))
+
+            crashed = store.get_job(created.id)
+            self.assertEqual(crashed.status, "running")
+            self.assertIsNotNone(crashed.checkpoint["pending_ai_response"])
+            self.assertIn(created.id, store.recover_stale_jobs(stale_after_seconds=0))
+            store.resume_job(created.id)
+            resumed = store.claim_next("second-worker")
+            resumed_context = WorkerContext(store, resumed, "second-worker", threading.Event())
+            with patch("ac.discovery.overnight_campaign.run_worker_search", side_effect=search), \
+                 patch("ac.discovery.overnight_campaign._memory_record"), \
+                 patch("ac.discovery.overnight_campaign.AIService", side_effect=AssertionError("saved response must be reused")), \
+                 patch("ac.discovery.overnight_campaign.OllamaProvider", side_effect=AssertionError("saved response must be reused")):
+                result = run_overnight_campaign(resumed, resumed_context)
+            store.finish(created.id, "second-worker", result)
+            completed = store.get_job(created.id)
+            dossier = validate_dossier(build_research_dossier(completed))
+
+        self.assertEqual(len(model_calls), 1)
+        self.assertEqual(completed.status, "completed")
+        self.assertEqual(result["overnight_campaign"]["stop_reason"], "refinement_budget")
+        self.assertEqual(len(result["overnight_campaign"]["completed_rounds"]), 2)
+        self.assertEqual(dossier["finite_result"]["proof_status"], "not_proved")
+        self.assertEqual(dossier["finite_result"]["overnight_campaign"]["assistant_iterations"][0]["response_text"], json.dumps(response))
 
     def test_pause_during_ai_request_cancels_provider_and_keeps_request_checkpoint(self):
         spec = _root_spec()

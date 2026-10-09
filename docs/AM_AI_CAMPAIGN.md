@@ -342,12 +342,13 @@ program operations or block schemas.
 
 Validation completed on 2026-10-09:
 
-- Eight offline AM-AI9 tests passed, covering strict budgets and loopback-only
+- Nine offline AM-AI9 tests passed, covering strict budgets and loopback-only
   endpoints, two-round search/refinement, persisted-response reuse after pause,
   interruption of an in-flight model request, exact-match early exit, rejected
-  proposal handling, partial-budget checkpoints, and dossier preservation of
-  every round's specification.
-- All **48 AM-AI1–AI9a offline tests** and all **51 repository unittest tests**
+  proposal handling, partial-budget checkpoints, SQLite crash recovery without
+  a duplicate model request, and dossier preservation of every round's
+  specification.
+- All **49 AM-AI1–AI9a offline tests** and all **52 repository unittest tests**
   passed. `compileall`, desktop `--startup-check`, worker `--help`, and
   `git diff --check` passed.
 - Ubuntu 24.04 amd64 `.deb` and wheel `0.1.0a34` built. The extracted package
