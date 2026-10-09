@@ -32,7 +32,7 @@ Validation:
 
 ## T2 — Finite behavior equivalence
 
-**Status: implementation added; hosted regression pending.** Exact candidates
+**Status: passed on 2026-10-09.** Exact candidates
 that induce the same complete finite maps across every requested scenario now
 share a family-map fingerprint. Results count the explored candidates in each
 behavior group and retain one example program. This identifies redundant
@@ -44,7 +44,12 @@ The family checkpoint version is now 2 so an interrupted run cannot resume
 with incomplete behavior-group counts from the older checkpoint schema. A
 focused regression uses three distinct exact programs that collapse to one
 finite behavior group, checks the bounded-scope language, and resumes from a
-completed checkpoint.
+completed checkpoint. The local T1/T2 focused suite passed, as did
+`compileall` and `git diff --check`.
+
+GitHub Actions run #44 passed all three regression runners and all three
+platform package jobs. Ubuntu install, launch, and desktop preview checks
+passed; Windows installer smoke checks and the macOS package build passed.
 
 ## Remaining AM-AI target-machine gates
 
