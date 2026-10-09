@@ -27,7 +27,9 @@ from ac.discovery.transformation_search import (
 
 
 FAMILY_SEARCH_FORMAT = "ascent-machine-transformation-family-search"
-FAMILY_SEARCH_VERSION = 2
+FAMILY_SEARCH_VERSION = 1
+SUPPORTED_FAMILY_SEARCH_VERSIONS = (1, 2)
+FAMILY_CHECKPOINT_VERSION = 3
 MAX_FAMILY_SCENARIOS = 32
 MAX_FAMILY_CANDIDATES = 1_000_000
 MAX_FAMILY_ENUMERATION = 50_000_000
@@ -143,7 +145,11 @@ class TransformationFamilySearchSpec:
         }
         if not isinstance(raw, dict) or set(raw) != expected:
             raise ValueError("transformation-family fields do not match the version-1 schema")
-        if raw["format"] != FAMILY_SEARCH_FORMAT or type(raw["version"]) is not int or raw["version"] != FAMILY_SEARCH_VERSION:
+        if (
+            raw["format"] != FAMILY_SEARCH_FORMAT
+            or type(raw["version"]) is not int
+            or raw["version"] not in SUPPORTED_FAMILY_SEARCH_VERSIONS
+        ):
             raise ValueError("unsupported transformation-family format or version")
         if not isinstance(raw["scenarios"], list):
             raise ValueError("family scenarios must be an array")
@@ -253,10 +259,10 @@ def run_worker_search(job, context) -> dict:
         raise ValueError("transformation-family worker requires a family-search specification")
 
     saved = dict(job.checkpoint)
-    if saved.get("family_search_version") != FAMILY_SEARCH_VERSION:
+    if saved.get("family_checkpoint_version") != FAMILY_CHECKPOINT_VERSION:
         saved = {}
     prep_state = saved or {
-        "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "next_candidate_index": 0,
         "examined": 0,
         "exact_candidate_count": 0,
@@ -373,10 +379,18 @@ def run_worker_search(job, context) -> dict:
             for scenario_result in scenario_results
         ]
         finite_family_fingerprint = None
+        finite_family_scenario_maps = None
         if match_count == len(spec.scenarios) and all(finite_map_fingerprints):
-            finite_family_payload = [
-                [scenario.fingerprint, finite_map_fingerprint]
+            finite_family_scenario_maps = [
+                {
+                    "scenario_fingerprint": scenario.fingerprint,
+                    "finite_map_fingerprint": finite_map_fingerprint,
+                }
                 for scenario, finite_map_fingerprint in zip(spec.scenarios, finite_map_fingerprints)
+            ]
+            finite_family_payload = [
+                [entry["scenario_fingerprint"], entry["finite_map_fingerprint"]]
+                for entry in finite_family_scenario_maps
             ]
             finite_family_fingerprint = sha256(json.dumps(
                 finite_family_payload, sort_keys=True, separators=(",", ":"),
@@ -397,6 +411,7 @@ def run_worker_search(job, context) -> dict:
             "matching_scenarios": matching_scenarios,
             "bijection_on_every_scenario": match_count == len(spec.scenarios),
             "finite_family_map_fingerprint": finite_family_fingerprint,
+            "finite_family_scenario_maps": finite_family_scenario_maps,
             "scenario_results": scenario_results,
             "proof_status": "not_proved",
         }
@@ -412,6 +427,7 @@ def run_worker_search(job, context) -> dict:
                     "finite_family_map_fingerprint": finite_family_fingerprint,
                     "candidate_count": 0,
                     "example_program": row["program"],
+                    "scenario_maps": finite_family_scenario_maps,
                 })
                 group["candidate_count"] += 1
             exact_candidates.append(row)
@@ -423,7 +439,7 @@ def run_worker_search(job, context) -> dict:
 
         if examined % interval == 0 or (start_index == 0 and next_index == 1):
             checkpoint_state = {
-                "family_search_version": FAMILY_SEARCH_VERSION,
+                "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
                 "next_candidate_index": next_index,
                 "examined": examined,
                 "exact_candidate_count": exact_count,
@@ -450,7 +466,7 @@ def run_worker_search(job, context) -> dict:
         and not candidate_space_exhausted
     )
     final_state = {
-        "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "next_candidate_index": next_index,
         "examined": examined,
         "exact_candidate_count": exact_count,
@@ -469,6 +485,7 @@ def run_worker_search(job, context) -> dict:
     return {
         "specification_fingerprint": spec.fingerprint,
         "family_search_version": FAMILY_SEARCH_VERSION,
+        "family_checkpoint_version": FAMILY_CHECKPOINT_VERSION,
         "grammar_version": spec.grammar_version,
         "grammar_manifest": transformation_grammar_manifest(
             spec.grammar, grammar_version=spec.grammar_version,
