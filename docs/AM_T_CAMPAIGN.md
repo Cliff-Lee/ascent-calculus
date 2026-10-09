@@ -83,6 +83,19 @@ The T1–T4 local focused suite, `compileall`, and `git diff --check` passed.
 GitHub Actions run #49 passed all three regression runners and all three
 platform package jobs, including Ubuntu install/startup and desktop previews.
 
+## T5 — Scenario evidence in the research interface
+
+**Status: implementation added; hosted validation pending.** The candidate
+evidence panel now displays the bounded sample input/output for each scenario
+alongside its match or failure status. A finite-family fingerprint is shown
+with an explicit finite-window limitation. The preview action opens the first
+available scenario map, and older saved candidate records that contain only
+the legacy preview remain readable.
+
+Focused UI-formatting tests cover multiple scenario previews and the legacy
+single-preview record. The release workflow now runs the AM-N10 UI regression
+alongside the AM-T tests.
+
 ## Remaining AM-AI target-machine gates
 
 AM-AI's hosted regression and package gates have passed on Windows, macOS, and
