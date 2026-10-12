@@ -271,6 +271,17 @@
       </div>
       <div class="finite-warning">A completed bounded comparison is finite evidence only. Matching through n=k does not prove equality for all degrees.</div>
       <div id="experiment-result" aria-live="polite"></div>
+      <section class="card" aria-label="Saved experiments">
+        <h3>Saved experiments <span id="saved-experiment-count">0</span></h3>
+        <div class="composer-actions">
+          <button type="button" id="save-experiment" class="secondary">Save current result</button>
+          <button type="button" id="export-experiment" class="secondary">Export result JSON</button>
+          <label for="import-experiment">Import experiment JSON</label>
+          <input type="file" id="import-experiment" accept=".json,application/json" />
+        </div>
+        <p id="saved-experiments-feedback" class="small muted" aria-live="polite"></p>
+        <div id="saved-experiment-list"></div>
+      </section>
 
       <details class="transform-experiment-panel">
         <summary>Transformation experiment · first release</summary>
