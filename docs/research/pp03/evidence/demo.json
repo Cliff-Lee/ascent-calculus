@@ -1,0 +1,425 @@
+{
+  "checkout_commit": "dfd00f59c7e1e7846eb612e597fb5f2ff039176d",
+  "checkout_has_changes": true,
+  "python_version": "3.14.7",
+  "results": [
+    {
+      "complete_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "first_tested_failure": null,
+      "proof_status": "not_proved",
+      "provenance": {
+        "engine_adapter_sha256": "cad08f1a4b6a380dac5f6c56a67d9888a4f99140df5bab8fa9906011ffd9079b",
+        "engine_source_sha256": {
+          "classes/theories.py": "e4dfadc33927f643aae44ee47ba9b09b03a0a6df99581958847aae8acab1c635",
+          "generate/universes.py": "39823ad8cdf02eaf16e75a81fb6c8e7c046b222f681ff967f95974678114a93c",
+          "logic/predicates.py": "bc8385699d42b9011d583c1bbc9a7c86817194d8e6c48c9617ad966d3b90b269",
+          "patterns/classical.py": "4501b95b7653d78e6636bea10b5e22e525b48110fc39c00dc1549c3679881ddf",
+          "patterns/constraints.py": "536db20166e8efced25d5ad4dff78060686360e074a58b8d451dd1833d74d5e4",
+          "patterns/general.py": "1cd83d19c9fe93f902907260400f10e11bbb80170adad34632196187334922b2"
+        },
+        "independence": "separate family predicates, enumeration and pattern matching; shared typed inputs and expected expression",
+        "oracle_sha256": "1b8b6307adf1442357f72d1e80e364cc0b6f15b8aec3243fd3277c3e99384db0"
+      },
+      "rows": [
+        {
+          "degree": 1,
+          "engine_count": 1,
+          "engine_only": null,
+          "expected": 1,
+          "formula_matches": true,
+          "oracle_count": 1,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 1
+        },
+        {
+          "degree": 2,
+          "engine_count": 2,
+          "engine_only": null,
+          "expected": 2,
+          "formula_matches": true,
+          "oracle_count": 2,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 2
+        },
+        {
+          "degree": 3,
+          "engine_count": 3,
+          "engine_only": null,
+          "expected": 3,
+          "formula_matches": true,
+          "oracle_count": 3,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 3
+        },
+        {
+          "degree": 4,
+          "engine_count": 4,
+          "engine_only": null,
+          "expected": 4,
+          "formula_matches": true,
+          "oracle_count": 4,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 4
+        },
+        {
+          "degree": 5,
+          "engine_count": 5,
+          "engine_only": null,
+          "expected": 5,
+          "formula_matches": true,
+          "oracle_count": 5,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 5
+        },
+        {
+          "degree": 6,
+          "engine_count": 6,
+          "engine_only": null,
+          "expected": 6,
+          "formula_matches": true,
+          "oracle_count": 6,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 6
+        }
+      ],
+      "schema_version": 1,
+      "statement": {
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129",
+              "value_base": 0,
+              "values": [
+                0,
+                1,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "formula": {
+          "kind": "linear",
+          "parameters": [
+            1,
+            0
+          ]
+        },
+        "id": "PP129-P5",
+        "maximum_degree": null,
+        "minimum_degree": 1,
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "source_theorem_id": "T-PP-129"
+      },
+      "status": "finite_verified"
+    },
+    {
+      "complete_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "first_tested_failure": null,
+      "proof_status": "not_proved",
+      "provenance": {
+        "engine_adapter_sha256": "cad08f1a4b6a380dac5f6c56a67d9888a4f99140df5bab8fa9906011ffd9079b",
+        "engine_source_sha256": {
+          "classes/theories.py": "e4dfadc33927f643aae44ee47ba9b09b03a0a6df99581958847aae8acab1c635",
+          "generate/universes.py": "39823ad8cdf02eaf16e75a81fb6c8e7c046b222f681ff967f95974678114a93c",
+          "logic/predicates.py": "bc8385699d42b9011d583c1bbc9a7c86817194d8e6c48c9617ad966d3b90b269",
+          "patterns/classical.py": "4501b95b7653d78e6636bea10b5e22e525b48110fc39c00dc1549c3679881ddf",
+          "patterns/constraints.py": "536db20166e8efced25d5ad4dff78060686360e074a58b8d451dd1833d74d5e4",
+          "patterns/general.py": "1cd83d19c9fe93f902907260400f10e11bbb80170adad34632196187334922b2"
+        },
+        "independence": "separate family predicates, enumeration and pattern matching; shared typed inputs and expected expression",
+        "oracle_sha256": "1b8b6307adf1442357f72d1e80e364cc0b6f15b8aec3243fd3277c3e99384db0"
+      },
+      "rows": [
+        {
+          "degree": 1,
+          "engine_count": 1,
+          "engine_only": null,
+          "expected": 1,
+          "formula_matches": true,
+          "oracle_count": 1,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 1
+        },
+        {
+          "degree": 2,
+          "engine_count": 2,
+          "engine_only": null,
+          "expected": 2,
+          "formula_matches": true,
+          "oracle_count": 2,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 2
+        },
+        {
+          "degree": 3,
+          "engine_count": 3,
+          "engine_only": null,
+          "expected": 3,
+          "formula_matches": true,
+          "oracle_count": 3,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 3
+        },
+        {
+          "degree": 4,
+          "engine_count": 5,
+          "engine_only": null,
+          "expected": 5,
+          "formula_matches": true,
+          "oracle_count": 5,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 4
+        },
+        {
+          "degree": 5,
+          "engine_count": 8,
+          "engine_only": null,
+          "expected": 8,
+          "formula_matches": true,
+          "oracle_count": 8,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 5
+        },
+        {
+          "degree": 6,
+          "engine_count": 13,
+          "engine_only": null,
+          "expected": 13,
+          "formula_matches": true,
+          "oracle_count": 13,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 6
+        }
+      ],
+      "schema_version": 1,
+      "statement": {
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "formula": {
+          "kind": "fibonacci_shift",
+          "parameters": [
+            1
+          ]
+        },
+        "id": "PP129-P6",
+        "maximum_degree": null,
+        "minimum_degree": 1,
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "status": "finite_verified"
+    },
+    {
+      "complete_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "first_tested_failure": null,
+      "proof_status": "not_proved",
+      "provenance": {
+        "engine_adapter_sha256": "cad08f1a4b6a380dac5f6c56a67d9888a4f99140df5bab8fa9906011ffd9079b",
+        "engine_source_sha256": {
+          "classes/theories.py": "e4dfadc33927f643aae44ee47ba9b09b03a0a6df99581958847aae8acab1c635",
+          "generate/universes.py": "39823ad8cdf02eaf16e75a81fb6c8e7c046b222f681ff967f95974678114a93c",
+          "logic/predicates.py": "bc8385699d42b9011d583c1bbc9a7c86817194d8e6c48c9617ad966d3b90b269",
+          "patterns/classical.py": "4501b95b7653d78e6636bea10b5e22e525b48110fc39c00dc1549c3679881ddf",
+          "patterns/constraints.py": "536db20166e8efced25d5ad4dff78060686360e074a58b8d451dd1833d74d5e4",
+          "patterns/general.py": "1cd83d19c9fe93f902907260400f10e11bbb80170adad34632196187334922b2"
+        },
+        "independence": "separate family predicates, enumeration and pattern matching; shared typed inputs and expected expression",
+        "oracle_sha256": "1b8b6307adf1442357f72d1e80e364cc0b6f15b8aec3243fd3277c3e99384db0"
+      },
+      "rows": [
+        {
+          "degree": 1,
+          "engine_count": 1,
+          "engine_only": null,
+          "expected": 1,
+          "formula_matches": true,
+          "oracle_count": 1,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 1
+        },
+        {
+          "degree": 2,
+          "engine_count": 2,
+          "engine_only": null,
+          "expected": 2,
+          "formula_matches": true,
+          "oracle_count": 2,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 2
+        },
+        {
+          "degree": 3,
+          "engine_count": 4,
+          "engine_only": null,
+          "expected": 4,
+          "formula_matches": true,
+          "oracle_count": 4,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 3
+        },
+        {
+          "degree": 4,
+          "engine_count": 7,
+          "engine_only": null,
+          "expected": 7,
+          "formula_matches": true,
+          "oracle_count": 7,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 4
+        },
+        {
+          "degree": 5,
+          "engine_count": 11,
+          "engine_only": null,
+          "expected": 11,
+          "formula_matches": true,
+          "oracle_count": 11,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 5
+        },
+        {
+          "degree": 6,
+          "engine_count": 16,
+          "engine_only": null,
+          "expected": 16,
+          "formula_matches": true,
+          "oracle_count": 16,
+          "oracle_only": null,
+          "same_complete_members": true,
+          "word_length": 6
+        }
+      ],
+      "schema_version": 1,
+      "statement": {
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-7",
+              "value_base": 0,
+              "values": [
+                0,
+                1,
+                1
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-7",
+              "value_base": 0,
+              "values": [
+                1,
+                0,
+                0
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-7",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "formula": {
+          "kind": "binomial_plus_constant",
+          "parameters": [
+            2,
+            1
+          ]
+        },
+        "id": "PP129-P7",
+        "maximum_degree": null,
+        "minimum_degree": 1,
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "source_theorem_id": "T-PP-129-7"
+      },
+      "status": "finite_verified"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Complete finite degrees 1..6; no proof certification"
+}
