@@ -48,3 +48,12 @@ Test coverage includes exact 140-record/source-byte roundtrip, Unicode author se
 Native window, distribution build and hosted CI remain unverified due to environment limits; perform those checks in the existing supported packaging environment before release. Existing broader ADP preservation blockers still apply. No source has been retrieved or inspected beyond the supplied metadata/audit. All entries remain CATALOGUED, not source-verified mathematics. Keyword family tags are heuristic, and future index/schema changes need versioned contracts. CSV formula escaping is deliberate; JSON/source export is lossless.
 
 **STOP: PP-RI-02 was not started.** It requires a separate stage request and legitimate primary-source inspection. The proposed PP-RI-12 design remains deferred pending earlier gates and human review.
+
+## Subsequent stage ledger
+
+The stop decisions above describe the original PP00–01 execution. Later authorized stages:
+
+- PP02: source verification completed; see `pp02/STAGE_REPORT.md`.
+- PP03: typed representations and independent reference checks completed; see `pp03/STAGE_REPORT.md`.
+- PP04: published benchmark laboratory completed; see `pp04/STAGE_REPORT.md` for the current gate and exact evidence.
+- PP05 has not begun. PP12 remains deferred until prior gates and design review.

@@ -1,0 +1,292 @@
+{
+  "records": [
+    {
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "counting_sequence": [
+        {
+          "kind": "linear",
+          "parameters": [
+            1,
+            0
+          ]
+        }
+      ],
+      "deep_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "degree_offset": 0,
+      "expected_counts": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "expected_outcome": "finite_verified",
+      "family": "ordinary_pair_avoidance",
+      "forbidden": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ],
+      "id": "PP129-P5",
+      "independent_oracle": "PP03 Cartesian enumeration with direct inequalities and pairwise pattern tests",
+      "quick_degrees": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reference_algorithm": "PP03 existing ordinary generator and pattern compiler",
+      "runtime_seconds": {
+        "deep": 60,
+        "quick": 10
+      },
+      "source_theorem_id": "T-PP-129",
+      "start_degree": 1,
+      "value_convention": "Zero-based source, translated to positive ordinary engine; equality-sensitive classical subsequences"
+    },
+    {
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "counting_sequence": [
+        {
+          "kind": "fibonacci_shift",
+          "parameters": [
+            1
+          ]
+        }
+      ],
+      "deep_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "degree_offset": 0,
+      "expected_counts": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        13
+      ],
+      "expected_outcome": "finite_verified",
+      "family": "ordinary_pair_avoidance",
+      "forbidden": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "id": "PP129-P6",
+      "independent_oracle": "PP03 Cartesian enumeration with direct inequalities and pairwise pattern tests",
+      "quick_degrees": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reference_algorithm": "PP03 existing ordinary generator and pattern compiler",
+      "runtime_seconds": {
+        "deep": 60,
+        "quick": 10
+      },
+      "source_theorem_id": "T-PP-129-6",
+      "start_degree": 1,
+      "value_convention": "Zero-based source, translated to positive ordinary engine; equality-sensitive classical subsequences"
+    },
+    {
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "counting_sequence": [
+        {
+          "kind": "binomial_plus_constant",
+          "parameters": [
+            2,
+            1
+          ]
+        }
+      ],
+      "deep_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "degree_offset": 0,
+      "expected_counts": [
+        1,
+        2,
+        4,
+        7,
+        11,
+        16
+      ],
+      "expected_outcome": "finite_verified",
+      "family": "ordinary_pair_avoidance",
+      "forbidden": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "id": "PP129-P7",
+      "independent_oracle": "PP03 Cartesian enumeration with direct inequalities and pairwise pattern tests",
+      "quick_degrees": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reference_algorithm": "PP03 existing ordinary generator and pattern compiler",
+      "runtime_seconds": {
+        "deep": 60,
+        "quick": 10
+      },
+      "source_theorem_id": "T-PP-129-7",
+      "start_degree": 1,
+      "value_convention": "Zero-based source, translated to positive ordinary engine; equality-sensitive classical subsequences"
+    },
+    {
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "counting_sequence": [
+        "[t^n](2-t-t*sqrt(1-8*t))/(4*t^2-4*t+2); sqrt constant=1"
+      ],
+      "deep_degrees": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "degree_offset": 0,
+      "expected_counts": [
+        1,
+        1,
+        2,
+        6,
+        24,
+        116,
+        632,
+        3720
+      ],
+      "expected_outcome": "finite_verified",
+      "family": "inversion_sequences",
+      "forbidden": [
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ],
+      "id": "testart-201-210",
+      "independent_oracle": "Full Cartesian product of position alphabets; direct triple inequalities",
+      "quick_degrees": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "reference_algorithm": "Right-extension with engine classical-pattern pruning; exact formal-series coefficients",
+      "runtime_seconds": {
+        "deep": 60,
+        "quick": 10
+      },
+      "source_theorem_id": "T-PP04-066",
+      "start_degree": 0,
+      "value_convention": "0<=e_i<i for one-based position i; empty word included"
+    },
+    {
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "counting_sequence": [
+        "[t^n]sum_{m>=0}prod_{k=1}^m(1-(1-t)^k)"
+      ],
+      "deep_degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "degree_offset": 0,
+      "expected_counts": [
+        1,
+        2,
+        5,
+        15,
+        53,
+        217
+      ],
+      "expected_outcome": "finite_verified",
+      "family": "fishburn_tree_transport",
+      "forbidden": [],
+      "id": "fishburn-inorder",
+      "independent_oracle": "Recursive enumeration of labelled decreasing shapes with direct first-node/left-child constraints",
+      "quick_degrees": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "reference_algorithm": "Existing modified generator; leftmost-maximum tree; in-order inverse; node/word statistics",
+      "runtime_seconds": {
+        "deep": 60,
+        "quick": 10
+      },
+      "source_theorem_id": "T-PP04-047",
+      "start_degree": 1,
+      "value_convention": "Positive labels; regular decreasing binary tree, strict left edges; n nodes maps to n modified entries"
+    }
+  ],
+  "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+  "schema_version": 1
+}

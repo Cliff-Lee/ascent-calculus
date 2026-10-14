@@ -1,0 +1,1275 @@
+{
+  "complete": true,
+  "manifest": {
+    "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+    "implementation_sha256": "6d520cf807712898a124cee624d534005f27e3342373a7d62d8b53b99384c24e",
+    "platform": "Darwin",
+    "profile": "deep",
+    "python": "3.14.7",
+    "randomness": "none",
+    "schema_version": 1,
+    "seed": null
+  },
+  "proof_status": "not_proved",
+  "results": [
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 1,
+      "details": {
+        "degree": 1,
+        "engine_count": 1,
+        "engine_only": null,
+        "expected": 1,
+        "formula_matches": true,
+        "oracle_count": 1,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 1
+      },
+      "expected_count": 1,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.17859641701215878
+    },
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 2,
+      "details": {
+        "degree": 2,
+        "engine_count": 2,
+        "engine_only": null,
+        "expected": 2,
+        "formula_matches": true,
+        "oracle_count": 2,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 2
+      },
+      "expected_count": 2,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.17827654200664256
+    },
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 3,
+      "details": {
+        "degree": 3,
+        "engine_count": 3,
+        "engine_only": null,
+        "expected": 3,
+        "formula_matches": true,
+        "oracle_count": 3,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 3
+      },
+      "expected_count": 3,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.17271849999087863
+    },
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 4,
+      "details": {
+        "degree": 4,
+        "engine_count": 4,
+        "engine_only": null,
+        "expected": 4,
+        "formula_matches": true,
+        "oracle_count": 4,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 4
+      },
+      "expected_count": 4,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.17383233399596065
+    },
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 5,
+      "details": {
+        "degree": 5,
+        "engine_count": 5,
+        "engine_only": null,
+        "expected": 5,
+        "formula_matches": true,
+        "oracle_count": 5,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 5
+      },
+      "expected_count": 5,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.18287025000608992
+    },
+    {
+      "benchmark_id": "PP129-P5",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129"
+      ],
+      "degree": 6,
+      "details": {
+        "degree": 6,
+        "engine_count": 6,
+        "engine_only": null,
+        "expected": 6,
+        "formula_matches": true,
+        "oracle_count": 6,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 6
+      },
+      "expected_count": 6,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129",
+      "status": "finite_verified",
+      "wall_seconds": 0.2584763750055572
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 1,
+      "details": {
+        "degree": 1,
+        "engine_count": 1,
+        "engine_only": null,
+        "expected": 1,
+        "formula_matches": true,
+        "oracle_count": 1,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 1
+      },
+      "expected_count": 1,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.21321391699893866
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 2,
+      "details": {
+        "degree": 2,
+        "engine_count": 2,
+        "engine_only": null,
+        "expected": 2,
+        "formula_matches": true,
+        "oracle_count": 2,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 2
+      },
+      "expected_count": 2,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.17593570800090674
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 3,
+      "details": {
+        "degree": 3,
+        "engine_count": 3,
+        "engine_only": null,
+        "expected": 3,
+        "formula_matches": true,
+        "oracle_count": 3,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 3
+      },
+      "expected_count": 3,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.18137370800832286
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 4,
+      "details": {
+        "degree": 4,
+        "engine_count": 5,
+        "engine_only": null,
+        "expected": 5,
+        "formula_matches": true,
+        "oracle_count": 5,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 4
+      },
+      "expected_count": 5,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.18226437499106396
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 5,
+      "details": {
+        "degree": 5,
+        "engine_count": 8,
+        "engine_only": null,
+        "expected": 8,
+        "formula_matches": true,
+        "oracle_count": 8,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 5
+      },
+      "expected_count": 8,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.18328083399683237
+    },
+    {
+      "benchmark_id": "PP129-P6",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degree": 6,
+      "details": {
+        "degree": 6,
+        "engine_count": 13,
+        "engine_only": null,
+        "expected": 13,
+        "formula_matches": true,
+        "oracle_count": 13,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 6
+      },
+      "expected_count": 13,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-6",
+      "status": "finite_verified",
+      "wall_seconds": 0.25073995799175464
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 1,
+      "details": {
+        "degree": 1,
+        "engine_count": 1,
+        "engine_only": null,
+        "expected": 1,
+        "formula_matches": true,
+        "oracle_count": 1,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 1
+      },
+      "expected_count": 1,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.17408870800863951
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 2,
+      "details": {
+        "degree": 2,
+        "engine_count": 2,
+        "engine_only": null,
+        "expected": 2,
+        "formula_matches": true,
+        "oracle_count": 2,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 2
+      },
+      "expected_count": 2,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.1747028749960009
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 3,
+      "details": {
+        "degree": 3,
+        "engine_count": 4,
+        "engine_only": null,
+        "expected": 4,
+        "formula_matches": true,
+        "oracle_count": 4,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 3
+      },
+      "expected_count": 4,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.173413583994261
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 4,
+      "details": {
+        "degree": 4,
+        "engine_count": 7,
+        "engine_only": null,
+        "expected": 7,
+        "formula_matches": true,
+        "oracle_count": 7,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 4
+      },
+      "expected_count": 7,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.18285175001074094
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 5,
+      "details": {
+        "degree": 5,
+        "engine_count": 11,
+        "engine_only": null,
+        "expected": 11,
+        "formula_matches": true,
+        "oracle_count": 11,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 5
+      },
+      "expected_count": 11,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.18399829100235365
+    },
+    {
+      "benchmark_id": "PP129-P7",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP-129-7"
+      ],
+      "degree": 6,
+      "details": {
+        "degree": 6,
+        "engine_count": 16,
+        "engine_only": null,
+        "expected": 16,
+        "formula_matches": true,
+        "oracle_count": 16,
+        "oracle_only": null,
+        "same_complete_members": true,
+        "word_length": 6
+      },
+      "expected_count": 16,
+      "family": "ordinary_pair_avoidance",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP-129-7",
+      "status": "finite_verified",
+      "wall_seconds": 0.24568133300635964
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 0,
+      "details": {
+        "oracle_count": 1,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 1,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": []
+      },
+      "expected_count": 1,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.16942500000004657
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 1,
+      "details": {
+        "oracle_count": 1,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 1,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0
+        ]
+      },
+      "expected_count": 1,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.1789066249912139
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 2,
+      "details": {
+        "oracle_count": 2,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 2,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1
+        ]
+      },
+      "expected_count": 2,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.17701862499234267
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 3,
+      "details": {
+        "oracle_count": 6,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 6,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1,
+          0
+        ]
+      },
+      "expected_count": 6,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.17747070800396614
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 4,
+      "details": {
+        "oracle_count": 24,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 24,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "expected_count": 24,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.17435479200503323
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 5,
+      "details": {
+        "oracle_count": 116,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 116,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected_count": 116,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.1738186659931671
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 6,
+      "details": {
+        "oracle_count": 632,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 632,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected_count": 632,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.1897574160102522
+    },
+    {
+      "benchmark_id": "testart-201-210",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true
+      },
+      "citation_ids": [
+        "C-PP04-066"
+      ],
+      "degree": 7,
+      "details": {
+        "oracle_count": 3720,
+        "oracle_duplicates": 0,
+        "oracle_only": null,
+        "production_count": 3720,
+        "production_duplicates": 0,
+        "production_only": null,
+        "same_complete_members": true,
+        "worked_word": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "expected_count": 3720,
+      "family": "inversion_sequences",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-066",
+      "status": "finite_verified",
+      "wall_seconds": 0.3689627910061972
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 1,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 1,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 1,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 1,
+          "target_count": 1
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1
+          ],
+          "first_positions": [
+            1
+          ],
+          "maximum": 1
+        },
+        "worked_tree": [
+          null,
+          1,
+          null
+        ],
+        "worked_word": [
+          1
+        ]
+      },
+      "expected_count": 1,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.16680850001284853
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 2,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 2,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 2,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 2,
+          "target_count": 2
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1,
+            2
+          ],
+          "first_positions": [
+            1,
+            2
+          ],
+          "maximum": 2
+        },
+        "worked_tree": [
+          [
+            null,
+            1,
+            null
+          ],
+          2,
+          null
+        ],
+        "worked_word": [
+          1,
+          2
+        ]
+      },
+      "expected_count": 2,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.1917843749979511
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 3,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 5,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 5,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 5,
+          "target_count": 5
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1,
+            2
+          ],
+          "first_positions": [
+            1,
+            2
+          ],
+          "maximum": 2
+        },
+        "worked_tree": [
+          [
+            null,
+            1,
+            null
+          ],
+          2,
+          [
+            null,
+            1,
+            null
+          ]
+        ],
+        "worked_word": [
+          1,
+          2,
+          1
+        ]
+      },
+      "expected_count": 5,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.1715324170072563
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 4,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 15,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 15,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 15,
+          "target_count": 15
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1,
+            3,
+            4
+          ],
+          "first_positions": [
+            1,
+            3,
+            4
+          ],
+          "maximum": 3
+        },
+        "worked_tree": [
+          [
+            [
+              null,
+              1,
+              [
+                null,
+                1,
+                null
+              ]
+            ],
+            2,
+            null
+          ],
+          3,
+          null
+        ],
+        "worked_word": [
+          1,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected_count": 15,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.17276520900486503
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 5,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 53,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 53,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 53,
+          "target_count": 53
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1,
+            2,
+            4
+          ],
+          "first_positions": [
+            1,
+            2,
+            4
+          ],
+          "maximum": 3
+        },
+        "worked_tree": [
+          [
+            [
+              null,
+              1,
+              null
+            ],
+            2,
+            [
+              null,
+              2,
+              null
+            ]
+          ],
+          3,
+          [
+            null,
+            3,
+            null
+          ]
+        ],
+        "worked_word": [
+          1,
+          2,
+          2,
+          3,
+          3
+        ]
+      },
+      "expected_count": 53,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.19280554199940525
+    },
+    {
+      "benchmark_id": "fishburn-inorder",
+      "catalog_sha256": "0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66",
+      "checks": {
+        "enumeration": true,
+        "members": true,
+        "transport_and_statistics": true
+      },
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degree": 6,
+      "details": {
+        "member_agreement": {
+          "oracle_count": 217,
+          "oracle_duplicates": 0,
+          "oracle_only": null,
+          "production_count": 217,
+          "production_duplicates": 0,
+          "production_only": null,
+          "same_complete_members": true
+        },
+        "transport": {
+          "failures": {},
+          "passed": true,
+          "source_count": 217,
+          "target_count": 217
+        },
+        "worked_statistics": {
+          "ascent_top_positions": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "first_positions": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "maximum": 4
+        },
+        "worked_tree": [
+          [
+            [
+              [
+                null,
+                1,
+                null
+              ],
+              2,
+              [
+                null,
+                1,
+                null
+              ]
+            ],
+            3,
+            null
+          ],
+          4,
+          [
+            null,
+            3,
+            null
+          ]
+        ],
+        "worked_word": [
+          1,
+          2,
+          1,
+          3,
+          4,
+          3
+        ]
+      },
+      "expected_count": 217,
+      "family": "fishburn_tree_transport",
+      "proof_status": "not_proved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "schema_version": 1,
+      "source_theorem_id": "T-PP04-047",
+      "status": "finite_verified",
+      "wall_seconds": 0.5186756250041071
+    }
+  ],
+  "resumed_cases": 32,
+  "schema_version": 1,
+  "workers": 2
+}
