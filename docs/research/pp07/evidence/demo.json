@@ -1,0 +1,1955 @@
+{
+  "audits": [
+    {
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "edge_id": "modified-to-tree",
+      "first_tested_failure": null,
+      "graph_sha256": "327852932bf57ad9bfac9a2456eb0f8a2ebf0803d81d718687f5cb630c2da36c",
+      "overrides_applied": false,
+      "proof_status": "unproved",
+      "rows": [
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 1,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 1,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 1,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 1,
+          "target_backend_agreement": {
+            "oracle_count": 1,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 1,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 1,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 1,
+            "target_count": 1
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 2,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 2,
+          "target_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 2,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 2,
+            "target_count": 2
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 3,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 5,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 5,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 5,
+          "target_backend_agreement": {
+            "oracle_count": 5,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 5,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 5,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 5,
+            "target_count": 5
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 4,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 15,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 15,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 15,
+          "target_backend_agreement": {
+            "oracle_count": 15,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 15,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 15,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 15,
+            "target_count": 15
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 5,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 53,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 53,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 53,
+          "target_backend_agreement": {
+            "oracle_count": 53,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 53,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 53,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 53,
+            "target_count": 53
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 6,
+          "passed": true,
+          "pattern_tests": [
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                1,
+                2,
+                1
+              ]
+            },
+            {
+              "encoding": "inorder_classical",
+              "first_failure": null,
+              "passed": true,
+              "pattern": [
+                3,
+                2,
+                1
+              ]
+            }
+          ],
+          "source_backend_agreement": {
+            "oracle_count": 217,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 217,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 217,
+          "target_backend_agreement": {
+            "oracle_count": 217,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 217,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 217,
+          "target_oracle_independence": "word-engine images versus independent structural tree generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 217,
+            "target_count": 217
+          }
+        }
+      ],
+      "schema_version": 1,
+      "source_review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "status": "finite_verified"
+    },
+    {
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "degrees": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "edge_id": "fibonacci-to-tiles",
+      "first_tested_failure": null,
+      "graph_sha256": "327852932bf57ad9bfac9a2456eb0f8a2ebf0803d81d718687f5cb630c2da36c",
+      "overrides_applied": false,
+      "proof_status": "unproved",
+      "rows": [
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 1,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 1,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 1,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 1,
+          "target_backend_agreement": {
+            "oracle_count": 1,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 1,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 1,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 1,
+            "target_count": 1
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 2,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 2,
+          "target_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 2,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 2,
+            "target_count": 2
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 3,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 3,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 3,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 3,
+          "target_backend_agreement": {
+            "oracle_count": 3,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 3,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 3,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 3,
+            "target_count": 3
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 4,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 5,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 5,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 5,
+          "target_backend_agreement": {
+            "oracle_count": 5,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 5,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 5,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 5,
+            "target_count": 5
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 5,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 8,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 8,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 8,
+          "target_backend_agreement": {
+            "oracle_count": 8,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 8,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 8,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 8,
+            "target_count": 8
+          }
+        },
+        {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 6,
+          "passed": true,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 13,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 13,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 13,
+          "target_backend_agreement": {
+            "oracle_count": 13,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 13,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 13,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {},
+            "passed": true,
+            "source_count": 13,
+            "target_count": 13
+          }
+        }
+      ],
+      "schema_version": 1,
+      "source_review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "status": "finite_verified"
+    }
+  ],
+  "checkout_commit": "bc3d6dade36dd9be8f3f6ac7210a266cf1ca5941",
+  "checkout_has_changes": true,
+  "graph": {
+    "edges": [
+      {
+        "citation_ids": [
+          "C-PP04-047"
+        ],
+        "codomain": "tree",
+        "degree_shift": 0,
+        "domain": "modified",
+        "id": "modified-to-tree",
+        "inverse_edge": "tree-to-modified",
+        "inverse_requirement": "two_sided",
+        "pattern_correspondences": [
+          {
+            "source_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                1,
+                1,
+                1
+              ]
+            },
+            "target_encoding": "inorder_classical",
+            "target_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                1,
+                1,
+                1
+              ]
+            }
+          },
+          {
+            "source_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                1,
+                2,
+                1
+              ]
+            },
+            "target_encoding": "inorder_classical",
+            "target_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                1,
+                2,
+                1
+              ]
+            }
+          },
+          {
+            "source_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                3,
+                2,
+                1
+              ]
+            },
+            "target_encoding": "inorder_classical",
+            "target_pattern": {
+              "adjacent_positions": [],
+              "citation_id": "C-PP04-047",
+              "value_base": 1,
+              "values": [
+                3,
+                2,
+                1
+              ]
+            }
+          }
+        ],
+        "primitive": "max_tree",
+        "proof_status": "unproved",
+        "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+        "statistic_links": [
+          [
+            "length",
+            "node_count"
+          ],
+          [
+            "first_positions",
+            "first_positions"
+          ],
+          [
+            "ascent_top_positions",
+            "ascent_top_positions"
+          ],
+          [
+            "maximum",
+            "maximum"
+          ]
+        ],
+        "tested_degrees": []
+      },
+      {
+        "citation_ids": [
+          "C-PP04-047"
+        ],
+        "codomain": "modified",
+        "degree_shift": 0,
+        "domain": "tree",
+        "id": "tree-to-modified",
+        "inverse_edge": "modified-to-tree",
+        "inverse_requirement": "two_sided",
+        "pattern_correspondences": [],
+        "primitive": "inorder",
+        "proof_status": "unproved",
+        "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+        "statistic_links": [
+          [
+            "node_count",
+            "length"
+          ],
+          [
+            "first_positions",
+            "first_positions"
+          ],
+          [
+            "ascent_top_positions",
+            "ascent_top_positions"
+          ],
+          [
+            "maximum",
+            "maximum"
+          ]
+        ],
+        "tested_degrees": []
+      },
+      {
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "codomain": "tiles",
+        "degree_shift": 0,
+        "domain": "fibonacci",
+        "id": "fibonacci-to-tiles",
+        "inverse_edge": "tiles-to-fibonacci",
+        "inverse_requirement": "two_sided",
+        "pattern_correspondences": [],
+        "primitive": "to_tiles",
+        "proof_status": "unproved",
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "statistic_links": [
+          [
+            "length",
+            "size"
+          ],
+          [
+            "repeat_count",
+            "two_count"
+          ],
+          [
+            "distinct_count",
+            "tile_count"
+          ]
+        ],
+        "tested_degrees": []
+      },
+      {
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "codomain": "fibonacci",
+        "degree_shift": 0,
+        "domain": "tiles",
+        "id": "tiles-to-fibonacci",
+        "inverse_edge": "fibonacci-to-tiles",
+        "inverse_requirement": "two_sided",
+        "pattern_correspondences": [],
+        "primitive": "from_tiles",
+        "proof_status": "unproved",
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "statistic_links": [
+          [
+            "size",
+            "length"
+          ],
+          [
+            "two_count",
+            "repeat_count"
+          ],
+          [
+            "tile_count",
+            "distinct_count"
+          ]
+        ],
+        "tested_degrees": []
+      }
+    ],
+    "endpoints": [
+      {
+        "definition_version": "ac-positive-families-v1",
+        "id": "modified",
+        "kind": "word",
+        "maximum_degree": 6,
+        "minimum_degree": 1,
+        "word_class": {
+          "avoid": [],
+          "citation_id": "C-PP04-047",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "modified",
+          "value_base": 1
+        }
+      },
+      {
+        "definition_version": "fishburn-endotree-v1",
+        "id": "tree",
+        "kind": "fishburn_tree",
+        "maximum_degree": 6,
+        "minimum_degree": 1,
+        "word_class": null
+      },
+      {
+        "definition_version": "ac-positive-families-v1",
+        "id": "fibonacci",
+        "kind": "word",
+        "maximum_degree": 6,
+        "minimum_degree": 1,
+        "word_class": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        }
+      },
+      {
+        "definition_version": "one-two-tilings-v1",
+        "id": "tiles",
+        "kind": "tile_word",
+        "maximum_degree": 6,
+        "minimum_degree": 1,
+        "word_class": null
+      }
+    ],
+    "schema_version": 1
+  },
+  "implementation_sha256": "be517545aad64b9d6e8fa804811e06116a692077856a8cd58f46b7a3baeec646",
+  "negative_controls": [
+    {
+      "audit": {
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "degrees": [
+          1,
+          2,
+          3
+        ],
+        "edge_id": "fibonacci-to-tiles",
+        "first_tested_failure": {
+          "checks": {
+            "injectivity": true,
+            "left_composition": false,
+            "patterns": true,
+            "right_composition": false,
+            "source_membership": true,
+            "statistics": true,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 2,
+          "passed": false,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 2,
+          "target_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 2,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {
+              "left_inverse": {
+                "image": [
+                  2
+                ],
+                "source": [
+                  0,
+                  0
+                ]
+              },
+              "right_inverse": [
+                2
+              ]
+            },
+            "passed": false,
+            "source_count": 2,
+            "target_count": 2
+          }
+        },
+        "graph_sha256": "327852932bf57ad9bfac9a2456eb0f8a2ebf0803d81d718687f5cb630c2da36c",
+        "overrides_applied": true,
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": true,
+              "patterns": true,
+              "right_composition": true,
+              "source_membership": true,
+              "statistics": true,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 1,
+            "passed": true,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 1,
+            "target_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 1,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {},
+              "passed": true,
+              "source_count": 1,
+              "target_count": 1
+            }
+          },
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": false,
+              "patterns": true,
+              "right_composition": false,
+              "source_membership": true,
+              "statistics": true,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 2,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 2,
+            "target_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 2,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "left_inverse": {
+                  "image": [
+                    2
+                  ],
+                  "source": [
+                    0,
+                    0
+                  ]
+                },
+                "right_inverse": [
+                  2
+                ]
+              },
+              "passed": false,
+              "source_count": 2,
+              "target_count": 2
+            }
+          },
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": false,
+              "patterns": true,
+              "right_composition": false,
+              "source_membership": true,
+              "statistics": true,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 3,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 3,
+            "target_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 3,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "left_inverse": {
+                  "image": [
+                    2,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "right_inverse": [
+                  1,
+                  2
+                ]
+              },
+              "passed": false,
+              "source_count": 3,
+              "target_count": 3
+            }
+          }
+        ],
+        "schema_version": 1,
+        "source_review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "status": "refuted"
+      },
+      "construction": "inverse returns the base word (0,) for every tile word"
+    },
+    {
+      "audit": {
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "degrees": [
+          1,
+          2,
+          3
+        ],
+        "edge_id": "fibonacci-to-tiles",
+        "first_tested_failure": {
+          "checks": {
+            "injectivity": false,
+            "left_composition": false,
+            "patterns": true,
+            "right_composition": false,
+            "source_membership": true,
+            "statistics": false,
+            "surjectivity": false,
+            "target_membership": true
+          },
+          "degree": 2,
+          "passed": false,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 2,
+          "target_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 2,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {
+              "collision": {
+                "other": [
+                  0,
+                  0
+                ],
+                "source": [
+                  0,
+                  1
+                ]
+              },
+              "left_inverse": {
+                "image": [
+                  1,
+                  1
+                ],
+                "source": [
+                  0,
+                  0
+                ]
+              },
+              "right_inverse": [
+                2
+              ],
+              "statistic": {
+                "image": [
+                  1,
+                  1
+                ],
+                "source": [
+                  0,
+                  0
+                ]
+              },
+              "surjectivity": [
+                2
+              ]
+            },
+            "passed": false,
+            "source_count": 2,
+            "target_count": 2
+          }
+        },
+        "graph_sha256": "327852932bf57ad9bfac9a2456eb0f8a2ebf0803d81d718687f5cb630c2da36c",
+        "overrides_applied": true,
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": true,
+              "patterns": true,
+              "right_composition": true,
+              "source_membership": true,
+              "statistics": true,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 1,
+            "passed": true,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 1,
+            "target_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 1,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {},
+              "passed": true,
+              "source_count": 1,
+              "target_count": 1
+            }
+          },
+          {
+            "checks": {
+              "injectivity": false,
+              "left_composition": false,
+              "patterns": true,
+              "right_composition": false,
+              "source_membership": true,
+              "statistics": false,
+              "surjectivity": false,
+              "target_membership": true
+            },
+            "degree": 2,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 2,
+            "target_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 2,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "collision": {
+                  "other": [
+                    0,
+                    0
+                  ],
+                  "source": [
+                    0,
+                    1
+                  ]
+                },
+                "left_inverse": {
+                  "image": [
+                    1,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    0
+                  ]
+                },
+                "right_inverse": [
+                  2
+                ],
+                "statistic": {
+                  "image": [
+                    1,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    0
+                  ]
+                },
+                "surjectivity": [
+                  2
+                ]
+              },
+              "passed": false,
+              "source_count": 2,
+              "target_count": 2
+            }
+          },
+          {
+            "checks": {
+              "injectivity": false,
+              "left_composition": false,
+              "patterns": true,
+              "right_composition": false,
+              "source_membership": true,
+              "statistics": false,
+              "surjectivity": false,
+              "target_membership": true
+            },
+            "degree": 3,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 3,
+            "target_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 3,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "collision": {
+                  "other": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "source": [
+                    0,
+                    1,
+                    1
+                  ]
+                },
+                "left_inverse": {
+                  "image": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "right_inverse": [
+                  1,
+                  2
+                ],
+                "statistic": {
+                  "image": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "surjectivity": [
+                  1,
+                  2
+                ]
+              },
+              "passed": false,
+              "source_count": 3,
+              "target_count": 3
+            }
+          }
+        ],
+        "schema_version": 1,
+        "source_review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "status": "refuted"
+      },
+      "construction": "forward returns only size-one tiles, losing repeated-value data"
+    },
+    {
+      "audit": {
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "degrees": [
+          1,
+          2,
+          3
+        ],
+        "edge_id": "fibonacci-to-tiles",
+        "first_tested_failure": {
+          "checks": {
+            "injectivity": true,
+            "left_composition": true,
+            "patterns": true,
+            "right_composition": true,
+            "source_membership": true,
+            "statistics": false,
+            "surjectivity": true,
+            "target_membership": true
+          },
+          "degree": 2,
+          "passed": false,
+          "pattern_tests": [],
+          "source_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "source_count": 2,
+          "target_backend_agreement": {
+            "oracle_count": 2,
+            "oracle_duplicates": 0,
+            "oracle_only": null,
+            "production_count": 2,
+            "production_duplicates": 0,
+            "production_only": null,
+            "same_complete_members": true
+          },
+          "target_count": 2,
+          "target_oracle_independence": "independent object generator",
+          "transport": {
+            "failures": {
+              "statistic": {
+                "image": [
+                  2
+                ],
+                "source": [
+                  0,
+                  0
+                ]
+              }
+            },
+            "passed": false,
+            "source_count": 2,
+            "target_count": 2
+          }
+        },
+        "graph_sha256": "6f222bcbd4261a6a87789ca09c02e871f7fdb12d96900c275172c54dda3ad16c",
+        "overrides_applied": false,
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": true,
+              "patterns": true,
+              "right_composition": true,
+              "source_membership": true,
+              "statistics": true,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 1,
+            "passed": true,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 1,
+            "target_backend_agreement": {
+              "oracle_count": 1,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 1,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 1,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {},
+              "passed": true,
+              "source_count": 1,
+              "target_count": 1
+            }
+          },
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": true,
+              "patterns": true,
+              "right_composition": true,
+              "source_membership": true,
+              "statistics": false,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 2,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 2,
+            "target_backend_agreement": {
+              "oracle_count": 2,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 2,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 2,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "statistic": {
+                  "image": [
+                    2
+                  ],
+                  "source": [
+                    0,
+                    0
+                  ]
+                }
+              },
+              "passed": false,
+              "source_count": 2,
+              "target_count": 2
+            }
+          },
+          {
+            "checks": {
+              "injectivity": true,
+              "left_composition": true,
+              "patterns": true,
+              "right_composition": true,
+              "source_membership": true,
+              "statistics": false,
+              "surjectivity": true,
+              "target_membership": true
+            },
+            "degree": 3,
+            "passed": false,
+            "pattern_tests": [],
+            "source_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "source_count": 3,
+            "target_backend_agreement": {
+              "oracle_count": 3,
+              "oracle_duplicates": 0,
+              "oracle_only": null,
+              "production_count": 3,
+              "production_duplicates": 0,
+              "production_only": null,
+              "same_complete_members": true
+            },
+            "target_count": 3,
+            "target_oracle_independence": "independent object generator",
+            "transport": {
+              "failures": {
+                "statistic": {
+                  "image": [
+                    2,
+                    1
+                  ],
+                  "source": [
+                    0,
+                    1,
+                    0
+                  ]
+                }
+              },
+              "passed": false,
+              "source_count": 3,
+              "target_count": 3
+            }
+          }
+        ],
+        "schema_version": 1,
+        "source_review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "status": "refuted"
+      },
+      "construction": "unchanged bijection with false statistic link distinct_count = total tile size"
+    }
+  ],
+  "parallel_source_specification": {
+    "atoms": [
+      [
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "citation_ids": [
+      "C-PP-129-6"
+    ],
+    "class_spec": {
+      "avoid": [
+        {
+          "adjacent_positions": [],
+          "citation_id": "C-PP-129-6",
+          "value_base": 0,
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adjacent_positions": [],
+          "citation_id": "C-PP-129-6",
+          "value_base": 0,
+          "values": [
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "citation_id": "C-PP-129-6",
+      "contain": [],
+      "definition_version": "ac-positive-families-v1",
+      "degree_offset": 0,
+      "family": "ordinary",
+      "value_base": 0
+    },
+    "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+    "rules": [
+      {
+        "anchor": "after_first_max",
+        "copies": 1,
+        "id": "one-max",
+        "minimum_parent_degree": 2
+      },
+      {
+        "anchor": "after_first_max",
+        "copies": 2,
+        "id": "two-max",
+        "minimum_parent_degree": 1
+      }
+    ],
+    "schema_version": 1,
+    "source_theorem_id": "T-PP-129-6"
+  },
+  "parallel_target_specification": {
+    "atoms": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "degree": "sum of tile sizes",
+    "family": "ordered_one_two_tilings",
+    "rules": [
+      {
+        "append": 1,
+        "minimum_parent_size": 2
+      },
+      {
+        "append": 2,
+        "minimum_parent_size": 1
+      }
+    ]
+  },
+  "proof_status": "unproved",
+  "schema_version": 1,
+  "unproved_obligations": [
+    "Source recursive decomposition at every length",
+    "Parallel constructors form disjoint and exhaustive branches",
+    "Recursive maps are inverse at every degree",
+    "Statistic preservation at every degree",
+    "Formal definitions match the inspected external transport theorem"
+  ],
+  "worked_recursive_derivation": {
+    "base_source": [
+      0
+    ],
+    "base_target": [
+      1
+    ],
+    "parallel_equations": {
+      "source": "A=t+2t^2+t(A-t)+t^2*A",
+      "target": "T=t+2t^2+t(T-t)+t^2*T"
+    },
+    "proof_status": "unproved",
+    "reverse_composition": [
+      0,
+      1,
+      2,
+      2,
+      1
+    ],
+    "source": [
+      0,
+      1,
+      2,
+      2,
+      1
+    ],
+    "steps": [
+      {
+        "branch": "two-max",
+        "source": [
+          0,
+          1,
+          2,
+          2,
+          1
+        ],
+        "source_degree": 5,
+        "source_parent": [
+          0,
+          1,
+          1
+        ],
+        "target": [
+          1,
+          2,
+          2
+        ],
+        "tile_size": 2
+      },
+      {
+        "branch": "two-max",
+        "source": [
+          0,
+          1,
+          1
+        ],
+        "source_degree": 3,
+        "source_parent": [
+          0
+        ],
+        "target": [
+          1,
+          2
+        ],
+        "tile_size": 2
+      }
+    ],
+    "target": [
+      1,
+      2,
+      2
+    ]
+  }
+}
