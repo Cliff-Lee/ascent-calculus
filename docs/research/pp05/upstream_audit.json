@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "inspected_on": "2026-10-14",
+  "upstream_commit": "826a16cc6b40b48eac1c334c777e2cc3da30740d",
+  "release_tag_v4_3_0_commit": "8cb5b919933e508b07894f2ec92071bd9bde1c77",
+  "pypi_version": "4.3.0",
+  "requires_python": ">=3.10",
+  "released_dependencies": [
+    "logzero==1.7.0",
+    "psutil==7.0.0",
+    "pympler==1.1",
+    "requests==2.32.4",
+    "sympy==1.14.0",
+    "tabulate==0.9.0",
+    "typing-extensions==4.14.0"
+  ],
+  "inspected_files_sha256": {
+    "pypi.json": "d19635931791d82c83489121e949d7381153a800433144cf26ff4e2983f66e0d",
+    "pyproject.toml": "17c69680497902b3d7687e74c80b70dab2efcbf90d182d357758fcc4fd2f508e",
+    "README.rst": "ba7ea164730c2e53aa3a9e4973f3ccce89144a3da78489e0577d6c946b7c86b4",
+    "LICENSE.txt": "0be24345553bf6e433889785b650577ac7da8549e8ba8b1a6d06d2ba40b1f03c"
+  },
+  "decision": "Independent bounded rule interface; upstream not installed, imported or vendored",
+  "compatibility": "Metadata permits >=3.10; no runtime integration tested on project >=3.11 or local 3.14.7",
+  "licence": "BSD-3-Clause read in full; notices/disclaimer retention and no endorsement apply to redistribution",
+  "api_notes": [
+    "CombinatorialClass equality/hash and serialization define class identity",
+    "StrategyPack collects decomposition/verification strategies",
+    "Forward/backward maps provide object reconstruction",
+    "CombinatorialSpecificationSearcher.auto_search returns a specification"
+  ]
+}

@@ -30,6 +30,7 @@ jobs:
       - name: Run focused regression
         run: >-
           python -m pytest -q
+          tests/test_research_specifications.py
           tests/test_research_benchmarks.py
           tests/test_research_math.py
           tests/test_research_evidence.py

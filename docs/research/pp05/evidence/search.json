@@ -1,0 +1,2170 @@
+{
+  "benchmark_id": "PP129-P6",
+  "checkout_commit": "8f0438b6c867eca59d444d25674a87a26b080a96",
+  "checkout_has_changes": true,
+  "design": {
+    "blind_discovery": false,
+    "candidate_count": 16,
+    "grammar": [
+      "append",
+      "prepend",
+      "before_first_max",
+      "after_first_max"
+    ],
+    "holdout": [
+      5,
+      6
+    ],
+    "seed": null,
+    "training": [
+      3,
+      4
+    ]
+  },
+  "implementation_sha256": "e5376341ce513d661018238518b3bc37c19bd4651863ed924f1c5b821e11099e",
+  "proof_status": "unproved",
+  "schema_version": 1,
+  "survivors": [
+    {
+      "description": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "class": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "equation": "A(t) = t^1+t^2+t^2 + t^1*A_ge_2(t) + t^2*A_ge_1(t)",
+        "proof_status": "unproved",
+        "rules": [
+          {
+            "constructor": "insert 1 copies of max(parent)+1 at after_first_max",
+            "decomposition": "remove all maxima; require exactly 1 and exact reconstruction",
+            "id": "one-max",
+            "precondition": "parent in class, length >= 2",
+            "size_shift": 1
+          },
+          {
+            "constructor": "insert 2 copies of max(parent)+1 at after_first_max",
+            "decomposition": "remove all maxima; require exactly 2 and exact reconstruction",
+            "id": "two-max",
+            "precondition": "parent in class, length >= 1",
+            "size_shift": 2
+          }
+        ]
+      },
+      "evidence": {
+        "first_tested_failure": null,
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "degree": 1,
+            "derivation_count": 1,
+            "distinct_generated_count": 1,
+            "engine_count": 1,
+            "failures": {},
+            "generated_count": 1,
+            "oracle_count": 1
+          },
+          {
+            "degree": 2,
+            "derivation_count": 2,
+            "distinct_generated_count": 2,
+            "engine_count": 2,
+            "failures": {},
+            "generated_count": 2,
+            "oracle_count": 2
+          },
+          {
+            "degree": 3,
+            "derivation_count": 3,
+            "distinct_generated_count": 3,
+            "engine_count": 3,
+            "failures": {},
+            "generated_count": 3,
+            "oracle_count": 3
+          },
+          {
+            "degree": 4,
+            "derivation_count": 5,
+            "distinct_generated_count": 5,
+            "engine_count": 5,
+            "failures": {},
+            "generated_count": 5,
+            "oracle_count": 5
+          },
+          {
+            "degree": 5,
+            "derivation_count": 8,
+            "distinct_generated_count": 8,
+            "engine_count": 8,
+            "failures": {},
+            "generated_count": 8,
+            "oracle_count": 8
+          },
+          {
+            "degree": 6,
+            "derivation_count": 13,
+            "distinct_generated_count": 13,
+            "engine_count": 13,
+            "failures": {},
+            "generated_count": 13,
+            "oracle_count": 13
+          }
+        ],
+        "schema_version": 1,
+        "specification_sha256": "03a06115c67a7ec460c5067f435981178662fe1d846a0597c91e39346ca9dbc2",
+        "status": "finite_verified",
+        "tested_degrees": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "obligations": [
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [],
+          "finite_check_status": "not_tested",
+          "finite_degrees": [],
+          "id": "structure",
+          "statement": "Any structural hypotheses used to justify this decomposition hold throughout the source class.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [
+            "structure",
+            "termination"
+          ],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "closure",
+          "statement": "Each constructor sends every eligible parent to a source-class member.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [
+            "structure",
+            "termination"
+          ],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "coverage",
+          "statement": "Every non-atomic source member belongs to a recursive branch.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [
+            "structure",
+            "termination"
+          ],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "disjointness",
+          "statement": "Atoms and branches are pairwise disjoint with no constructor collisions.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [
+            "structure",
+            "termination"
+          ],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "inverse",
+          "statement": "Removing maxima and constructing are mutual inverses in both directions.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "termination",
+          "statement": "All recursive children have strictly smaller nonnegative degree.",
+          "status": "unproved"
+        },
+        {
+          "citation_ids": [
+            "C-PP-129-6"
+          ],
+          "dependencies": [
+            "structure",
+            "termination"
+          ],
+          "finite_check_status": "finite_verified",
+          "finite_degrees": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "id": "equation",
+          "statement": "The derivation-count equation equals the class counting equation at all degrees.",
+          "status": "unproved"
+        }
+      ],
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "after_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "after_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      }
+    }
+  ],
+  "trials": [
+    {
+      "anchors": [
+        "append",
+        "append"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              0,
+              0,
+              1
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            0,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "append",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "append",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "58930a8915efc6b9a8fba73e2296e983a330b44a800e993caae4cfee5168d556",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "append",
+        "prepend"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              0,
+              0,
+              1
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            0,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "append",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "prepend",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "caf7ea064ec4e37874e1bf3581e4d1522f9eb2181c91cfdd22d68d6ec3cc1e0d",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "append",
+        "before_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              0,
+              0,
+              1
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            0,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "append",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "before_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "537a85688f22878ced03dbd37c1ff0c62bf9f7707a3df3934fc9725b409a24d3",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "append",
+        "after_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              0,
+              0,
+              1
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            0,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "append",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "after_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "d80bd7806f268e3ad2f46fbe36dde93674de4a9ac96b470504acf4296c824296",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "prepend",
+        "append"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            1,
+            0,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "prepend",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "append",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "ca89a84b45e8fe8d2b6a3bb0346b10deaed94989598a1b4ed14e7adc9ce603ca",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "prepend",
+        "prepend"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            1,
+            0,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "prepend",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "prepend",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "52205130d4ffc161527cba2856719c4d7aab1a16c9ddd84f3d053c0da8f77e76",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "prepend",
+        "before_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            1,
+            0,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "prepend",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "before_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "98a6b3082eb415d78b1ae54bcb461f55c066f4dadfd773bdab26272700d72a64",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "prepend",
+        "after_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            1,
+            0,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "prepend",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "after_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "cd6ecfc377c0e21584c2bf9552fc626bbbddc0aa430c87dfc1ee54fe762a032f",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "before_first_max",
+        "append"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            2,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "before_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "append",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "9afe5b23bd8a2a6122ff0296446494e4c78b1d98c7aac204bc960fc6b4dad4e5",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "before_first_max",
+        "prepend"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            2,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "before_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "prepend",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "742050495c2cbc2c7d66e2c44dc79b836915d40b7e5f06985086bf44ba904846",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "before_first_max",
+        "before_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            2,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "before_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "before_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "e774f178adb2c67d6bdbbc6b30fc086734967c8020ff23f3c9cadbea645c16b6",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "before_first_max",
+        "after_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              0,
+              0
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "one-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            2,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            0
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "before_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "after_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "ca1f476cdceed2e04f60f840dee4fe87e14cd531b78188dbf19c7033ccfc9aaf",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "after_first_max",
+        "append"
+      ],
+      "first_training_failure": {
+        "degree": 4,
+        "derivation_count": 5,
+        "distinct_generated_count": 5,
+        "engine_count": 5,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "parent": [
+              0,
+              0
+            ],
+            "rule": "two-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              1,
+              0
+            ]
+          },
+          "invalid_output": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "missing_object": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        "generated_count": 5,
+        "oracle_count": 5
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "after_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "append",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "fb6f6315ad2869e6cd2703cab3eaa44d5392b3b201d24ebe9b330d6cd780a1fc",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "after_first_max",
+        "prepend"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              1,
+              0
+            ],
+            "parent": [
+              0
+            ],
+            "rule": "two-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              1
+            ]
+          },
+          "invalid_output": [
+            1,
+            1,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            1
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "after_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "prepend",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "606d5f6c0867e39d90fddbbf2d32cfb0a7e519b607d9ffc881d3e1762d8bd545",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "after_first_max",
+        "before_first_max"
+      ],
+      "first_training_failure": {
+        "degree": 3,
+        "derivation_count": 3,
+        "distinct_generated_count": 3,
+        "engine_count": 3,
+        "failures": {
+          "constructor_inverse": {
+            "image": [
+              1,
+              1,
+              0
+            ],
+            "parent": [
+              0
+            ],
+            "rule": "two-max"
+          },
+          "decomposition_partition": {
+            "branch_count": 0,
+            "word": [
+              0,
+              1,
+              1
+            ]
+          },
+          "invalid_output": [
+            1,
+            1,
+            0
+          ],
+          "missing_object": [
+            0,
+            1,
+            1
+          ]
+        },
+        "generated_count": 3,
+        "oracle_count": 3
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "after_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "before_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "a37ac49e8892e054adb7d9224ba818e1a08788a6324dd9f09218e62d869b7c34",
+      "training_status": "refuted"
+    },
+    {
+      "anchors": [
+        "after_first_max",
+        "after_first_max"
+      ],
+      "first_training_failure": null,
+      "holdout": {
+        "first_tested_failure": null,
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "degree": 5,
+            "derivation_count": 8,
+            "distinct_generated_count": 8,
+            "engine_count": 8,
+            "failures": {},
+            "generated_count": 8,
+            "oracle_count": 8
+          },
+          {
+            "degree": 6,
+            "derivation_count": 13,
+            "distinct_generated_count": 13,
+            "engine_count": 13,
+            "failures": {},
+            "generated_count": 13,
+            "oracle_count": 13
+          }
+        ],
+        "schema_version": 1,
+        "specification_sha256": "03a06115c67a7ec460c5067f435981178662fe1d846a0597c91e39346ca9dbc2",
+        "status": "finite_verified",
+        "tested_degrees": [
+          5,
+          6
+        ]
+      },
+      "specification": {
+        "atoms": [
+          [
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "class_spec": {
+          "avoid": [
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "adjacent_positions": [],
+              "citation_id": "C-PP-129-6",
+              "value_base": 0,
+              "values": [
+                0,
+                0,
+                1
+              ]
+            }
+          ],
+          "citation_id": "C-PP-129-6",
+          "contain": [],
+          "definition_version": "ac-positive-families-v1",
+          "degree_offset": 0,
+          "family": "ordinary",
+          "value_base": 0
+        },
+        "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+        "rules": [
+          {
+            "anchor": "after_first_max",
+            "copies": 1,
+            "id": "one-max",
+            "minimum_parent_degree": 2
+          },
+          {
+            "anchor": "after_first_max",
+            "copies": 2,
+            "id": "two-max",
+            "minimum_parent_degree": 1
+          }
+        ],
+        "schema_version": 1,
+        "source_theorem_id": "T-PP-129-6"
+      },
+      "specification_sha256": "03a06115c67a7ec460c5067f435981178662fe1d846a0597c91e39346ca9dbc2",
+      "training_status": "finite_verified"
+    }
+  ]
+}
