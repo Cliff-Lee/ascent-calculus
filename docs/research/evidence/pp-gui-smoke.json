@@ -1,0 +1,7 @@
+{
+  "ac.gui.desktop": "ModuleNotFoundError: No module named '_tkinter'",
+  "ac.gui.research_state": "imported",
+  "ac.gui.experiments": "imported",
+  "ac.research_library": "imported",
+  "limits": "Model/import smoke only; main interpreter lacks _tkinter; native window/installer not checked"
+}

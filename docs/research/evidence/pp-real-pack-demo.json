@@ -1,0 +1,302 @@
+{
+  "first": {
+    "status": "ingested",
+    "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+    "catalogue_sha256": "d5186aef18505bd14e507aa74f10495597b26be7db51912b22223d3b78423e8b",
+    "audit_sha256": "2823208b089788810b155bb22c0b345f949748473aeb88f6b54fd0b3244638d9",
+    "record_count": 140,
+    "schema_version": 1,
+    "imported_at": "2026-10-14T05:45:39.577752+00:00",
+    "evidence_status": "imported_annotation_unverified"
+  },
+  "repeat": {
+    "status": "already_ingested",
+    "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+    "catalogue_sha256": "d5186aef18505bd14e507aa74f10495597b26be7db51912b22223d3b78423e8b",
+    "audit_sha256": "2823208b089788810b155bb22c0b345f949748473aeb88f6b54fd0b3244638d9",
+    "record_count": 140,
+    "schema_version": 1,
+    "imported_at": "2026-10-14T05:45:39.577752+00:00",
+    "evidence_status": "imported_annotation_unverified"
+  },
+  "record_count": 140,
+  "priorities": {
+    "P0": 46,
+    "P1": 60,
+    "P2": 34
+  },
+  "bijection_methods": [
+    {
+      "original": {
+        "authors": "Jon Steinn Eliasson",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-031",
+        "priority": "P0",
+        "proposed_module": "parallel-specification bijections",
+        "relevance": "Search matched recursive specifications and construct forward/inverse certified maps.",
+        "source_type": "conference talk",
+        "title": "Automated Bijections with Combinatorial Exploration",
+        "url": "https://combinatorics.cis.strath.ac.uk/pp2021/PP2021-Programme.pdf",
+        "year": 2021
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "b35f3fd6680cf54b16d57b523159e60cdcd4084a4b68b75d7ed9bf33a9c0693a",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-031"
+      },
+      "index": {
+        "method": "parallel-specification bijections",
+        "families": [],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Sergi Elizalde",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-034",
+        "priority": "P0",
+        "proposed_module": "cross-family bijection library",
+        "relevance": "Study explicit bridges from inversion sequences to other families.",
+        "source_type": "conference talk",
+        "title": "Bijections for Derangements and Pattern-Avoiding Inversion Sequences",
+        "url": "https://combinatorics.cis.strath.ac.uk/pp2021/PP2021-Programme.pdf",
+        "year": 2021
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "46ad8f1ed0177ab8bb928c03eb50c82ed7a9fd8bf6523d6eb59dd232de8e4ffe",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-034"
+      },
+      "index": {
+        "method": "cross-family bijection library",
+        "families": [
+          "inversion_sequences"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Andrei Asinowski, Michaela Polley",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-068",
+        "priority": "P0",
+        "proposed_module": "cross-family bijection search",
+        "relevance": "Proves equivalences via rectangulations and Dyck paths; adapt structure-guided discovery.",
+        "source_type": "PP2024 special issue, paper",
+        "title": "Patterns in Rectangulations. Part I: T-like Patterns and Inversion Sequence Classes",
+        "url": "https://dmtcs.episciences.org/en/volumes/952",
+        "year": 2024
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "4c0a88089f7ea7274fb09aed80340aef6946be183e29c76f72960cef30ad406b",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-068"
+      },
+      "index": {
+        "method": "cross-family bijection search",
+        "families": [
+          "inversion_sequences",
+          "paths"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Andrei Asinowski, Michaela Polley",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-078",
+        "priority": "P0",
+        "proposed_module": "structural bijections",
+        "relevance": "Demonstration of proving avoidance equivalence through alternate combinatorial objects.",
+        "source_type": "conference talk",
+        "title": "T-Avoiding Rectangulations and I(010,101,120,201) ≅ I(011,201)",
+        "url": "https://sites.cs.st-andrews.ac.uk/pp25/program/abstracts/asinowski.pdf",
+        "year": 2025
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "b76fc62fc2f48eed8a92e75f4c5d527588e0a20f4b7bd18f894a8c27595fc25a",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-078"
+      },
+      "index": {
+        "method": "structural bijections",
+        "families": [],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Alexander Burstein",
+        "evidence_note": "Conference programme/title verified; software reuse is a proposal",
+        "id": "PP-133",
+        "priority": "P0",
+        "proposed_module": "forest-bijection discovery",
+        "relevance": "Known cross-family count coincidences between permutation and inversion classes; search for transport and structure.",
+        "source_type": "virtual workshop poster",
+        "title": "Pattern Classes Equinumerous to the Class of Ternary Forests",
+        "url": "https://permutationpatterns.com/2020-virtual-workshop/program/wednesday-poster-session-a/",
+        "year": 2020
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "2c4d8fe7ac5349fcedaced45dc47db7678d74427b0d8dfcee014d43216640154",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-133"
+      },
+      "index": {
+        "method": "forest-bijection discovery",
+        "families": [
+          "inversion_sequences",
+          "permutations",
+          "trees"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    }
+  ],
+  "inversion_family": [
+    {
+      "original": {
+        "authors": "Megan Martinez",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-002",
+        "priority": "P0",
+        "proposed_module": "pattern-definition DSL",
+        "relevance": "Extend containment predicates beyond classical pattern strings.",
+        "source_type": "conference talk",
+        "title": "A generalization of patterns in inversion sequences",
+        "url": "https://permutationpatterns2016.wordpress.com/program/",
+        "year": 2016
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "4c0831610d49b87b9b182ee5b26091761b0a8fdbd79126ff973cb6cc8f572b11",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-002"
+      },
+      "index": {
+        "method": "pattern-definition DSL",
+        "families": [
+          "inversion_sequences"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Juan S. Auli",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-011",
+        "priority": "P0",
+        "proposed_module": "constraint DSL and test suite",
+        "relevance": "Exercise consecutive-word patterns and their special containment semantics.",
+        "source_type": "conference talk",
+        "title": "Consecutive Patterns in Inversion Sequences",
+        "url": "https://2018.permutationpatterns.com/docs/pp2018-program.pdf",
+        "year": 2018
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "58326438625a2f116f97f57636013c66af21ee4a32777c3ace5bf7bdc82f7211",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-011"
+      },
+      "index": {
+        "method": "constraint DSL and test suite",
+        "families": [
+          "inversion_sequences",
+          "words"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    },
+    {
+      "original": {
+        "authors": "Sergi Elizalde",
+        "evidence_note": "verified title; implementation adaptation proposed",
+        "id": "PP-034",
+        "priority": "P0",
+        "proposed_module": "cross-family bijection library",
+        "relevance": "Study explicit bridges from inversion sequences to other families.",
+        "source_type": "conference talk",
+        "title": "Bijections for Derangements and Pattern-Avoiding Inversion Sequences",
+        "url": "https://combinatorics.cis.strath.ac.uk/pp2021/PP2021-Programme.pdf",
+        "year": 2021
+      },
+      "provenance": {
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "record_sha256": "46ad8f1ed0177ab8bb928c03eb50c82ed7a9fd8bf6523d6eb59dd232de8e4ffe",
+        "source_member": "permutation_patterns_ascent_research_catalogue_expanded.json",
+        "record_id": "PP-034"
+      },
+      "index": {
+        "method": "cross-family bijection library",
+        "families": [
+          "inversion_sequences"
+        ],
+        "version": "pp-keyword-v1",
+        "status": "heuristic_metadata_index"
+      },
+      "verification_status": "CATALOGUED",
+      "evidence_status": "imported_annotation_unverified",
+      "proof_status": "not_assessed"
+    }
+  ],
+  "metadata": {
+    "created": "2026-10-14",
+    "topic": "Permutation Patterns conference work for Ascent Calculus",
+    "scope_note": "Curated research catalogue of conference programmes and related papers/software, not an exhaustive enumeration of every work presented since 2003. Unverified oral talks are not asserted.",
+    "priority_legend": {
+      "P0": "direct adoption/prototype value",
+      "P1": "useful module or research track",
+      "P2": "adjacent or future exploration"
+    },
+    "audit_revision": "Resumed and expanded older 2003–2015 and PP2020 material, retaining original 2016–2026 records.",
+    "sources_checked": [
+      "https://permutationpatterns.com/history/",
+      "https://math.haifa.ac.il/toufik/conf_2005/talkspp05.html",
+      "https://faculty.valpo.edu/lpudwell/presentations.html",
+      "https://www.lix.polytechnique.fr/pp2013/index.php?page=program",
+      "https://permutationpatterns.com/2020-virtual-workshop/program/",
+      "https://sites.cs.st-andrews.ac.uk/pp25/program/",
+      "https://sites.google.com/view/permutationpatterns2026/talk-slides",
+      "https://github.com/PermutaTriangle/comb_spec_searcher",
+      "https://github.com/PermutaTriangle/Tilings"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+...................................                                      [100%]
+=============================== warnings summary ===============================
+tests/test_pp_research_library.py::test_zip_allowlist_traversal_duplicates_and_code_refused[permutation_patterns_ascent_research_catalogue_expanded.json]
+  /opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/zipfile/__init__.py:1730: UserWarning: Duplicate name: 'permutation_patterns_ascent_research_catalogue_expanded.json'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

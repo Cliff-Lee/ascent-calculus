@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ascent-research:pp-input:v1",
+  "title": "PP 140-record source catalogue (observed input contract v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "created",
+    "topic",
+    "scope_note",
+    "priority_legend",
+    "records",
+    "audit_revision",
+    "sources_checked"
+  ],
+  "properties": {
+    "created": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "^[^\\u0000-\\u001f]+$",
+      "format": "date"
+    },
+    "topic": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "^[^\\u0000-\\u001f]+$"
+    },
+    "scope_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "^[^\\u0000-\\u001f]+$"
+    },
+    "audit_revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "pattern": "^[^\\u0000-\\u001f]+$"
+    },
+    "priority_legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "P0",
+        "P1",
+        "P2"
+      ],
+      "properties": {
+        "P0": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "P1": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "P2": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 140,
+      "maxItems": 140,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "authors",
+          "evidence_note",
+          "id",
+          "priority",
+          "proposed_module",
+          "relevance",
+          "source_type",
+          "title",
+          "url",
+          "year"
+        ],
+        "properties": {
+          "authors": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "evidence_note": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^PP-[0-9]{3}$"
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          },
+          "proposed_module": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "relevance": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "source_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000,
+            "pattern": "^https?://",
+            "format": "uri"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          }
+        }
+      }
+    },
+    "sources_checked": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000,
+        "pattern": "^https?://",
+        "format": "uri"
+      }
+    }
+  },
+  "$comment": "Stdlib validator additionally checks unique record IDs, real calendar dates, credential-free HTTP(S) locators, and rejects boolean years. Original input has no schema declaration. ZIP validation is a separate layer."
+}
