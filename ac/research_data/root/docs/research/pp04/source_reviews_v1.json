@@ -1,0 +1,328 @@
+{
+  "entities": [
+    {
+      "data": {
+        "authors": [
+          "Andrew Baxter",
+          "Lara Pudwell"
+        ],
+        "id": "W-PP-129",
+        "lead_id": "PP-129",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Ascent Sequences Avoiding Pairs of Patterns",
+        "year": 2015
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-129",
+        "inspection_scope": "Section 1 definitions; Section 2 Proposition 5 and proof",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv perpetual non-exclusive posting licence; no full-text redistribution inferred.",
+        "url": "https://arxiv.org/html/1406.4100v2",
+        "version": "v2, 2015-02-15"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-129",
+        "label": "Section 1 definitions; Section 2 Proposition 5 and proof",
+        "source_id": "S-PP-129"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-129",
+        "location_id": "L-PP-129",
+        "work_id": "W-PP-129"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "authors": [
+          "Giulio Cerbai",
+          "Anders Claesson"
+        ],
+        "id": "W-PP-047",
+        "lead_id": "PP-047",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Fishburn Trees",
+        "year": 2023
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "authors": [
+          "Benjamin Testart"
+        ],
+        "id": "W-PP-066",
+        "lead_id": "PP-066",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Generating Trees Growing on the Left for Pattern-Avoiding Inversion Sequences",
+        "year": 2025
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "id": "EV-PP-129",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Selected statement, hypotheses and displayed argument inspected; no independent proof replay.",
+        "source_id": "S-PP-129"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Nonnegative ascent sequences of Section 1; simultaneous avoidance; n >= 1."
+        ],
+        "citation_ids": [
+          "C-PP-129"
+        ],
+        "evidence_ids": [
+          "EV-PP-129"
+        ],
+        "family": "ordinary ascent sequences",
+        "id": "T-PP-129",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "classical subsequence reduction preserving equality",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For every integer n >= 1, the number of ordinary ascent sequences avoiding both 000 and 011 is n."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-129-PP03",
+        "inspection_scope": "Section 1 definitions and Section 2 Propositions 6-7 with displayed arguments",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv posting licence; no full text redistributed",
+        "url": "https://arxiv.org/html/1406.4100v2",
+        "version": "v2, 2015-02-15"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-129-6",
+        "label": "Section 2, Proposition 6 and proof",
+        "source_id": "S-PP-129-PP03"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-129-6",
+        "location_id": "L-PP-129-6",
+        "work_id": "W-PP-129"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-129-6",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Statement, indexing, restrictions and displayed argument inspected; not independently proved.",
+        "source_id": "S-PP-129-PP03"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Section 1 ordinary nonnegative ascent-sequence definition; n >= 1; classical simultaneous avoidance."
+        ],
+        "citation_ids": [
+          "C-PP-129-6"
+        ],
+        "evidence_ids": [
+          "E-PP-129-6"
+        ],
+        "family": "ordinary ascent sequences",
+        "id": "T-PP-129-6",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "equality-sensitive subsequence reduction",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For n >= 1, ordinary nonnegative ascent sequences avoiding 000 and 001 are counted by F_(n+1), with Fibonacci indexing F_1=F_2=1."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "id": "L-PP-129-7",
+        "label": "Section 2, Proposition 7 and proof",
+        "source_id": "S-PP-129-PP03"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-129-7",
+        "location_id": "L-PP-129-7",
+        "work_id": "W-PP-129"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-129-7",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Statement, indexing, restrictions and displayed argument inspected; not independently proved.",
+        "source_id": "S-PP-129-PP03"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Section 1 ordinary nonnegative ascent-sequence definition; n >= 1; classical simultaneous avoidance."
+        ],
+        "citation_ids": [
+          "C-PP-129-7"
+        ],
+        "evidence_ids": [
+          "E-PP-129-7"
+        ],
+        "family": "ordinary ascent sequences",
+        "id": "T-PP-129-7",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "equality-sensitive subsequence reduction",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For n >= 1, ordinary nonnegative ascent sequences avoiding 011 and 100 are counted by binomial(n,2)+1."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP04-066",
+        "inspection_scope": "Section 1.1; Section 3 Proposition 3, Lemma 4, Theorem 5 and proofs",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Linked source with short original extraction only; no full text redistributed.",
+        "url": "https://arxiv.org/html/2411.05726v3",
+        "version": "v3, 2025-09-22"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP04-066",
+        "label": "Section 1.1; Section 3 Proposition 3, Lemma 4, Theorem 5 and proofs",
+        "source_id": "S-PP04-066"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP04-066",
+        "location_id": "L-PP04-066",
+        "work_id": "W-PP-066"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP04-066",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Inspected definitions, statement and displayed argument. External source review, not formal verification; finite implementation checks recorded separately.",
+        "source_id": "S-PP04-066"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "n>=0; coefficient of t^n; 0<=e_i<i; positions start at 1; empty word included"
+        ],
+        "citation_ids": [
+          "C-PP04-066"
+        ],
+        "evidence_ids": [
+          "E-PP04-066"
+        ],
+        "family": "inversion sequences avoiding 201 and 210",
+        "id": "T-PP04-066",
+        "indexing": "n>=0; coefficient of t^n; 0<=e_i<i; positions start at 1; empty word included",
+        "pattern_semantics": "Equality-sensitive classical subsequences",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "The ordinary generating function for inversion sequences avoiding 201 and 210 is (2-t-t*sqrt(1-8*t))/(4*t^2-4*t+2), with square root constant term 1."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP04-047",
+        "inspection_scope": "Section 1 counting series; Definitions 2.1 and 3.1; Propositions 2.2-2.3 and 4.4, Lemmas 4.1-4.3 and Corollary 4.5 with proofs",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Linked source with short original extraction only; no full text redistributed.",
+        "url": "https://arxiv.org/html/2211.07200v2",
+        "version": "v2, 2023-06-08"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP04-047",
+        "label": "Section 1 counting series; Definitions 2.1 and 3.1; Propositions 2.2-2.3 and 4.4, Lemmas 4.1-4.3 and Corollary 4.5 with proofs",
+        "source_id": "S-PP04-047"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP04-047",
+        "location_id": "L-PP04-047",
+        "work_id": "W-PP-047"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP04-047",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Inspected definitions, statement and displayed argument. External source review, not formal verification; finite implementation checks recorded separately.",
+        "source_id": "S-PP04-047"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "n>=1 benchmark scope; positive labels; n counts nodes or entries; degree offset zero"
+        ],
+        "citation_ids": [
+          "C-PP04-047"
+        ],
+        "evidence_ids": [
+          "E-PP04-047"
+        ],
+        "family": "Fishburn trees / modified ascent sequences",
+        "id": "T-PP04-047",
+        "indexing": "n>=1 benchmark scope; positive labels; n counts nodes or entries; degree offset zero",
+        "pattern_semantics": "No forbidden word pattern; regular decreasing labelled binary trees strictly decreasing to the left, with first-occurrence nodes equal to the first in-order node plus nodes having a left child.",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "In-order traversal restricts to a size-preserving bijection from Fishburn trees to modified ascent sequences; recursive splitting at the leftmost maximum is its inverse."
+      },
+      "kind": "Theorem"
+    }
+  ],
+  "method_cards": [],
+  "schema_version": 1
+}

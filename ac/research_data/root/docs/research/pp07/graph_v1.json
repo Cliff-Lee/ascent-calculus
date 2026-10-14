@@ -1,0 +1,274 @@
+{
+  "edges": [
+    {
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "codomain": "tree",
+      "degree_shift": 0,
+      "domain": "modified",
+      "id": "modified-to-tree",
+      "inverse_edge": "tree-to-modified",
+      "inverse_requirement": "two_sided",
+      "pattern_correspondences": [
+        {
+          "source_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              1,
+              1,
+              1
+            ]
+          },
+          "target_encoding": "inorder_classical",
+          "target_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "source_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              1,
+              2,
+              1
+            ]
+          },
+          "target_encoding": "inorder_classical",
+          "target_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              1,
+              2,
+              1
+            ]
+          }
+        },
+        {
+          "source_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              3,
+              2,
+              1
+            ]
+          },
+          "target_encoding": "inorder_classical",
+          "target_pattern": {
+            "adjacent_positions": [],
+            "citation_id": "C-PP04-047",
+            "value_base": 1,
+            "values": [
+              3,
+              2,
+              1
+            ]
+          }
+        }
+      ],
+      "primitive": "max_tree",
+      "proof_status": "unproved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "statistic_links": [
+        [
+          "length",
+          "node_count"
+        ],
+        [
+          "first_positions",
+          "first_positions"
+        ],
+        [
+          "ascent_top_positions",
+          "ascent_top_positions"
+        ],
+        [
+          "maximum",
+          "maximum"
+        ]
+      ],
+      "tested_degrees": []
+    },
+    {
+      "citation_ids": [
+        "C-PP04-047"
+      ],
+      "codomain": "modified",
+      "degree_shift": 0,
+      "domain": "tree",
+      "id": "tree-to-modified",
+      "inverse_edge": "modified-to-tree",
+      "inverse_requirement": "two_sided",
+      "pattern_correspondences": [],
+      "primitive": "inorder",
+      "proof_status": "unproved",
+      "review_sha256": "611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91",
+      "statistic_links": [
+        [
+          "node_count",
+          "length"
+        ],
+        [
+          "first_positions",
+          "first_positions"
+        ],
+        [
+          "ascent_top_positions",
+          "ascent_top_positions"
+        ],
+        [
+          "maximum",
+          "maximum"
+        ]
+      ],
+      "tested_degrees": []
+    },
+    {
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "codomain": "tiles",
+      "degree_shift": 0,
+      "domain": "fibonacci",
+      "id": "fibonacci-to-tiles",
+      "inverse_edge": "tiles-to-fibonacci",
+      "inverse_requirement": "two_sided",
+      "pattern_correspondences": [],
+      "primitive": "to_tiles",
+      "proof_status": "unproved",
+      "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "statistic_links": [
+        [
+          "length",
+          "size"
+        ],
+        [
+          "repeat_count",
+          "two_count"
+        ],
+        [
+          "distinct_count",
+          "tile_count"
+        ]
+      ],
+      "tested_degrees": []
+    },
+    {
+      "citation_ids": [
+        "C-PP-129-6"
+      ],
+      "codomain": "fibonacci",
+      "degree_shift": 0,
+      "domain": "tiles",
+      "id": "tiles-to-fibonacci",
+      "inverse_edge": "fibonacci-to-tiles",
+      "inverse_requirement": "two_sided",
+      "pattern_correspondences": [],
+      "primitive": "from_tiles",
+      "proof_status": "unproved",
+      "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "statistic_links": [
+        [
+          "size",
+          "length"
+        ],
+        [
+          "two_count",
+          "repeat_count"
+        ],
+        [
+          "tile_count",
+          "distinct_count"
+        ]
+      ],
+      "tested_degrees": []
+    }
+  ],
+  "endpoints": [
+    {
+      "definition_version": "ac-positive-families-v1",
+      "id": "modified",
+      "kind": "word",
+      "maximum_degree": 6,
+      "minimum_degree": 1,
+      "word_class": {
+        "avoid": [],
+        "citation_id": "C-PP04-047",
+        "contain": [],
+        "definition_version": "ac-positive-families-v1",
+        "degree_offset": 0,
+        "family": "modified",
+        "value_base": 1
+      }
+    },
+    {
+      "definition_version": "fishburn-endotree-v1",
+      "id": "tree",
+      "kind": "fishburn_tree",
+      "maximum_degree": 6,
+      "minimum_degree": 1,
+      "word_class": null
+    },
+    {
+      "definition_version": "ac-positive-families-v1",
+      "id": "fibonacci",
+      "kind": "word",
+      "maximum_degree": 6,
+      "minimum_degree": 1,
+      "word_class": {
+        "avoid": [
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-6",
+            "value_base": 0,
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-6",
+            "value_base": 0,
+            "values": [
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "citation_id": "C-PP-129-6",
+        "contain": [],
+        "definition_version": "ac-positive-families-v1",
+        "degree_offset": 0,
+        "family": "ordinary",
+        "value_base": 0
+      }
+    },
+    {
+      "definition_version": "one-two-tilings-v1",
+      "id": "tiles",
+      "kind": "tile_word",
+      "maximum_degree": 6,
+      "minimum_degree": 1,
+      "word_class": null
+    }
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,14 @@
+{
+  "native_startup": "passed",
+  "existing_window_smoke": "passed",
+  "research_journey": "passed",
+  "worker_bootstrap_failure": "resolved with freeze_support; rebuilt and rerun",
+  "runtime": "Python 3.13.15 / Tk 9.0 / PyInstaller 6.22.3 / macOS arm64",
+  "payload_bytes": 263056,
+  "payload_records": 37,
+  "development_executable_sha256": "7d216c9bd17a808cbf047f25b1ea91cebb839c326efa1ef1a46441cfa05a7e13",
+  "bundle_bytes": 57500813,
+  "installed_advanced_app_replaced": false,
+  "windows_linux_native_builds": "not run",
+  "hosted_ci": "not run"
+}

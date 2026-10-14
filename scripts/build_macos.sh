@@ -14,6 +14,7 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+python3 scripts/prepare_research_data.py
 python3 -m pip install --upgrade '.[desktop-build]'
 python3 -m PyInstaller \
   --noconfirm \
@@ -23,6 +24,8 @@ python3 -m PyInstaller \
   --name AscentCalculus \
   --osx-bundle-identifier org.cliffpackman.ascentcalculus \
   --collect-submodules tkinter \
+  --collect-data ac.research_data \
+  --add-data "ac/research_data/root/ac:ac/research_data/root/ac" \
   ac/gui/desktop.py
 
 APP_BIN="dist/AscentCalculus.app/Contents/MacOS/AscentCalculus"

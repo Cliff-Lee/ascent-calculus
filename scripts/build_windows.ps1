@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $PSScriptRoot
 Set-Location $Root
+python scripts/prepare_research_data.py
 
 python -m pip install --upgrade ".[desktop-build]"
 python -m PyInstaller `
@@ -11,6 +12,8 @@ python -m PyInstaller `
   --onedir `
   --name AscentCalculus `
   --collect-submodules tkinter `
+  --collect-data ac.research_data `
+  --add-data "ac/research_data/root/ac;ac/research_data/root/ac" `
   ac/gui/desktop.py
 
 $PackagedExe = Join-Path $Root "dist\AscentCalculus\AscentCalculus.exe"

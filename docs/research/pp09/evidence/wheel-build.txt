@@ -1,0 +1,796 @@
+* Getting build dependencies for wheel...
+running egg_info
+writing ascent_calculus.egg-info/PKG-INFO
+writing dependency_links to ascent_calculus.egg-info/dependency_links.txt
+writing entry points to ascent_calculus.egg-info/entry_points.txt
+writing requirements to ascent_calculus.egg-info/requires.txt
+writing top-level names to ascent_calculus.egg-info/top_level.txt
+reading manifest file 'ascent_calculus.egg-info/SOURCES.txt'
+writing manifest file 'ascent_calculus.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+copying ac/research_data/__init__.py -> build/lib/ac/research_data
+copying ac/gui/desktop.py -> build/lib/ac/gui
+running egg_info
+writing ascent_calculus.egg-info/PKG-INFO
+writing dependency_links to ascent_calculus.egg-info/dependency_links.txt
+writing entry points to ascent_calculus.egg-info/entry_points.txt
+writing requirements to ascent_calculus.egg-info/requires.txt
+writing top-level names to ascent_calculus.egg-info/top_level.txt
+reading manifest file 'ascent_calculus.egg-info/SOURCES.txt'
+writing manifest file 'ascent_calculus.egg-info/SOURCES.txt'
+copying ac/research_data/manifest.json -> build/lib/ac/research_data
+copying ac/research_data/root/ac/research_benchmark_oracles.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_benchmark_runner.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_benchmarks.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_conversion_audit.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_conversion_graph.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_evidence.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_fishburn.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_generating_trees.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_growth_oracle.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_inversions.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_language_benchmarks.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_languages.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_library.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_math.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_math_oracle.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_recursive_bijections.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_references.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_resources.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/research_specifications.py -> build/lib/ac/research_data/root/ac
+copying ac/research_data/root/ac/classes/theories.py -> build/lib/ac/research_data/root/ac/classes
+copying ac/research_data/root/ac/generate/universes.py -> build/lib/ac/research_data/root/ac/generate
+copying ac/research_data/root/ac/gui/research_http.py -> build/lib/ac/research_data/root/ac/gui
+copying ac/research_data/root/ac/gui/research_jobs.py -> build/lib/ac/research_data/root/ac/gui
+copying ac/research_data/root/ac/gui/research_library_model.py -> build/lib/ac/research_data/root/ac/gui
+copying ac/research_data/root/ac/gui/research_panel.py -> build/lib/ac/research_data/root/ac/gui
+copying ac/research_data/root/ac/gui/research_smoke.py -> build/lib/ac/research_data/root/ac/gui
+copying ac/research_data/root/ac/logic/predicates.py -> build/lib/ac/research_data/root/ac/logic
+copying ac/research_data/root/ac/patterns/classical.py -> build/lib/ac/research_data/root/ac/patterns
+copying ac/research_data/root/ac/patterns/constraints.py -> build/lib/ac/research_data/root/ac/patterns
+copying ac/research_data/root/ac/patterns/general.py -> build/lib/ac/research_data/root/ac/patterns
+copying ac/research_data/root/docs/research/pp03/reference_corpus_v1.json -> build/lib/ac/research_data/root/docs/research/pp03
+copying ac/research_data/root/docs/research/pp03/source_reviews_v1.json -> build/lib/ac/research_data/root/docs/research/pp03
+copying ac/research_data/root/docs/research/pp04/benchmarks_v1.json -> build/lib/ac/research_data/root/docs/research/pp04
+copying ac/research_data/root/docs/research/pp04/source_reviews_v1.json -> build/lib/ac/research_data/root/docs/research/pp04
+copying ac/research_data/root/docs/research/pp06/source_reviews_v1.json -> build/lib/ac/research_data/root/docs/research/pp06
+copying ac/research_data/root/docs/research/pp07/graph_v1.json -> build/lib/ac/research_data/root/docs/research/pp07
+copying ac/research_data/root/docs/research/pp08/source_reviews_v1.json -> build/lib/ac/research_data/root/docs/research/pp08
+copying ac/gui/static/index.html -> build/lib/ac/gui/static
+copying ac/gui/static/research.js -> build/lib/ac/gui/static
+installing to build/bdist.macosx-26.0-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-26.0-arm64/wheel
+creating build/bdist.macosx-26.0-arm64/wheel/ac
+copying build/lib/ac/research_benchmark_oracles.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_references.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_resources.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/core
+copying build/lib/ac/core/typed.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/core
+copying build/lib/ac/core/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/core
+copying build/lib/ac/core/word.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/core
+copying build/lib/ac/core/scope.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/core
+copying build/lib/ac/research_inversions.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/patterns
+copying build/lib/ac/patterns/transport.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/patterns
+copying build/lib/ac/patterns/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/patterns
+copying build/lib/ac/patterns/classical.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/patterns
+copying build/lib/ac/patterns/constraints.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/patterns
+copying build/lib/ac/patterns/general.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/patterns
+copying build/lib/ac/research_benchmark_runner.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_conversion_audit.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_library.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_growth_oracle.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/classes
+copying build/lib/ac/classes/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/classes
+copying build/lib/ac/classes/theories.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/classes
+copying build/lib/ac/research_conversion_graph.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_language_benchmarks.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_specifications.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/discovery
+copying build/lib/ac/discovery/claims.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/growth.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/laws.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/discriminate.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/hypotheses.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/local_repair.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/schemas.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/repairs.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/proof_extraction.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/classes.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/fibre_geometry.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/profiles.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+copying build/lib/ac/discovery/synthesis.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/discovery
+creating build/bdist.macosx-26.0-arm64/wheel/ac/logic
+copying build/lib/ac/logic/translate.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/predicates.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/semantics.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/selectors.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/fo.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/formula_predicate.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/logic/snapshot.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/logic
+copying build/lib/ac/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_fishburn.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/solvers
+copying build/lib/ac/solvers/z3_backend.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/solvers
+copying build/lib/ac/solvers/models.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/solvers
+copying build/lib/ac/solvers/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/solvers
+copying build/lib/ac/solvers/exhaustive.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/solvers
+copying build/lib/ac/research_languages.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_recursive_bijections.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data
+copying build/lib/ac/research_data/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data
+copying build/lib/ac/research_data/manifest.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_benchmark_oracles.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_references.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_resources.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_inversions.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac/patterns
+copying build/lib/ac/research_data/root/ac/patterns/classical.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/patterns
+copying build/lib/ac/research_data/root/ac/patterns/constraints.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/patterns
+copying build/lib/ac/research_data/root/ac/patterns/general.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/patterns
+copying build/lib/ac/research_data/root/ac/research_benchmark_runner.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_conversion_audit.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_library.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_growth_oracle.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac/classes
+copying build/lib/ac/research_data/root/ac/classes/theories.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/classes
+copying build/lib/ac/research_data/root/ac/research_conversion_graph.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_language_benchmarks.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_specifications.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac/logic
+copying build/lib/ac/research_data/root/ac/logic/predicates.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/logic
+copying build/lib/ac/research_data/root/ac/research_fishburn.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_languages.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_recursive_bijections.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac/gui
+copying build/lib/ac/research_data/root/ac/gui/research_library_model.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/gui
+copying build/lib/ac/research_data/root/ac/gui/research_http.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/gui
+copying build/lib/ac/research_data/root/ac/gui/research_jobs.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/gui
+copying build/lib/ac/research_data/root/ac/gui/research_panel.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/gui
+copying build/lib/ac/research_data/root/ac/gui/research_smoke.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/gui
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/ac/generate
+copying build/lib/ac/research_data/root/ac/generate/universes.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac/generate
+copying build/lib/ac/research_data/root/ac/research_math_oracle.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_benchmarks.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_evidence.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_math.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+copying build/lib/ac/research_data/root/ac/research_generating_trees.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research/pp06
+copying build/lib/ac/research_data/root/docs/research/pp06/source_reviews_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp06
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research/pp08
+copying build/lib/ac/research_data/root/docs/research/pp08/source_reviews_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp08
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research/pp07
+copying build/lib/ac/research_data/root/docs/research/pp07/graph_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp07
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research/pp04
+copying build/lib/ac/research_data/root/docs/research/pp04/benchmarks_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp04
+copying build/lib/ac/research_data/root/docs/research/pp04/source_reviews_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp04
+creating build/bdist.macosx-26.0-arm64/wheel/ac/research_data/root/docs/research/pp03
+copying build/lib/ac/research_data/root/docs/research/pp03/reference_corpus_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp03
+copying build/lib/ac/research_data/root/docs/research/pp03/source_reviews_v1.json -> build/bdist.macosx-26.0-arm64/wheel/./ac/research_data/root/docs/research/pp03
+creating build/bdist.macosx-26.0-arm64/wheel/ac/gui
+copying build/lib/ac/gui/research_library_model.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/server.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/research_http.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/viewmodel.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/experiments.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/research_jobs.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+creating build/bdist.macosx-26.0-arm64/wheel/ac/gui/static
+copying build/lib/ac/gui/static/index.html -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui/static
+copying build/lib/ac/gui/static/styles.css -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui/static
+copying build/lib/ac/gui/static/research.js -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui/static
+copying build/lib/ac/gui/static/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui/static
+copying build/lib/ac/gui/static/app.js -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui/static
+copying build/lib/ac/gui/research_panel.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/transform_experiments.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/research_smoke.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/research_state.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+copying build/lib/ac/gui/desktop.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/gui
+creating build/bdist.macosx-26.0-arm64/wheel/ac/generate
+copying build/lib/ac/generate/universes.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/generate
+copying build/lib/ac/generate/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/generate
+copying build/lib/ac/research_math_oracle.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_benchmarks.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_evidence.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/transform
+copying build/lib/ac/transform/hat.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/transform
+copying build/lib/ac/transform/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/transform
+copying build/lib/ac/transform/basic.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/transform
+copying build/lib/ac/transform/restrict.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/transform
+copying build/lib/ac/research_math.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+copying build/lib/ac/research_generating_trees.py -> build/bdist.macosx-26.0-arm64/wheel/./ac
+creating build/bdist.macosx-26.0-arm64/wheel/ac/algebra
+copying build/lib/ac/algebra/transforms.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+copying build/lib/ac/algebra/lift_transport.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+copying build/lib/ac/algebra/transport.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+copying build/lib/ac/algebra/property_transport.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+copying build/lib/ac/algebra/__init__.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+copying build/lib/ac/algebra/equivalence.py -> build/bdist.macosx-26.0-arm64/wheel/./ac/algebra
+running install_egg_info
+Copying ascent_calculus.egg-info to build/bdist.macosx-26.0-arm64/wheel/./ascent_calculus-0.1.0a27-py3.13.egg-info
+running install_scripts
+creating build/bdist.macosx-26.0-arm64/wheel/ascent_calculus-0.1.0a27.dist-info/WHEEL
+creating '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/wheel/.tmp-2c4k5b_1/ascent_calculus-0.1.0a27-py3-none-any.whl' and adding 'build/bdist.macosx-26.0-arm64/wheel' to it
+adding 'ac/__init__.py'
+adding 'ac/research_benchmark_oracles.py'
+adding 'ac/research_benchmark_runner.py'
+adding 'ac/research_benchmarks.py'
+adding 'ac/research_conversion_audit.py'
+adding 'ac/research_conversion_graph.py'
+adding 'ac/research_evidence.py'
+adding 'ac/research_fishburn.py'
+adding 'ac/research_generating_trees.py'
+adding 'ac/research_growth_oracle.py'
+adding 'ac/research_inversions.py'
+adding 'ac/research_language_benchmarks.py'
+adding 'ac/research_languages.py'
+adding 'ac/research_library.py'
+adding 'ac/research_math.py'
+adding 'ac/research_math_oracle.py'
+adding 'ac/research_recursive_bijections.py'
+adding 'ac/research_references.py'
+adding 'ac/research_resources.py'
+adding 'ac/research_specifications.py'
+adding 'ac/algebra/__init__.py'
+adding 'ac/algebra/equivalence.py'
+adding 'ac/algebra/lift_transport.py'
+adding 'ac/algebra/property_transport.py'
+adding 'ac/algebra/transforms.py'
+adding 'ac/algebra/transport.py'
+adding 'ac/classes/__init__.py'
+adding 'ac/classes/theories.py'
+adding 'ac/core/__init__.py'
+adding 'ac/core/scope.py'
+adding 'ac/core/typed.py'
+adding 'ac/core/word.py'
+adding 'ac/discovery/__init__.py'
+adding 'ac/discovery/claims.py'
+adding 'ac/discovery/classes.py'
+adding 'ac/discovery/discriminate.py'
+adding 'ac/discovery/fibre_geometry.py'
+adding 'ac/discovery/growth.py'
+adding 'ac/discovery/hypotheses.py'
+adding 'ac/discovery/laws.py'
+adding 'ac/discovery/local_repair.py'
+adding 'ac/discovery/profiles.py'
+adding 'ac/discovery/proof_extraction.py'
+adding 'ac/discovery/repairs.py'
+adding 'ac/discovery/schemas.py'
+adding 'ac/discovery/synthesis.py'
+adding 'ac/generate/__init__.py'
+adding 'ac/generate/universes.py'
+adding 'ac/gui/__init__.py'
+adding 'ac/gui/desktop.py'
+adding 'ac/gui/experiments.py'
+adding 'ac/gui/research_http.py'
+adding 'ac/gui/research_jobs.py'
+adding 'ac/gui/research_library_model.py'
+adding 'ac/gui/research_panel.py'
+adding 'ac/gui/research_smoke.py'
+adding 'ac/gui/research_state.py'
+adding 'ac/gui/server.py'
+adding 'ac/gui/transform_experiments.py'
+adding 'ac/gui/viewmodel.py'
+adding 'ac/gui/static/__init__.py'
+adding 'ac/gui/static/app.js'
+adding 'ac/gui/static/index.html'
+adding 'ac/gui/static/research.js'
+adding 'ac/gui/static/styles.css'
+adding 'ac/logic/__init__.py'
+adding 'ac/logic/fo.py'
+adding 'ac/logic/formula_predicate.py'
+adding 'ac/logic/predicates.py'
+adding 'ac/logic/selectors.py'
+adding 'ac/logic/semantics.py'
+adding 'ac/logic/snapshot.py'
+adding 'ac/logic/translate.py'
+adding 'ac/patterns/__init__.py'
+adding 'ac/patterns/classical.py'
+adding 'ac/patterns/constraints.py'
+adding 'ac/patterns/general.py'
+adding 'ac/patterns/transport.py'
+adding 'ac/research_data/__init__.py'
+adding 'ac/research_data/manifest.json'
+adding 'ac/research_data/root/ac/research_benchmark_oracles.py'
+adding 'ac/research_data/root/ac/research_benchmark_runner.py'
+adding 'ac/research_data/root/ac/research_benchmarks.py'
+adding 'ac/research_data/root/ac/research_conversion_audit.py'
+adding 'ac/research_data/root/ac/research_conversion_graph.py'
+adding 'ac/research_data/root/ac/research_evidence.py'
+adding 'ac/research_data/root/ac/research_fishburn.py'
+adding 'ac/research_data/root/ac/research_generating_trees.py'
+adding 'ac/research_data/root/ac/research_growth_oracle.py'
+adding 'ac/research_data/root/ac/research_inversions.py'
+adding 'ac/research_data/root/ac/research_language_benchmarks.py'
+adding 'ac/research_data/root/ac/research_languages.py'
+adding 'ac/research_data/root/ac/research_library.py'
+adding 'ac/research_data/root/ac/research_math.py'
+adding 'ac/research_data/root/ac/research_math_oracle.py'
+adding 'ac/research_data/root/ac/research_recursive_bijections.py'
+adding 'ac/research_data/root/ac/research_references.py'
+adding 'ac/research_data/root/ac/research_resources.py'
+adding 'ac/research_data/root/ac/research_specifications.py'
+adding 'ac/research_data/root/ac/classes/theories.py'
+adding 'ac/research_data/root/ac/generate/universes.py'
+adding 'ac/research_data/root/ac/gui/research_http.py'
+adding 'ac/research_data/root/ac/gui/research_jobs.py'
+adding 'ac/research_data/root/ac/gui/research_library_model.py'
+adding 'ac/research_data/root/ac/gui/research_panel.py'
+adding 'ac/research_data/root/ac/gui/research_smoke.py'
+adding 'ac/research_data/root/ac/logic/predicates.py'
+adding 'ac/research_data/root/ac/patterns/classical.py'
+adding 'ac/research_data/root/ac/patterns/constraints.py'
+adding 'ac/research_data/root/ac/patterns/general.py'
+adding 'ac/research_data/root/docs/research/pp03/reference_corpus_v1.json'
+adding 'ac/research_data/root/docs/research/pp03/source_reviews_v1.json'
+adding 'ac/research_data/root/docs/research/pp04/benchmarks_v1.json'
+adding 'ac/research_data/root/docs/research/pp04/source_reviews_v1.json'
+adding 'ac/research_data/root/docs/research/pp06/source_reviews_v1.json'
+adding 'ac/research_data/root/docs/research/pp07/graph_v1.json'
+adding 'ac/research_data/root/docs/research/pp08/source_reviews_v1.json'
+adding 'ac/solvers/__init__.py'
+adding 'ac/solvers/exhaustive.py'
+adding 'ac/solvers/models.py'
+adding 'ac/solvers/z3_backend.py'
+adding 'ac/transform/__init__.py'
+adding 'ac/transform/basic.py'
+adding 'ac/transform/hat.py'
+adding 'ac/transform/restrict.py'
+adding 'ascent_calculus-0.1.0a27.dist-info/METADATA'
+adding 'ascent_calculus-0.1.0a27.dist-info/WHEEL'
+adding 'ascent_calculus-0.1.0a27.dist-info/entry_points.txt'
+adding 'ascent_calculus-0.1.0a27.dist-info/top_level.txt'
+adding 'ascent_calculus-0.1.0a27.dist-info/RECORD'
+removing build/bdist.macosx-26.0-arm64/wheel
+WARNING Package 'ac.research_data.root.ac' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.ac.classes' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac.classes' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac.classes' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac.classes' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac.classes' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.ac.generate' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac.generate' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac.generate' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac.generate' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac.generate' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.ac.gui' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac.gui' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac.gui' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac.gui' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac.gui' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.ac.logic' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac.logic' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac.logic' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac.logic' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac.logic' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.ac.patterns' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.ac.patterns' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.ac.patterns' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.ac.patterns' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.ac.patterns' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.docs.research.pp03' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.docs.research.pp03' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.docs.research.pp03' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.docs.research.pp03' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.docs.research.pp03' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.docs.research.pp04' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.docs.research.pp04' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.docs.research.pp04' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.docs.research.pp04' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.docs.research.pp04' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.docs.research.pp06' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.docs.research.pp06' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.docs.research.pp06' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.docs.research.pp06' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.docs.research.pp06' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.docs.research.pp07' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.docs.research.pp07' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.docs.research.pp07' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.docs.research.pp07' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.docs.research.pp07' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+WARNING Package 'ac.research_data.root.docs.research.pp08' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'ac.research_data.root.docs.research.pp08' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'ac.research_data.root.docs.research.pp08' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'ac.research_data.root.docs.research.pp08' to be distributed and are
+        already explicitly excluding 'ac.research_data.root.docs.research.pp08' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+Successfully built ascent_calculus-0.1.0a27-py3-none-any.whl

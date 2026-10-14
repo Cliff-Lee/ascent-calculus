@@ -22,10 +22,12 @@ desktop-build = ["pyinstaller>=6.11"]
 
 [tool.setuptools.package-data]
 "ac.gui.static" = ["*.html", "*.css", "*.js"]
+"ac.research_data" = ["manifest.json", "root/docs/research/*/*.json", "root/ac/*.py", "root/ac/*/*.py"]
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["ac", "ac.*"]
+exclude = ["ac.research_data.root*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

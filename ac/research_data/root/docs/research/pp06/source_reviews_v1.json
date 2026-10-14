@@ -1,0 +1,79 @@
+{
+  "entities": [
+    {
+      "data": {
+        "authors": [
+          "Benjamin Testart"
+        ],
+        "id": "W-PP-066",
+        "lead_id": "PP-066",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Generating Trees Growing on the Left for Pattern-Avoiding Inversion Sequences",
+        "year": 2025
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP04-066",
+        "inspection_scope": "Section 1.1; Section 3 Proposition 3, Lemma 4, Theorem 5 and proofs",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Linked source with short original extraction only; no full text redistributed.",
+        "url": "https://arxiv.org/html/2411.05726v3",
+        "version": "v3, 2025-09-22"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP06-tree",
+        "label": "Sections 1.1-2 and Section 3, Proposition 3 and Lemma 4 with displayed proofs",
+        "source_id": "S-PP04-066"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP06-tree",
+        "location_id": "L-PP06-tree",
+        "work_id": "W-PP-066"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP06-tree",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Reinspected published definitions, zero-subset growth and Lemma 4 proof; finite implementation replay is separate from this source review.",
+        "source_id": "S-PP04-066"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Inversion entries satisfy 0<=e_i<i with one-based positions; equality-sensitive classical avoidance of 201 and 210.",
+          "Left children prepend zero, increment all positive entries and an arbitrary subset of zero entries, restricting to the avoidance class."
+        ],
+        "citation_ids": [
+          "C-PP06-tree"
+        ],
+        "evidence_ids": [
+          "E-PP06-tree"
+        ],
+        "family": "inversion sequences avoiding 201 and 210",
+        "id": "T-PP06-L4",
+        "indexing": "n>=0, empty root included; zero-based values; s(empty)=0",
+        "pattern_semantics": "Equalities and relative order preserved on subsequences; no consecutive constraints",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For inversion sequences avoiding 201 and 210, left growth has root label 0 and label s=leading zeros + indicator of any nonleading zero. A parent of label s has one child of each label i for 1<=i<=s+1 and additionally 2^(s-i)-1 children of label i+1 for 1<=i<=s-1."
+      },
+      "kind": "Theorem"
+    }
+  ],
+  "method_cards": [],
+  "schema_version": 1
+}

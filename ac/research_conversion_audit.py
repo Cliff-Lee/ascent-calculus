@@ -1,4 +1,6 @@
 """Independent finite audits for typed conversions; failure witnesses retained."""
+
+from ac.research_resources import research_root, source_bytes
 from hashlib import sha256
 from itertools import combinations
 import json
@@ -13,7 +15,7 @@ from ac.research_fishburn import tree_statistics, max_tree
 from ac.research_recursive_bijections import tile_levels, independent_tiles, reference_specification, derivation
 from ac.research_conversion_graph import ConversionGraph
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=research_root()
 GRAPH_SHA256='327852932bf57ad9bfac9a2456eb0f8a2ebf0803d81d718687f5cb630c2da36c'
 
 
@@ -159,4 +161,4 @@ def reference_demo():
             'unproved_obligations':['Source recursive decomposition at every length','Parallel constructors form disjoint and exhaustive branches',
                                     'Recursive maps are inverse at every degree','Statistic preservation at every degree',
                                     'Formal definitions match the inspected external transport theorem'],
-            'proof_status':'unproved','implementation_sha256':sha256(Path(__file__).read_bytes()).hexdigest()}
+            'proof_status':'unproved','implementation_sha256':sha256(source_bytes('research_conversion_audit.py')).hexdigest()}

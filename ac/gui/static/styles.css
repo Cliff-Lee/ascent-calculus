@@ -611,3 +611,9 @@ footer { border-top:1px solid #e3e9e4; background:#fafbf9; }
   .compare-connector { flex-direction:row; }
   .compare-connector b { transform:rotate(90deg); }
 }
+
+.research-controls { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:16px 0; }
+.research-controls label { display:flex; flex-direction:column; gap:4px; }
+.research-evidence { max-height:330px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; padding:14px; background:#fff; border:1px solid #dce3de; border-radius:8px; }
+#research-citations a { display:block; margin:8px 0; }
+#research-objects button { margin:6px; }

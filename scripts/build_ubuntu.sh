@@ -8,6 +8,7 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+python3 scripts/prepare_research_data.py
 
 SYSTEM_PYTHON=/usr/bin/python3
 OUT="$ROOT/dist/AscentCalculus-ubuntu-24.04-amd64"

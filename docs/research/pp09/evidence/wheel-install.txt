@@ -1,0 +1,4 @@
+WARNING: The directory '/Users/cliffpackman/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Processing ./.local-imports/pp09/wheel/ascent_calculus-0.1.0a27-py3-none-any.whl
+Installing collected packages: ascent-calculus
+Successfully installed ascent-calculus-0.1.0a27

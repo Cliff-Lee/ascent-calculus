@@ -1,0 +1,154 @@
+{
+  "files": {
+    "ac/classes/theories.py": {
+      "bytes": 946,
+      "sha256": "e4dfadc33927f643aae44ee47ba9b09b03a0a6df99581958847aae8acab1c635"
+    },
+    "ac/generate/universes.py": {
+      "bytes": 2188,
+      "sha256": "39823ad8cdf02eaf16e75a81fb6c8e7c046b222f681ff967f95974678114a93c"
+    },
+    "ac/gui/research_http.py": {
+      "bytes": 1799,
+      "sha256": "05a1da8d8bab70a95b747c7ceb41e64157f9df4f788953b8ab66981d7ab26b2c"
+    },
+    "ac/gui/research_jobs.py": {
+      "bytes": 8850,
+      "sha256": "51f3df77e922c86ec816aa2651be4e18b0029c28d81e81a3866a957904ce8ac2"
+    },
+    "ac/gui/research_library_model.py": {
+      "bytes": 10033,
+      "sha256": "c404da5ad768bbdee3b3427e9c206f7dda3050bb0d27c628127ef5d02995e154"
+    },
+    "ac/gui/research_panel.py": {
+      "bytes": 9424,
+      "sha256": "e6ceb7eaea9b02d65e641a25447f1a08c2b9e465574b5443b75ba8ef25b3a51b"
+    },
+    "ac/gui/research_smoke.py": {
+      "bytes": 2896,
+      "sha256": "ce42e6f120d04df7cc40fc2cc6c2a7e92625e05182c47d740d44d5d56d5e6d74"
+    },
+    "ac/logic/predicates.py": {
+      "bytes": 5438,
+      "sha256": "bc8385699d42b9011d583c1bbc9a7c86817194d8e6c48c9617ad966d3b90b269"
+    },
+    "ac/patterns/classical.py": {
+      "bytes": 5350,
+      "sha256": "4501b95b7653d78e6636bea10b5e22e525b48110fc39c00dc1549c3679881ddf"
+    },
+    "ac/patterns/constraints.py": {
+      "bytes": 1565,
+      "sha256": "536db20166e8efced25d5ad4dff78060686360e074a58b8d451dd1833d74d5e4"
+    },
+    "ac/patterns/general.py": {
+      "bytes": 2440,
+      "sha256": "1cd83d19c9fe93f902907260400f10e11bbb80170adad34632196187334922b2"
+    },
+    "ac/research_benchmark_oracles.py": {
+      "bytes": 1960,
+      "sha256": "6feaf8458f7db22fc14f7be799ab2fedc2914ca82f2534fc46837fc51c4c874f"
+    },
+    "ac/research_benchmark_runner.py": {
+      "bytes": 7777,
+      "sha256": "f3aee558d4c731f622b55bbfdb9cf1fb0d2fdaafec7fff9ea50c841297e94fc5"
+    },
+    "ac/research_benchmarks.py": {
+      "bytes": 8270,
+      "sha256": "aaa53aa7541b6531ab3d7c6ccbbcf9b2769db8a6e567df029ceff679fc6d35ac"
+    },
+    "ac/research_conversion_audit.py": {
+      "bytes": 10316,
+      "sha256": "302ae0132ec12b65cd55857b86746afbf8499056a2b996f7041eafb3f0cb0b87"
+    },
+    "ac/research_conversion_graph.py": {
+      "bytes": 12747,
+      "sha256": "df4c94fe56a5681153eb7980d1d2393b00a717237e9f722ec4d4701be2979202"
+    },
+    "ac/research_evidence.py": {
+      "bytes": 9993,
+      "sha256": "1285dfa7b29f379aa39ca95b3c432e1ebd2ab5f33b40b0ed13d3fb4f7802beca"
+    },
+    "ac/research_fishburn.py": {
+      "bytes": 2098,
+      "sha256": "0e3f08407b67c019752c8628278dce4e31f66a09c279f3c092c66f8c3e6b6ede"
+    },
+    "ac/research_generating_trees.py": {
+      "bytes": 13843,
+      "sha256": "7d46a28b4f40aaaa9c829ee765679007df011fb85fa04c7549e2ea5eec64265c"
+    },
+    "ac/research_growth_oracle.py": {
+      "bytes": 1241,
+      "sha256": "a4cb7a89989e600a7316241d3e5ce867fab295f397cb1e59b77c55dafb9a8663"
+    },
+    "ac/research_inversions.py": {
+      "bytes": 2216,
+      "sha256": "14a24032fb39c4035de725874a8b954b1224f87f6bf5d360d1e7cf2a7cdb3b55"
+    },
+    "ac/research_language_benchmarks.py": {
+      "bytes": 8664,
+      "sha256": "e23d517a394769ee5240a35c9c2588fdfc84ffecad97e99fae5cb0b25a73e427"
+    },
+    "ac/research_languages.py": {
+      "bytes": 13543,
+      "sha256": "0d80f6df0825b010a2c783d10084a6361908109d31b8336e44458f3cf3cadbd8"
+    },
+    "ac/research_library.py": {
+      "bytes": 15483,
+      "sha256": "3ef3a93f904127b3d51138ae9baae1ca691ebf31bcfabdc7c793a7e4cfcbf1ef"
+    },
+    "ac/research_math.py": {
+      "bytes": 12772,
+      "sha256": "72c34cc328a159b9d128a81cfebc8292d4053665f74cab6a2324260951807c92"
+    },
+    "ac/research_math_oracle.py": {
+      "bytes": 1851,
+      "sha256": "1b8b6307adf1442357f72d1e80e364cc0b6f15b8aec3243fd3277c3e99384db0"
+    },
+    "ac/research_recursive_bijections.py": {
+      "bytes": 3792,
+      "sha256": "1c2d98f7dd79958cb6ca36e4bf015bb97dee189ff711c8c96c18df90f9608ca6"
+    },
+    "ac/research_references.py": {
+      "bytes": 1871,
+      "sha256": "3694de9257ef50c1b9acd5a7baa6081bd9662d306e5114b1dd8c4ff8e639d0ea"
+    },
+    "ac/research_resources.py": {
+      "bytes": 658,
+      "sha256": "5e8db9c7cf47f862870b426efd454948c9b3ced78077cea4bc5876b104467a3f"
+    },
+    "ac/research_specifications.py": {
+      "bytes": 14145,
+      "sha256": "e35ad66ccac9e7179c3784a25f132927277ad16632a42889130608d725a9eb2d"
+    },
+    "docs/research/pp03/reference_corpus_v1.json": {
+      "bytes": 3169,
+      "sha256": "81b6ce71daa18c9074e4021484a07d5304d1b47ed97b421c440f87790c023558"
+    },
+    "docs/research/pp03/source_reviews_v1.json": {
+      "bytes": 36688,
+      "sha256": "6355216d8d9c09692a9956da9f749385f4bac2b468300dd06beb808ad979a253"
+    },
+    "docs/research/pp04/benchmarks_v1.json": {
+      "bytes": 6260,
+      "sha256": "c9585983fa2e8d657f399a400befe989302b27e24df2c2bc5daddc75b39efedf"
+    },
+    "docs/research/pp04/source_reviews_v1.json": {
+      "bytes": 10707,
+      "sha256": "ac7f06d66e6182744e0bfbc5f14d1ace5af8a57ef134f57c63b5df34f871d095"
+    },
+    "docs/research/pp06/source_reviews_v1.json": {
+      "bytes": 2831,
+      "sha256": "5ba10e286bbdbbc4b9b016ef866467ac6be4138a518572b872201e923c72313f"
+    },
+    "docs/research/pp07/graph_v1.json": {
+      "bytes": 6449,
+      "sha256": "8e94ba64cb00607180c18a85147b133d897bf57fb933d205291b8b026896147a"
+    },
+    "docs/research/pp08/source_reviews_v1.json": {
+      "bytes": 2783,
+      "sha256": "c51eb20433702dce7cc1cb67c9b03baca8fdc92f6a9206f525620dc92b89e150"
+    }
+  },
+  "schema_version": 1,
+  "total_bytes": 263056
+}

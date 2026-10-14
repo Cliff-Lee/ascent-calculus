@@ -39,6 +39,7 @@
         <button class="tab nav-item" id="tab-status" data-tab="status" role="tab" aria-controls="panel-status" aria-selected="false" tabindex="-1">
           <span class="nav-number">05</span><span class="nav-copy"><b>Research status</b><small>Evidence and open work</small></span>
         </button>
+        <button class="tab nav-item" id="tab-research" data-tab="research" role="tab" aria-controls="panel-research" aria-selected="false" tabindex="-1"><span class="nav-number">06</span><span class="nav-copy"><b>Research Library</b><small>Citations and method explorer</small></span></button>
       </nav>
       <div class="sidebar-note">
         <span class="sidebar-note-icon" aria-hidden="true">i</span>
@@ -128,6 +129,7 @@
       <div class="panel-head">
         <div>
           <h2>Sequence inspector</h2>
+      <p id="research-inspector-context" role="status"></p>
           <p>Structural roles come from the Python engine. Click any position to see why it has each role.</p>
         </div>
         <div class="controls inline">
@@ -338,6 +340,29 @@
         <p id="contract-rule" class="muted"></p>
       </div>
     </section>
+    <section class="panel" id="panel-research" role="tabpanel" aria-labelledby="tab-research" tabindex="0">
+      <h2>Research Library · Benchmark / Method Explorer</h2>
+      <p>Source review, independent finite evidence and formal proof remain separate.</p>
+      <form id="research-search" class="research-controls">
+        <label>Method / family / relevance <input id="research-query" maxlength="200" /></label>
+        <label>Author <input id="research-author" maxlength="200" /></label>
+        <label>Year <input id="research-year" type="number" min="1900" max="2100" /></label>
+        <label>Priority <select id="research-priority"><option value="">Any</option><option>P0</option><option>P1</option><option>P2</option></select></label>
+        <button type="submit">Search works</button>
+        <label>Import conference ZIP <input id="research-pack" type="file" accept=".zip" /></label>
+      </form>
+      <p id="research-notice" role="status" aria-live="polite"></p>
+      <label>Conference work <select id="research-work"><option value="">Select a work</option></select></label>
+      <pre id="research-detail" tabindex="0" class="research-evidence"></pre>
+      <div id="research-citations"></div>
+      <div class="research-controls">
+        <label>Mapped reference method <select id="research-method"></select></label>
+        <button id="research-run" type="button">Run small reference</button>
+        <button id="research-cancel" type="button" disabled>Cancel run</button>
+      </div>
+      <pre id="research-result" tabindex="0" class="research-evidence"></pre>
+      <div id="research-objects"></div>
+    </section>
     </main>
   </div>
 
@@ -346,5 +371,6 @@
     <span id="connection-state">Connecting to engine…</span>
   </footer>
   <script src="/static/app.js"></script>
+  <script src="/static/research.js"></script>
 </body>
 </html>

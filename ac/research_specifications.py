@@ -4,6 +4,8 @@ Constructors operate on words, never on finite matching tables. Published
 count identities are reference checks; a synthesized specification has its
 own outstanding universal obligations.
 """
+
+from ac.research_resources import research_root, source_bytes
 from dataclasses import asdict, dataclass
 from hashlib import sha256
 from itertools import product
@@ -15,7 +17,7 @@ from ac.research_math_oracle import reference_words
 from ac.research_references import load_references
 
 ANCHORS = ('append', 'prepend', 'before_first_max', 'after_first_max')
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = research_root()
 
 
 @dataclass(frozen=True)
@@ -261,4 +263,4 @@ def search_fibonacci_specifications(training=(3,4), holdout=(5,6)):
             'design':{'training':list(training),'holdout':list(holdout),'seed':None,
                       'grammar':list(ANCHORS),'candidate_count':16,'blind_discovery':False},
             'trials':trials,'survivors':survivors,'proof_status':'unproved',
-            'implementation_sha256':sha256(Path(__file__).read_bytes()).hexdigest()}
+            'implementation_sha256':sha256(source_bytes('research_specifications.py')).hexdigest()}

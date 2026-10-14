@@ -1,4 +1,6 @@
 """Typed finite generating-tree exploration and published reference replay."""
+
+from ac.research_resources import research_root, source_bytes
 from collections import Counter
 from dataclasses import asdict, dataclass
 from hashlib import sha256
@@ -213,7 +215,7 @@ def published_transitions(state):
 def reference_demo(through=6):
     integer(through,5,7)
     from ac.research_evidence import load_review
-    review=load_review(Path(__file__).resolve().parents[1]/'docs/research/pp06/source_reviews_v1.json')
+    review=load_review(research_root()/'docs/research/pp06/source_reviews_v1.json')
     if review.fingerprint!=REVIEW_SHA256:
         raise ValueError('Published tree source binding changed; re-audit required')
     spec=InversionClass(tuple(SourcePattern(p,0,(),'C-PP06-tree') for p in ((2,0,1),(2,1,0))))
@@ -256,5 +258,5 @@ def reference_demo(through=6):
             'sides':sides,'strategy':json.loads(GrowthStrategy(spec,'left').to_json()),
             'review_sha256':review.fingerprint,'source_theorem_id':'T-PP06-L4',
             'citation_ids':['C-PP06-tree'],'proof_status':'unproved',
-            'implementation_sha256':sha256(Path(__file__).read_bytes()).hexdigest(),
-            'oracle_sha256':sha256(Path(__file__).with_name('research_growth_oracle.py').read_bytes()).hexdigest()}
+            'implementation_sha256':sha256(source_bytes('research_generating_trees.py')).hexdigest(),
+            'oracle_sha256':sha256(source_bytes('research_growth_oracle.py')).hexdigest()}

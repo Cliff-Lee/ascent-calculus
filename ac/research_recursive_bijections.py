@@ -4,6 +4,8 @@ One/two maximum copies correspond recursively to a final tile of size one/two.
 Only the three structural base objects are paired explicitly. No target-set
 enumeration or matching table is consulted by either map.
 """
+
+from ac.research_resources import research_root, source_bytes
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
@@ -15,7 +17,7 @@ from ac.research_specifications import InsertionRule, RecursiveSpecification
 
 @lru_cache(maxsize=1)
 def reference_specification():
-    root=Path(__file__).resolve().parents[1]/'docs/research/pp03'
+    root=research_root()/'docs/research/pp03'
     statement=next(s for s in load_references(root/'reference_corpus_v1.json',root/'source_reviews_v1.json') if s.id=='PP129-P6')
     return RecursiveSpecification(statement.class_spec,((0,),(0,0),(0,1)),
         (InsertionRule('one-max','after_first_max',1,2),InsertionRule('two-max','after_first_max',2,1)),

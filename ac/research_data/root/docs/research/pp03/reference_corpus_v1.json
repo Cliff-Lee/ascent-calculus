@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "statements": [
+    {
+      "class_spec": {
+        "avoid": [
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129",
+            "value_base": 0,
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129",
+            "value_base": 0,
+            "values": [
+              0,
+              1,
+              1
+            ]
+          }
+        ],
+        "citation_id": "C-PP-129",
+        "contain": [],
+        "definition_version": "ac-positive-families-v1",
+        "degree_offset": 0,
+        "family": "ordinary",
+        "value_base": 0
+      },
+      "formula": {
+        "kind": "linear",
+        "parameters": [
+          1,
+          0
+        ]
+      },
+      "id": "PP129-P5",
+      "maximum_degree": null,
+      "minimum_degree": 1,
+      "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "source_theorem_id": "T-PP-129"
+    },
+    {
+      "class_spec": {
+        "avoid": [
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-6",
+            "value_base": 0,
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-6",
+            "value_base": 0,
+            "values": [
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "citation_id": "C-PP-129-6",
+        "contain": [],
+        "definition_version": "ac-positive-families-v1",
+        "degree_offset": 0,
+        "family": "ordinary",
+        "value_base": 0
+      },
+      "formula": {
+        "kind": "fibonacci_shift",
+        "parameters": [
+          1
+        ]
+      },
+      "id": "PP129-P6",
+      "maximum_degree": null,
+      "minimum_degree": 1,
+      "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "source_theorem_id": "T-PP-129-6"
+    },
+    {
+      "class_spec": {
+        "avoid": [
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-7",
+            "value_base": 0,
+            "values": [
+              0,
+              1,
+              1
+            ]
+          },
+          {
+            "adjacent_positions": [],
+            "citation_id": "C-PP-129-7",
+            "value_base": 0,
+            "values": [
+              1,
+              0,
+              0
+            ]
+          }
+        ],
+        "citation_id": "C-PP-129-7",
+        "contain": [],
+        "definition_version": "ac-positive-families-v1",
+        "degree_offset": 0,
+        "family": "ordinary",
+        "value_base": 0
+      },
+      "formula": {
+        "kind": "binomial_plus_constant",
+        "parameters": [
+          2,
+          1
+        ]
+      },
+      "id": "PP129-P7",
+      "maximum_degree": null,
+      "minimum_degree": 1,
+      "review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+      "source_theorem_id": "T-PP-129-7"
+    }
+  ]
+}

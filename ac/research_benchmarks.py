@@ -1,4 +1,6 @@
 """Published-result benchmarks. Computation never promotes a proof status."""
+
+from ac.research_resources import research_root, source_bytes
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -11,7 +13,7 @@ from ac.research_fishburn import max_tree, inorder, tree_statistics, fishburn_co
 from ac.research_benchmark_oracles import inversion_201_210, fishburn_trees
 from ac.research_math_oracle import reference_words
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = research_root()
 DATA = ROOT / 'docs/research/pp04'
 REVIEW_SHA256 = '611cc5ba90c35b5cf80c3444351e92e98ea6238b420d30fe8bff5a53f75dbe91'
 CATALOG_SHA256 = '0d628e4c15db87e43a9be8ab98a5f7186f138a59977064b6d320068915844c66'

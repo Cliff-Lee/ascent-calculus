@@ -3,6 +3,7 @@
 Production definitions/generators remain in ac.classes/ac.generate. The oracle
 is deliberately separate and bounded. No finite result becomes a proof.
 """
+from ac.research_resources import source_bytes
 from dataclasses import dataclass,asdict
 from hashlib import sha256
 import json
@@ -225,4 +226,4 @@ def evaluate(statement,degrees):
         row={'degree':n,'word_length':length,'engine_count':len(a),'oracle_count':len(b),'expected':expected,'same_complete_members':equal,'formula_matches':matches,'engine_only':list(min(a-b)) if a-b else None,'oracle_only':list(min(b-a)) if b-a else None}
         rows.append(row)
         if not matches and failure is None:failure=row
-    return {'schema_version':1,'statement':json.loads(statement.to_json()),'complete_degrees':list(degrees),'status':'validation_disagreement' if any(not r['same_complete_members'] for r in rows) else 'refuted' if failure else 'finite_verified','first_tested_failure':failure,'rows':rows,'proof_status':'not_proved','provenance':{'engine_adapter_sha256':sha256(Path(__file__).read_bytes()).hexdigest(),'engine_source_sha256':{name:sha256(Path(__file__).parent.joinpath(name).read_bytes()).hexdigest() for name in ('classes/theories.py','generate/universes.py','patterns/classical.py','patterns/constraints.py','patterns/general.py','logic/predicates.py')},'oracle_sha256':sha256(Path(__file__).with_name('research_math_oracle.py').read_bytes()).hexdigest(),'independence':'separate family predicates, enumeration and pattern matching; shared typed inputs and expected expression'}}
+    return {'schema_version':1,'statement':json.loads(statement.to_json()),'complete_degrees':list(degrees),'status':'validation_disagreement' if any(not r['same_complete_members'] for r in rows) else 'refuted' if failure else 'finite_verified','first_tested_failure':failure,'rows':rows,'proof_status':'not_proved','provenance':{'engine_adapter_sha256':sha256(source_bytes('research_math.py')).hexdigest(),'engine_source_sha256':{name:sha256(source_bytes(name)).hexdigest() for name in ('classes/theories.py','generate/universes.py','patterns/classical.py','patterns/constraints.py','patterns/general.py','logic/predicates.py')},'oracle_sha256':sha256(source_bytes('research_math_oracle.py')).hexdigest(),'independence':'separate family predicates, enumeration and pattern matching; shared typed inputs and expected expression'}}

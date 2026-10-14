@@ -76,6 +76,8 @@ _LOG_STREAM = None
 
 
 def _startup_log_path() -> Path:
+    if os.environ.get("ASCENT_ENGINE_LOG_DIR"):
+        return Path(os.environ["ASCENT_ENGINE_LOG_DIR"]) / "startup.log"
     if __import__("sys").platform == "darwin":
         return Path.home() / "Library" / "Logs" / "AscentCalculus" / "startup.log"
     return Path.home() / ".ascent-calculus" / "startup.log"
@@ -293,7 +295,7 @@ class DesktopWorkbench:
         nav = tk.Frame(body, bg=BG)
         nav.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 12))
         self.nav_buttons = {}
-        for key, label in (("conjecture", "Conjecture engine"), ("transform", "Transform visualizer")):
+        for key, label in (("conjecture", "Conjecture engine"), ("transform", "Transform visualizer"), ("research", "Research Library")):
             button = tk.Button(nav, text=label, command=lambda k=key: self._show_view(k), relief="flat", bd=0, padx=14, pady=8, cursor="hand2", font=("TkDefaultFont", 9, "bold"))
             button.pack(side="left", padx=(0, 6))
             self.nav_buttons[key] = button
@@ -305,6 +307,8 @@ class DesktopWorkbench:
         self.main_rail = self._build_palette(content)
         self.main_work = self._build_workspace(content)
         self.transform_view = self._build_transform_view(content)
+        self.research_view = None
+        self.research_parent = content
         self._show_view("conjecture")
 
     def _build_palette(self, parent):
@@ -519,7 +523,15 @@ class DesktopWorkbench:
             self.footer.configure(text=f"{FAMILY_CHOICES[family]} family set for Class {'A' if side == 'left' else 'B'}.", fg=GREEN_DARK)
 
     def _show_view(self, view):
-        if view == "conjecture":
+        if self.research_view is not None:
+            self.research_view.grid_remove()
+        if view == "research":
+            if self.research_view is None:
+                from ac.gui.research_panel import ResearchPanel
+                self.research_view = ResearchPanel(self.research_parent, self)
+            self.main_rail.grid_remove(); self.main_work.grid_remove(); self.transform_view.grid_remove()
+            self.research_view.grid(row=0, column=0, columnspan=2, sticky="nsew")
+        elif view == "conjecture":
             self.transform_view.grid_remove()
             self.main_rail.grid(row=0, column=0, sticky="nsew", padx=(0, 18))
             self.main_work.grid(row=0, column=1, sticky="nsew")
@@ -1301,10 +1313,15 @@ def _window_smoke_check() -> None:
 
 
 def main(argv=None) -> None:
+    import multiprocessing
+    multiprocessing.freeze_support()
     import argparse
 
     launch_started = time.perf_counter()
     parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--research-smoke-check", action="store_true")
+    parser.add_argument("--research-pack")
+    parser.add_argument("--research-smoke-output")
     parser.add_argument("--startup-check", action="store_true")
     parser.add_argument("--window-smoke-check", action="store_true")
     parser.add_argument("--launch-smoke-check", action="store_true")
@@ -1313,6 +1330,13 @@ def main(argv=None) -> None:
     mode = "launch_smoke_check" if args.launch_smoke_check else "window_smoke_check" if args.window_smoke_check else "startup_check" if args.startup_check else "desktop"
     _log("main_entered", mode=mode)
     try:
+        if args.research_smoke_check:
+            from ac.gui.research_smoke import run_native_journey
+            result = run_native_journey(args.research_pack)
+            if args.research_smoke_output:
+                Path(args.research_smoke_output).write_text(json.dumps(result, indent=2)+"\n")
+            _log("research_smoke_passed", **result)
+            return
         if args.startup_check:
             _startup_check()
             return
@@ -1349,7 +1373,7 @@ def main(argv=None) -> None:
     except Exception:
         details = traceback.format_exc()
         _log("fatal_exception", traceback=details)
-        if __import__("sys").platform == "darwin" and not (args.startup_check or args.window_smoke_check or args.launch_smoke_check):
+        if __import__("sys").platform == "darwin" and not (args.startup_check or args.window_smoke_check or args.launch_smoke_check or args.research_smoke_check):
             try:
                 import subprocess
                 script = 'display dialog ' + json.dumps(f"Ascent Engine could not start. Diagnostic log: {log_path}") + ' with title "Ascent Engine" buttons {"OK"}'

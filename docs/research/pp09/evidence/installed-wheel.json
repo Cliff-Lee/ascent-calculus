@@ -1,0 +1,12 @@
+{
+  "records": 11,
+  "root": "/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/wheel-installed/ac/research_data/root",
+  "method_results": {
+    "counts": "finite_verified",
+    "specification": "finite_verified",
+    "tree": "finite_verified",
+    "transport": "finite_verified",
+    "bijection": "finite_verified",
+    "language": "finite_verified"
+  }
+}

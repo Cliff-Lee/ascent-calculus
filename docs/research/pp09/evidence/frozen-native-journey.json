@@ -1,0 +1,23 @@
+{
+  "native_window_mapped": true,
+  "lazy_startup": true,
+  "pack_records": 140,
+  "source_citation": "C-PP-129-6",
+  "method": "bijection",
+  "tested_degrees": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "counterexample_inspector_positive_word": [
+    1,
+    1
+  ],
+  "source_base": 0,
+  "cancel_status": "cancelled",
+  "cancel_seconds": 0.011064040998462588,
+  "journey_seconds": 0.5687398750014836,
+  "proof_status": "unproved",
+  "data_store": ".local-imports/pp09/frozen-state/pp-research-library.sqlite"
+}

@@ -1,4 +1,6 @@
 """PP08 source-grounded regular and counter/grammar reference audits."""
+
+from ac.research_resources import research_root, source_bytes
 from hashlib import sha256
 from itertools import product
 import json
@@ -10,7 +12,7 @@ from ac.research_math_oracle import reference_words
 from ac.research_recursive_bijections import independent_tiles, reference_specification
 from ac.research_evidence import load_review
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=research_root()
 REVIEW_SHA256='69d94bb9978313a12e5fff4e9375498346b8ac04416c60ce43d28bda93a40db3'
 
 
@@ -133,5 +135,5 @@ def reference_demo():
                                     'Correct selected formal-series initial branch'], 'proof_status':'unproved'},
             'negative_controls':negatives,'symbolic_backend':{'implementation':'exact integer coefficient convolution and typed equation exporter',
                 'third_party_solver':'not integrated; SymPy absent and unnecessary for this bounded benchmark'},
-            'proof_status':'unproved','implementation_sha256':sha256(Path(__file__).read_bytes()).hexdigest(),
-            'language_interface_sha256':sha256(Path(__file__).with_name('research_languages.py').read_bytes()).hexdigest()}
+            'proof_status':'unproved','implementation_sha256':sha256(source_bytes('research_language_benchmarks.py')).hexdigest(),
+            'language_interface_sha256':sha256(source_bytes('research_languages.py')).hexdigest()}

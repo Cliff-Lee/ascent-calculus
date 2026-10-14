@@ -1,0 +1,91 @@
+63 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.8
+64 INFO: Python: 3.13.15
+75 INFO: Platform: macOS-26.3.1-arm64-arm-64bit-Mach-O
+75 INFO: Python environment: /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env
+75 INFO: wrote .local-imports/pp09/AscentCalculusPP09.spec
+528 INFO: Module search paths (PYTHONPATH):
+['/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public',
+ '/opt/homebrew/Cellar/python@3.13/3.13.15/Frameworks/Python.framework/Versions/3.13/lib/python313.zip',
+ '/opt/homebrew/Cellar/python@3.13/3.13.15/Frameworks/Python.framework/Versions/3.13/lib/python3.13',
+ '/opt/homebrew/Cellar/python@3.13/3.13.15/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload',
+ '/Users/cliffpackman/Documents/ChatGPT/Ascent '
+ 'calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages',
+ '/opt/homebrew/opt/python-tk@3.13/libexec',
+ '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public']
+633 INFO: Appending 'datas' from .spec
+635 INFO: checking Analysis
+640 INFO: Building because /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/ac/research_data/manifest.json changed
+640 INFO: Looking for Python shared library...
+642 INFO: Using Python shared library: /opt/homebrew/Cellar/python@3.13/3.13.15/Frameworks/Python.framework/Versions/3.13/Python
+642 INFO: Running Analysis Analysis-00.toc
+642 INFO: Target bytecode optimization level: 0
+642 INFO: Initializing module dependency graph...
+643 INFO: Initializing module graph hook caches...
+652 INFO: Analyzing modules for base_library.zip ...
+1126 INFO: Processing standard module hook 'hook-encodings.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+1578 INFO: Processing standard module hook 'hook-math.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+2707 INFO: Processing standard module hook 'hook-pickle.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3247 INFO: Processing standard module hook 'hook-heapq.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3539 INFO: Caching module dependency graph...
+3559 INFO: Analyzing /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/ac/gui/desktop.py
+3629 INFO: Processing standard module hook 'hook-platform.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3649 INFO: Processing standard module hook 'hook-xml.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3671 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3680 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3682 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+3690 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks/pre_find_module_path'
+3691 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+3837 INFO: Processing standard module hook 'hook-_tkinter.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+4116 INFO: Processing standard module hook 'hook-webbrowser.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+4154 INFO: Processing standard module hook 'hook-sqlite3.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+4291 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+4710 INFO: Analyzing hidden import 'tkinter.__main__'
+4711 INFO: Analyzing hidden import 'tkinter.colorchooser'
+4712 INFO: Analyzing hidden import 'tkinter.dnd'
+4717 INFO: Analyzing hidden import 'tkinter.font'
+4722 INFO: Analyzing hidden import 'tkinter.scrolledtext'
+4724 INFO: Processing module hooks (post-graph stage)...
+4736 INFO: Processing standard module hook 'hook-_tkinter.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks'
+4928 INFO: Performing binary vs. data reclassification (370 entries)
+4973 INFO: Looking for ctypes DLLs
+4983 INFO: Analyzing run-time hooks ...
+4985 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+4986 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+4988 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+4989 INFO: Including run-time hook 'pyi_rth__tkinter.py' from '/Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/hooks/rthooks'
+4998 INFO: Creating base_library.zip...
+5009 INFO: Looking for dynamic libraries
+5096 INFO: Warnings written to /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/warn-AscentCalculusPP09.txt
+5105 INFO: Graph cross-reference written to /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/xref-AscentCalculusPP09.html
+5142 INFO: checking PYZ
+5144 INFO: Building because /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/ac/gui/desktop.py changed
+5144 INFO: Building PYZ (ZlibArchive) /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/PYZ-00.pyz
+5323 INFO: Building PYZ (ZlibArchive) /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/PYZ-00.pyz completed successfully.
+5328 INFO: EXE target arch: arm64
+5328 INFO: Code signing identity: None
+5329 INFO: checking PKG
+5329 INFO: Building because /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/PYZ-00.pyz changed
+5329 INFO: Building PKG (CArchive) AscentCalculusPP09.pkg
+5375 INFO: Building PKG (CArchive) AscentCalculusPP09.pkg completed successfully.
+5376 INFO: Bootloader /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build-env/lib/python3.13/site-packages/PyInstaller/bootloader/Darwin-64bit/runw
+5376 INFO: checking EXE
+5377 INFO: Rebuilding EXE-00.toc because pkg is more recent
+5377 INFO: Building EXE from EXE-00.toc
+5378 INFO: Copying bootloader EXE to /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/build/AscentCalculusPP09/AscentCalculusPP09
+5379 INFO: Converting EXE to target arch (arm64)
+5459 INFO: Removing signature(s) from EXE
+5480 INFO: Modifying Mach-O image UUID(s) in EXE
+5482 INFO: Appending PKG archive to EXE
+5483 INFO: Fixing EXE headers for code signing
+5486 INFO: Re-signing the EXE
+5501 INFO: Building EXE from EXE-00.toc completed successfully.
+5506 INFO: checking COLLECT
+5508 INFO: Removing dir /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/dist/AscentCalculusPP09
+5544 INFO: Building COLLECT COLLECT-00.toc
+5719 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+5724 INFO: checking BUNDLE
+5726 INFO: Removing dir /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/dist/AscentCalculusPP09.app
+5767 INFO: Building BUNDLE BUNDLE-00.toc
+5943 INFO: Signing the BUNDLE...
+6037 INFO: Building BUNDLE BUNDLE-00.toc completed successfully.
+6041 INFO: Build complete! The results are available in: /Users/cliffpackman/Documents/ChatGPT/Ascent calculus/public/.local-imports/pp09/dist

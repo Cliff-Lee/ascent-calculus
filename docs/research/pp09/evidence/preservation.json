@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "original_worktree_count": 6,
+  "original_worktree_heads_unchanged": true,
+  "original_worktree_statuses_unchanged": true,
+  "installed_executable_unchanged": true,
+  "private_commit": "f398f092ab1822a3bb8d0348d2363d671aa64be2",
+  "private_clean": true,
+  "core_math_unchanged": true,
+  "limits": [
+    "No complete system data inventory or clean-machine restoration drill",
+    "Local development bundle only; installed advanced application not replaced"
+  ]
+}
