@@ -1,0 +1,54 @@
+{
+  "snapshot_sha256": "018cdcdc636eb760ef6237427cec902ba61124137a5cd0f98c1aecd433929ac6",
+  "method_cards": 11,
+  "source_statuses": {
+    "S-PP-129": "FULL_TEXT_INSPECTED",
+    "S-PP-031": "NEEDS_REVIEW",
+    "S-PP-094": "SOURCE_LOCATED",
+    "S-PP-073": "NEEDS_REVIEW",
+    "S-PP-042": "FULL_TEXT_INSPECTED",
+    "S-PP-047": "FULL_TEXT_INSPECTED",
+    "S-PP-066": "FULL_TEXT_INSPECTED",
+    "S-PP-074": "NEEDS_REVIEW",
+    "S-PP-120": "FULL_TEXT_INSPECTED",
+    "S-PP-109": "SOURCE_LOCATED",
+    "S-PP-110": "SOURCE_LOCATED",
+    "S-PP-094-slides": "INACCESSIBLE",
+    "S-PP-109-licence": "SOURCE_LOCATED",
+    "S-PP-110-licence": "SOURCE_LOCATED",
+    "S-PP-066-publisher": "SOURCE_LOCATED"
+  },
+  "statements": [
+    {
+      "id": "T-PP-129",
+      "status": "PROVED_EXTERNAL",
+      "statement": "For every integer n >= 1, the number of ordinary ascent sequences avoiding both 000 and 011 is n."
+    },
+    {
+      "id": "T-PP-047",
+      "status": "PROVED_EXTERNAL",
+      "statement": "For an endotree T of size n with in-order word x=alpha(T), T is a Fishburn tree if and only if x is a modified ascent sequence of size n."
+    },
+    {
+      "id": "T-PP-120",
+      "status": "PROVED_EXTERNAL",
+      "statement": "Every finite basis containing only patterns (sigma,[|sigma|-1]) and (sigma,[|sigma|-2]) admits a finite enumeration scheme whose reversible deletion sets are empty or {1}."
+    },
+    {
+      "id": "D-inversion",
+      "status": "NOT_ASSERTED",
+      "statement": "An inversion sequence of length n has integer entries e_i with 0 <= e_i < i for 1 <= i <= n."
+    },
+    {
+      "id": "A-parallel",
+      "status": "NOT_ASSERTED",
+      "statement": "Traverse two rule universes to find parallel specifications, then reconstruct maps from matched constructors."
+    },
+    {
+      "id": "Q-021",
+      "status": "PROPOSED",
+      "statement": "The extended abstract reports algebraic generating functions for inversion sequences avoiding 021 and any finite additional pattern set."
+    }
+  ],
+  "interpretation": "PROVED_EXTERNAL is source-inspected, not independently checked; validation is structural, not a mathematical verifier."
+}

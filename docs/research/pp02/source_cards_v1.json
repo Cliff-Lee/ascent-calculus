@@ -1,0 +1,1032 @@
+{
+  "entities": [
+    {
+      "data": {
+        "authors": [
+          "Andrew Baxter",
+          "Lara Pudwell"
+        ],
+        "id": "W-PP-129",
+        "lead_id": "PP-129",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Ascent Sequences Avoiding Pairs of Patterns",
+        "year": 2015
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-129",
+        "inspection_scope": "Section 1 definitions; Section 2 Proposition 5 and proof",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv perpetual non-exclusive posting licence; no full-text redistribution inferred.",
+        "url": "https://arxiv.org/html/1406.4100v2",
+        "version": "v2, 2015-02-15"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-129",
+        "label": "Section 1 definitions; Section 2 Proposition 5 and proof",
+        "source_id": "S-PP-129"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-129",
+        "location_id": "L-PP-129",
+        "work_id": "W-PP-129"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-129",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-129"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Jon Steinn Eliasson"
+        ],
+        "id": "W-PP-031",
+        "lead_id": "PP-031",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Automated Bijections with Combinatorial Exploration",
+        "year": 2021
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-031",
+        "inspection_scope": "printed pp.27-28, Eliasson abstract",
+        "inspection_status": "NEEDS_REVIEW",
+        "medium": "extended_abstract",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://combinatorics.cis.strath.ac.uk/pp2021/PP2021-Programme.pdf",
+        "version": "PP2021 programme"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-031",
+        "label": "printed pp.27-28, Eliasson abstract",
+        "source_id": "S-PP-031"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-031",
+        "location_id": "L-PP-031",
+        "work_id": "W-PP-031"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-031",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-031"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Abigail Ollson"
+        ],
+        "id": "W-PP-094",
+        "lead_id": "PP-094",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Automatic Discovery of Generating Trees for Pattern-Avoiding Inversion Sequences",
+        "year": 2026
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-094",
+        "inspection_scope": "Monday July 20, Abigail Ollson listing",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "programme",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://sites.google.com/view/permutationpatterns2026/talk-slides",
+        "version": "PP2026 slides index, inspected 2026-10-14"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-094",
+        "label": "Monday July 20, Abigail Ollson listing",
+        "source_id": "S-PP-094"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-094",
+        "location_id": "L-PP-094",
+        "work_id": "W-PP-094"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-094",
+        "inspection_status": "SOURCE_LOCATED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-094"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Benjamin Testart"
+        ],
+        "id": "W-PP-073",
+        "lead_id": "PP-073",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Inversion Sequences Avoiding 021 and Other Patterns",
+        "year": 2025
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-073",
+        "inspection_scope": "pp.1-3, Summary of results and Figure 2",
+        "inspection_status": "NEEDS_REVIEW",
+        "medium": "extended_abstract",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://sites.cs.st-andrews.ac.uk/pp25/program/abstracts/testart.pdf",
+        "version": "PP2025 extended abstract"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-073",
+        "label": "pp.1-3, Summary of results and Figure 2",
+        "source_id": "S-PP-073"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-073",
+        "location_id": "L-PP-073",
+        "work_id": "W-PP-073"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-073",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-073"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Giulio Cerbai",
+          "Anders Claesson"
+        ],
+        "id": "W-PP-042",
+        "lead_id": "PP-042",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Transport of Patterns by Burge Transpose",
+        "year": 2022
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-042",
+        "inspection_scope": "Sections 2-5, Theorem 5.1, Corollary 5.2",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv perpetual non-exclusive posting licence; no full-text redistribution inferred.",
+        "url": "https://arxiv.org/html/2005.07950v3",
+        "version": "v3, 2022-09-26"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-042",
+        "label": "Sections 2-5, Theorem 5.1, Corollary 5.2",
+        "source_id": "S-PP-042"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-042",
+        "location_id": "L-PP-042",
+        "work_id": "W-PP-042"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-042",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-042"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Giulio Cerbai",
+          "Anders Claesson"
+        ],
+        "id": "W-PP-047",
+        "lead_id": "PP-047",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Fishburn Trees",
+        "year": 2023
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-047",
+        "inspection_scope": "Definition 3.1; Lemmas 4.1-4.3; Proposition 4.4 and proof",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv perpetual non-exclusive posting licence; no full-text redistribution inferred.",
+        "url": "https://arxiv.org/html/2211.07200v2",
+        "version": "v2, 2023-06-08"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-047",
+        "label": "Definition 3.1; Lemmas 4.1-4.3; Proposition 4.4 and proof",
+        "source_id": "S-PP-047"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-047",
+        "location_id": "L-PP-047",
+        "work_id": "W-PP-047"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-047",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-047"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Benjamin Testart"
+        ],
+        "id": "W-PP-066",
+        "lead_id": "PP-066",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Generating Trees Growing on the Left for Pattern-Avoiding Inversion Sequences",
+        "year": 2025
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-066",
+        "inspection_scope": "Sections 1-2 and Section 3 Theorem 5 with proof",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Publisher metadata reports CC BY 4.0; no full text redistributed.",
+        "url": "https://arxiv.org/html/2411.05726v3",
+        "version": "v3; publisher 2025 in PP2024 issue"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-066",
+        "label": "Sections 1-2 and Section 3 Theorem 5 with proof",
+        "source_id": "S-PP-066"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-066",
+        "location_id": "L-PP-066",
+        "work_id": "W-PP-066"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-066",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-066"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Abigail Ollson",
+          "Christian Bean",
+          "Paul C. Bell"
+        ],
+        "id": "W-PP-074",
+        "lead_id": "PP-074",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "The Insertion Encoding of Cayley Permutations",
+        "year": 2025
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-074",
+        "inspection_scope": "pp.1-3, Theorems 1-2",
+        "inspection_status": "NEEDS_REVIEW",
+        "medium": "extended_abstract",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://sites.cs.st-andrews.ac.uk/pp25/program/abstracts/ollson.pdf",
+        "version": "PP2025 extended abstract"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-074",
+        "label": "pp.1-3, Theorems 1-2",
+        "source_id": "S-PP-074"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-074",
+        "location_id": "L-PP-074",
+        "work_id": "W-PP-074"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-074",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-074"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "Andrew Baxter",
+          "Lara Pudwell"
+        ],
+        "id": "W-PP-120",
+        "lead_id": "PP-120",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Enumeration schemes for vincular patterns",
+        "year": 2012
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-120",
+        "inspection_scope": "Section 4 Theorem 15 and proof; Algorithm 3",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "arXiv perpetual non-exclusive posting licence; no full-text redistribution inferred.",
+        "url": "https://arxiv.org/html/1108.2642v2",
+        "version": "v2, 2012-01-16"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-120",
+        "label": "Section 4 Theorem 15 and proof; Algorithm 3",
+        "source_id": "S-PP-120"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-120",
+        "location_id": "L-PP-120",
+        "work_id": "W-PP-120"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-120",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-120"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "PermutaTriangle"
+        ],
+        "id": "W-PP-109",
+        "lead_id": "PP-109",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Combinatorial Specification Searcher Python library",
+        "year": 2026
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-109",
+        "inspection_scope": "README: classes, StrategyPack, ParallelSpecFinder, Bijection",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "software_docs",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://github.com/PermutaTriangle/comb_spec_searcher",
+        "version": "develop README as viewed 2026-10-14; not commit-pinned"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-109",
+        "label": "README: classes, StrategyPack, ParallelSpecFinder, Bijection",
+        "source_id": "S-PP-109"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-109",
+        "location_id": "L-PP-109",
+        "work_id": "W-PP-109"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-109",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-109"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "authors": [
+          "PermutaTriangle"
+        ],
+        "id": "W-PP-110",
+        "lead_id": "PP-110",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Tilings / TileScope Python library",
+        "year": 2026
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-110",
+        "inspection_scope": "README: tilings definition and TileScope sections",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "software_docs",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Links and original short review only; redistribution permission not inferred.",
+        "url": "https://github.com/PermutaTriangle/Tilings",
+        "version": "develop README as viewed 2026-10-14; not commit-pinned"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-110",
+        "label": "README: tilings definition and TileScope sections",
+        "source_id": "S-PP-110"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-110",
+        "location_id": "L-PP-110",
+        "work_id": "W-PP-110"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP-110",
+        "inspection_status": "CLAIM_EXTRACTED",
+        "review_note": "Inspected relevant source sections; this does not independently prove mathematical truth.",
+        "source_id": "S-PP-110"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "id": "EV-PP-129",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Selected statement, hypotheses and displayed argument inspected; no independent proof replay.",
+        "source_id": "S-PP-129"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Nonnegative ascent sequences of Section 1; simultaneous avoidance; n >= 1."
+        ],
+        "citation_ids": [
+          "C-PP-129"
+        ],
+        "evidence_ids": [
+          "EV-PP-129"
+        ],
+        "family": "ordinary ascent sequences",
+        "id": "T-PP-129",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "classical subsequence reduction preserving equality",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For every integer n >= 1, the number of ordinary ascent sequences avoiding both 000 and 011 is n."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "id": "EV-PP-047",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Selected statement, hypotheses and displayed argument inspected; no independent proof replay.",
+        "source_id": "S-PP-047"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Endotrees, Fishburn trees and alpha as defined in Sections 2-4."
+        ],
+        "citation_ids": [
+          "C-PP-047"
+        ],
+        "evidence_ids": [
+          "EV-PP-047"
+        ],
+        "family": "Fishburn trees / modified ascent sequences",
+        "id": "T-PP-047",
+        "indexing": "one-based labels and indexed roles",
+        "pattern_semantics": "first occurrence equals ascent top, including first position",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "For an endotree T of size n with in-order word x=alpha(T), T is a Fishburn tree if and only if x is a modified ascent sequence of size n."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "id": "EV-PP-120",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Selected statement, hypotheses and displayed argument inspected; no independent proof replay.",
+        "source_id": "S-PP-120"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Vincular permutation patterns and finite basis B in the notation of Theorem 15."
+        ],
+        "citation_ids": [
+          "C-PP-120"
+        ],
+        "evidence_ids": [
+          "EV-PP-120"
+        ],
+        "family": "permutations",
+        "id": "T-PP-120",
+        "indexing": "one-based positions",
+        "pattern_semantics": "vincular adjacency sets, not equality-sensitive words",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "Every finite basis containing only patterns (sigma,[|sigma|-1]) and (sigma,[|sigma|-2]) admits a finite enumeration scheme whose reversible deletion sets are empty or {1}."
+      },
+      "kind": "Theorem"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "n is a nonnegative integer."
+        ],
+        "citation_ids": [
+          "C-PP-066"
+        ],
+        "evidence_ids": [
+          "E-PP-066"
+        ],
+        "family": "inversion sequences",
+        "id": "D-inversion",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "not applicable",
+        "proof_status": "NOT_ASSERTED",
+        "statement": "An inversion sequence of length n has integer entries e_i with 0 <= e_i < i for 1 <= i <= n."
+      },
+      "kind": "Definition"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Rules have explicit forward and inverse constructions."
+        ],
+        "citation_ids": [
+          "C-PP-031"
+        ],
+        "evidence_ids": [
+          "E-PP-031"
+        ],
+        "family": "combinatorial specifications",
+        "id": "A-parallel",
+        "indexing": "not applicable",
+        "pattern_semantics": "not applicable",
+        "proof_status": "NOT_ASSERTED",
+        "statement": "Traverse two rule universes to find parallel specifications, then reconstruct maps from matched constructors."
+      },
+      "kind": "Algorithm"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Paper proof and exact path-pattern transport still need review."
+        ],
+        "citation_ids": [
+          "C-PP-073"
+        ],
+        "evidence_ids": [
+          "E-PP-073"
+        ],
+        "family": "inversion sequences",
+        "id": "Q-021",
+        "indexing": "zero-based values; one-based positions",
+        "pattern_semantics": "classical subsequences in source",
+        "proof_status": "PROPOSED",
+        "statement": "The extended abstract reports algebraic generating functions for inversion sequences avoiding 021 and any finite additional pattern set."
+      },
+      "kind": "Claim"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-094-slides",
+        "inspection_scope": "Public deck linked from official index; text retrieval failed.",
+        "inspection_status": "INACCESSIBLE",
+        "medium": "slides",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "No permissions inferred",
+        "url": "https://drive.google.com/file/d/1Lzg7mE6x1nyp4nwmvpMJiMAqvJc86utH/view?usp=sharing",
+        "version": "retrieved 2026-10-14"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-094-slides",
+        "label": "Public deck linked from official index; text retrieval failed.",
+        "source_id": "S-PP-094-slides"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-094-slides",
+        "location_id": "L-PP-094-slides",
+        "work_id": "W-PP-094"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "content_sha256": "0be24345553bf6e433889785b650577ac7da8549e8ba8b1a6d06d2ba40b1f03c",
+        "id": "S-PP-109-licence",
+        "inspection_scope": "BSD-3-Clause licence read in full; retain notices, no endorsement.",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "licence",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "BSD-3-Clause",
+        "url": "https://raw.githubusercontent.com/PermutaTriangle/comb_spec_searcher/develop/LICENSE.txt",
+        "version": "retrieved 2026-10-14"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-109-licence",
+        "label": "BSD-3-Clause licence read in full; retain notices, no endorsement.",
+        "source_id": "S-PP-109-licence"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-109-licence",
+        "location_id": "L-PP-109-licence",
+        "work_id": "W-PP-109"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "content_sha256": "9190716fdf9897405c86b267844903252b44e35f110af8117aca73c393ecd7e7",
+        "id": "S-PP-110-licence",
+        "inspection_scope": "BSD-3-Clause licence read in full; retain notices, no endorsement.",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "licence",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "BSD-3-Clause",
+        "url": "https://raw.githubusercontent.com/PermutaTriangle/Tilings/develop/LICENSE",
+        "version": "retrieved 2026-10-14"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-110-licence",
+        "label": "BSD-3-Clause licence read in full; retain notices, no endorsement.",
+        "source_id": "S-PP-110-licence"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-110-licence",
+        "location_id": "L-PP-110-licence",
+        "work_id": "W-PP-110"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP-066-publisher",
+        "inspection_scope": "Publication details and Licence section",
+        "inspection_status": "SOURCE_LOCATED",
+        "medium": "publisher_metadata",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "CC BY 4.0 as displayed by publisher; no full text redistributed.",
+        "url": "https://dmtcs.episciences.org/en/articles/14716",
+        "version": "publication 2025-09-23; PP2024 issue"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP-066-publisher",
+        "label": "Publication details / Licence",
+        "source_id": "S-PP-066-publisher"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP-066-publisher",
+        "location_id": "L-PP-066-publisher",
+        "work_id": "W-PP-066"
+      },
+      "kind": "Citation"
+    }
+  ],
+  "method_cards": [
+    {
+      "adaptation_risks": "Shift alphabet explicitly; do not use modified definition",
+      "assumptions": "nonnegative entries; classical equality-sensitive subsequences",
+      "blockers": "None for selected proposition",
+      "complexity": "Not audited here",
+      "construction": "structural case classification",
+      "implementation_idea": "published positive benchmark",
+      "input_type": "two forbidden patterns",
+      "output_type": "enumeration statement",
+      "problem_family": "ordinary ascent sequences",
+      "proof_mechanism": "elementary constructive proof",
+      "source_ids": [
+        "S-PP-129"
+      ],
+      "work_id": "W-PP-129"
+    },
+    {
+      "adaptation_risks": "Equinumerosity alone is insufficient",
+      "assumptions": "all component rules bijective with known forward/inverse maps",
+      "blockers": "Full proof/source implementation not inspected",
+      "complexity": "No proven bound inspected",
+      "construction": "parallel specification traversal",
+      "implementation_idea": "later adapter design",
+      "input_type": "two specifications",
+      "output_type": "candidate recursive map",
+      "problem_family": "recursive combinatorial classes",
+      "proof_mechanism": "matched constructors and recursive paths",
+      "source_ids": [
+        "S-PP-031"
+      ],
+      "work_id": "W-PP-031"
+    },
+    {
+      "adaptation_risks": "Title does not specify an algorithm",
+      "assumptions": "Not extracted",
+      "blockers": "Linked Google Drive deck inaccessible to text retrieval",
+      "complexity": "Not extracted",
+      "construction": "Not extracted",
+      "implementation_idea": "defer until slides readable",
+      "input_type": "Not extracted",
+      "output_type": "Not extracted",
+      "problem_family": "inversion sequences",
+      "proof_mechanism": "Not extracted",
+      "source_ids": [
+        "S-PP-094",
+        "S-PP-094-slides"
+      ],
+      "work_id": "W-PP-094"
+    },
+    {
+      "adaptation_risks": "Counter automaton is not a finite automaton",
+      "assumptions": "021 avoidance and a finite additional forbidden set",
+      "blockers": "Full proof not supplied by abstract",
+      "complexity": "No bound audited",
+      "construction": "coloured path encoding and counter language",
+      "implementation_idea": "later counter-automaton investigation",
+      "input_type": "pattern-restricted sequences",
+      "output_type": "language and generating-function claim",
+      "problem_family": "021-avoiding inversion sequences",
+      "proof_mechanism": "reported context-free enumeration argument",
+      "source_ids": [
+        "S-PP-073"
+      ],
+      "work_id": "W-PP-073"
+    },
+    {
+      "adaptation_risks": "Basis generally contains multiple patterns; authors include Claesson",
+      "assumptions": "permutation pattern; full Fishburn basis under paper conventions",
+      "blockers": "No independent implementation audit",
+      "complexity": "Not audited here",
+      "construction": "Burge transpose and quotient representatives",
+      "implementation_idea": "later typed transport adapter",
+      "input_type": "permutation pattern",
+      "output_type": "transported forbidden basis",
+      "problem_family": "Fishburn permutations and modified ascent sequences",
+      "proof_mechanism": "containment transport",
+      "source_ids": [
+        "S-PP-042"
+      ],
+      "work_id": "W-PP-042"
+    },
+    {
+      "adaptation_risks": "First position is an ascent top; matrices use lower triangle",
+      "assumptions": "paper-defined endotrees and indexed role sets",
+      "blockers": "No independent conversion implementation",
+      "complexity": "Not audited here",
+      "construction": "in-order traversal",
+      "implementation_idea": "representation adapter candidate",
+      "input_type": "labelled tree",
+      "output_type": "word",
+      "problem_family": "Fishburn trees and modified ascent sequences",
+      "proof_mechanism": "role correspondence",
+      "source_ids": [
+        "S-PP-047"
+      ],
+      "work_id": "W-PP-047"
+    },
+    {
+      "adaptation_risks": "Different family and alphabet from positive ascent words",
+      "assumptions": "0 <= e_i < i; avoid 201 and 210 for Theorem 5",
+      "blockers": "No independent coefficient oracle yet",
+      "complexity": "Not audited here",
+      "construction": "left growth and succession equations",
+      "implementation_idea": "later left-growth benchmark",
+      "input_type": "restricted sequences",
+      "output_type": "bivariate equation and OGF",
+      "problem_family": "inversion sequences",
+      "proof_mechanism": "kernel method",
+      "source_ids": [
+        "S-PP-066",
+        "S-PP-066-publisher"
+      ],
+      "work_id": "W-PP-066"
+    },
+    {
+      "adaptation_risks": "Two growth directions have different criteria",
+      "assumptions": "basis of equality-sensitive Cayley patterns",
+      "blockers": "No full proof inspected",
+      "complexity": "Linear-time claim reported, not independently audited",
+      "construction": "vertical and horizontal insertion encodings",
+      "implementation_idea": "later encoding adapter",
+      "input_type": "class basis",
+      "output_type": "regularity classification reported",
+      "problem_family": "Cayley permutation classes",
+      "proof_mechanism": "reported obstruction classification",
+      "source_ids": [
+        "S-PP-074"
+      ],
+      "work_id": "W-PP-074"
+    },
+    {
+      "adaptation_risks": "Published title is vincular; failure within bounds is not impossibility",
+      "assumptions": "finite basis of consecutive or consecutive-head/final-separated patterns",
+      "blockers": "Maple reuse licence not verified",
+      "complexity": "No runtime bound audited",
+      "construction": "gap vectors and reversible deletions",
+      "implementation_idea": "later scheme interface",
+      "input_type": "basis and bounded search parameters",
+      "output_type": "enumeration scheme or search failure",
+      "problem_family": "vincular permutation patterns",
+      "proof_mechanism": "coverage and reversible deletion",
+      "source_ids": [
+        "S-PP-120"
+      ],
+      "work_id": "W-PP-120"
+    },
+    {
+      "adaptation_risks": "Example uses literal consecutive words, not classical Cayley patterns",
+      "assumptions": "correct class equality/emptiness and constructive strategies",
+      "blockers": "Compatibility and pinned version review deferred to PP05",
+      "complexity": "No general bound audited",
+      "construction": "strategy-rule exploration",
+      "implementation_idea": "future optional adapter",
+      "input_type": "typed class and strategy pack",
+      "output_type": "specification or matched recursive maps",
+      "problem_family": "finitely graded combinatorial classes",
+      "proof_mechanism": "rule constructors; not automatic truth checking",
+      "source_ids": [
+        "S-PP-109",
+        "S-PP-109-licence"
+      ],
+      "work_id": "W-PP-109"
+    },
+    {
+      "adaptation_risks": "A requirement set means alternatives; not ordinary word containment",
+      "assumptions": "obstructions and requirement sets in a fixed grid",
+      "blockers": "Dependency/API execution not audited",
+      "complexity": "No general bound audited",
+      "construction": "TileScope strategy packs",
+      "implementation_idea": "future optional tiling adapter",
+      "input_type": "tiling or permutation basis",
+      "output_type": "candidate specification and enumeration",
+      "problem_family": "gridded permutation classes",
+      "proof_mechanism": "constructor-based exploration",
+      "source_ids": [
+        "S-PP-110",
+        "S-PP-110-licence"
+      ],
+      "work_id": "W-PP-110"
+    }
+  ],
+  "schema_version": 1
+}
