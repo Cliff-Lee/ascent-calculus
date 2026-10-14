@@ -1,0 +1,694 @@
+{
+  "checkout_commit": "134e246a857bdb6069b17e60913e7271fa9265fe",
+  "checkout_has_changes": true,
+  "counter_grammar": {
+    "audit": {
+      "first_tested_failure": null,
+      "proof_status": "unproved",
+      "rows": [
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 1,
+          "degree": 0,
+          "derivation_count": 1,
+          "equation_coefficient": 1,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 1
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 1,
+          "degree": 1,
+          "derivation_count": 1,
+          "equation_coefficient": 1,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 1
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 2,
+          "degree": 2,
+          "derivation_count": 2,
+          "equation_coefficient": 2,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 2
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 4,
+          "degree": 3,
+          "derivation_count": 4,
+          "equation_coefficient": 4,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 4
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 9,
+          "degree": 4,
+          "derivation_count": 9,
+          "equation_coefficient": 9,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 9
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 21,
+          "degree": 5,
+          "derivation_count": 21,
+          "equation_coefficient": 21,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 21
+        },
+        {
+          "checks": {
+            "coefficients": true,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 51,
+          "degree": 6,
+          "derivation_count": 51,
+          "equation_coefficient": 51,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 51
+        }
+      ],
+      "status": "finite_verified"
+    },
+    "automaton": {
+      "accepting": [
+        "Q"
+      ],
+      "alphabet": [
+        {
+          "name": "H",
+          "weight": 1
+        },
+        {
+          "name": "U",
+          "weight": 1
+        },
+        {
+          "name": "D",
+          "weight": 1
+        }
+      ],
+      "kind": "one_counter",
+      "schema_version": 1,
+      "start": "Q",
+      "states": [
+        "Q"
+      ],
+      "transitions": [
+        {
+          "counter_delta": 0,
+          "source": "Q",
+          "target": "Q",
+          "terminal": "H"
+        },
+        {
+          "counter_delta": 1,
+          "source": "Q",
+          "target": "Q",
+          "terminal": "U"
+        },
+        {
+          "counter_delta": -1,
+          "source": "Q",
+          "target": "Q",
+          "terminal": "D"
+        }
+      ]
+    },
+    "citation_ids": [
+      "C-PP08-Motzkin"
+    ],
+    "class_bridge": [
+      {
+        "counts_match": true,
+        "degree": 1,
+        "engine_count": 1,
+        "independent_ascent_count": 1,
+        "path_count": 1,
+        "same_complete_ascent_members": true
+      },
+      {
+        "counts_match": true,
+        "degree": 2,
+        "engine_count": 2,
+        "independent_ascent_count": 2,
+        "path_count": 2,
+        "same_complete_ascent_members": true
+      },
+      {
+        "counts_match": true,
+        "degree": 3,
+        "engine_count": 4,
+        "independent_ascent_count": 4,
+        "path_count": 4,
+        "same_complete_ascent_members": true
+      },
+      {
+        "counts_match": true,
+        "degree": 4,
+        "engine_count": 9,
+        "independent_ascent_count": 9,
+        "path_count": 9,
+        "same_complete_ascent_members": true
+      },
+      {
+        "counts_match": true,
+        "degree": 5,
+        "engine_count": 21,
+        "independent_ascent_count": 21,
+        "path_count": 21,
+        "same_complete_ascent_members": true
+      },
+      {
+        "counts_match": true,
+        "degree": 6,
+        "engine_count": 51,
+        "independent_ascent_count": 51,
+        "path_count": 51,
+        "same_complete_ascent_members": true
+      }
+    ],
+    "derivation": [
+      "M = epsilon | H M | U M D M",
+      "F_M=1+t*F_M+t^2*F_M^2",
+      "F_M(0)=1",
+      "A=F_M-1 counts nonempty source degrees"
+    ],
+    "empty_convention": {
+      "comparison_starts_at_degree": 1,
+      "grammar_paths_degree_zero": 1,
+      "ordinary_engine_degree_zero": 0,
+      "ordinary_gf_relation": "A(t)=F_M(t)-1"
+    },
+    "equations": {
+      "classification": "polynomial_derivation_system",
+      "equations": [
+        {
+          "terms": [
+            {
+              "coefficient": 1,
+              "t_power": 0,
+              "variables": []
+            },
+            {
+              "coefficient": 1,
+              "t_power": 1,
+              "variables": [
+                "M"
+              ]
+            },
+            {
+              "coefficient": 1,
+              "t_power": 2,
+              "variables": [
+                "M",
+                "M"
+              ]
+            }
+          ],
+          "variable": "M"
+        }
+      ],
+      "gf_class_for_intended_objects": "not_certified",
+      "logical_obligations": [
+        "Complete encoding of intended objects",
+        "Unambiguous production partition",
+        "Correct degree and empty-object convention",
+        "Intended generating function is the selected formal-series branch"
+      ],
+      "proof_status": "unproved",
+      "root": "M",
+      "schema_version": 1
+    },
+    "grammar": {
+      "alphabet": [
+        {
+          "name": "H",
+          "weight": 1
+        },
+        {
+          "name": "U",
+          "weight": 1
+        },
+        {
+          "name": "D",
+          "weight": 1
+        }
+      ],
+      "nonterminals": [
+        "M"
+      ],
+      "productions": [
+        {
+          "id": "empty",
+          "lhs": "M",
+          "rhs": []
+        },
+        {
+          "id": "horizontal",
+          "lhs": "M",
+          "rhs": [
+            {
+              "kind": "terminal",
+              "name": "H"
+            },
+            {
+              "kind": "nonterminal",
+              "name": "M"
+            }
+          ]
+        },
+        {
+          "id": "arch",
+          "lhs": "M",
+          "rhs": [
+            {
+              "kind": "terminal",
+              "name": "U"
+            },
+            {
+              "kind": "nonterminal",
+              "name": "M"
+            },
+            {
+              "kind": "terminal",
+              "name": "D"
+            },
+            {
+              "kind": "nonterminal",
+              "name": "M"
+            }
+          ]
+        }
+      ],
+      "schema_version": 1,
+      "start": "M"
+    },
+    "human_equations": [
+      "F_M = 1 + t*F_M + t^2*F_M*F_M"
+    ],
+    "logical_obligations": [
+      "All-length completeness and unambiguity of the path grammar",
+      "Exact correspondence with the source recurrence and hypotheses",
+      "No sequence-to-path bijection is claimed from count agreement alone",
+      "Correct selected formal-series initial branch"
+    ],
+    "proof_status": "unproved",
+    "state_space": "control_states_times_unbounded_nonnegative_counter"
+  },
+  "implementation_sha256": "6652d6eb2bbaf50c04b136fe112ad5cb9bfdbdb0a00471169c2165afdaf4d3fd",
+  "language_interface_sha256": "0d80f6df0825b010a2c783d10084a6361908109d31b8336e44458f3cf3cadbd8",
+  "negative_controls": [
+    {
+      "audit": {
+        "first_tested_failure": {
+          "checks": {
+            "coefficients": false,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": true,
+            "unambiguous_at_degree": false
+          },
+          "counter_count": 1,
+          "degree": 0,
+          "derivation_count": 2,
+          "equation_coefficient": 2,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 1
+        },
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": true,
+              "unambiguous_at_degree": false
+            },
+            "counter_count": 1,
+            "degree": 0,
+            "derivation_count": 2,
+            "equation_coefficient": 2,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 1
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": true,
+              "unambiguous_at_degree": false
+            },
+            "counter_count": 1,
+            "degree": 1,
+            "derivation_count": 2,
+            "equation_coefficient": 2,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 1
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": true,
+              "unambiguous_at_degree": false
+            },
+            "counter_count": 2,
+            "degree": 2,
+            "derivation_count": 6,
+            "equation_coefficient": 6,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 2
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": true,
+              "unambiguous_at_degree": false
+            },
+            "counter_count": 4,
+            "degree": 3,
+            "derivation_count": 14,
+            "equation_coefficient": 14,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 4
+          }
+        ],
+        "status": "refuted"
+      },
+      "name": "duplicated_empty_production"
+    },
+    {
+      "audit": {
+        "first_tested_failure": {
+          "checks": {
+            "coefficients": false,
+            "grammar_complete_objects": true,
+            "machine_complete_objects": false,
+            "unambiguous_at_degree": true
+          },
+          "counter_count": 3,
+          "degree": 1,
+          "derivation_count": 1,
+          "equation_coefficient": 1,
+          "extra_path": null,
+          "missing_path": null,
+          "oracle_count": 1
+        },
+        "proof_status": "unproved",
+        "rows": [
+          {
+            "checks": {
+              "coefficients": true,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": true,
+              "unambiguous_at_degree": true
+            },
+            "counter_count": 1,
+            "degree": 0,
+            "derivation_count": 1,
+            "equation_coefficient": 1,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 1
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": false,
+              "unambiguous_at_degree": true
+            },
+            "counter_count": 3,
+            "degree": 1,
+            "derivation_count": 1,
+            "equation_coefficient": 1,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 1
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": false,
+              "unambiguous_at_degree": true
+            },
+            "counter_count": 9,
+            "degree": 2,
+            "derivation_count": 2,
+            "equation_coefficient": 2,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 2
+          },
+          {
+            "checks": {
+              "coefficients": false,
+              "grammar_complete_objects": true,
+              "machine_complete_objects": false,
+              "unambiguous_at_degree": true
+            },
+            "counter_count": 27,
+            "degree": 3,
+            "derivation_count": 4,
+            "equation_coefficient": 4,
+            "extra_path": null,
+            "missing_path": null,
+            "oracle_count": 4
+          }
+        ],
+        "status": "refuted"
+      },
+      "name": "counter_discarded_changes_language"
+    }
+  ],
+  "proof_status": "unproved",
+  "regular": {
+    "automaton": {
+      "accepting": [
+        "A"
+      ],
+      "alphabet": [
+        {
+          "name": "one",
+          "weight": 1
+        },
+        {
+          "name": "two",
+          "weight": 2
+        }
+      ],
+      "kind": "finite_dfa",
+      "schema_version": 1,
+      "start": "I",
+      "states": [
+        "I",
+        "A"
+      ],
+      "transitions": [
+        {
+          "counter_delta": 0,
+          "source": "I",
+          "target": "A",
+          "terminal": "one"
+        },
+        {
+          "counter_delta": 0,
+          "source": "I",
+          "target": "A",
+          "terminal": "two"
+        },
+        {
+          "counter_delta": 0,
+          "source": "A",
+          "target": "A",
+          "terminal": "one"
+        },
+        {
+          "counter_delta": 0,
+          "source": "A",
+          "target": "A",
+          "terminal": "two"
+        }
+      ]
+    },
+    "citation_ids": [
+      "C-PP-129-6"
+    ],
+    "constant_coefficient": 0,
+    "derivation": [
+      "F_I=(t+t^2)*F_A",
+      "F_A=1+(t+t^2)*F_A",
+      "F_A=1/(1-t-t^2)",
+      "F_I=(t+t^2)/(1-t-t^2)"
+    ],
+    "derived_rational_gf": "(t+t^2)/(1-t-t^2)",
+    "equations": {
+      "classification": "finite_weighted_linear_system",
+      "equations": [
+        {
+          "constant": 0,
+          "terms": [
+            {
+              "coefficient": 1,
+              "t_power": 1,
+              "variables": [
+                "A"
+              ]
+            },
+            {
+              "coefficient": 1,
+              "t_power": 2,
+              "variables": [
+                "A"
+              ]
+            }
+          ],
+          "variable": "I"
+        },
+        {
+          "constant": 1,
+          "terms": [
+            {
+              "coefficient": 1,
+              "t_power": 1,
+              "variables": [
+                "A"
+              ]
+            },
+            {
+              "coefficient": 1,
+              "t_power": 2,
+              "variables": [
+                "A"
+              ]
+            }
+          ],
+          "variable": "A"
+        }
+      ],
+      "gf_class_for_machine": "rational",
+      "logical_obligations": [
+        "Machine recognizes intended class completely",
+        "Correct terminal weights and initial/final states"
+      ],
+      "proof_status": "unproved",
+      "root": "I",
+      "schema_version": 1,
+      "size_semantics": "sum_of_terminal_weights"
+    },
+    "human_equations": [
+      "F_I = t*F_A + t^2*F_A",
+      "F_A = 1 + t*F_A + t^2*F_A"
+    ],
+    "proof_status": "unproved",
+    "rows": [
+      {
+        "degree": 1,
+        "equation_count": 1,
+        "independent_ascent_count": 1,
+        "independent_tile_count": 1,
+        "machine_count": 1,
+        "passed": true
+      },
+      {
+        "degree": 2,
+        "equation_count": 2,
+        "independent_ascent_count": 2,
+        "independent_tile_count": 2,
+        "machine_count": 2,
+        "passed": true
+      },
+      {
+        "degree": 3,
+        "equation_count": 3,
+        "independent_ascent_count": 3,
+        "independent_tile_count": 3,
+        "machine_count": 3,
+        "passed": true
+      },
+      {
+        "degree": 4,
+        "equation_count": 5,
+        "independent_ascent_count": 5,
+        "independent_tile_count": 5,
+        "machine_count": 5,
+        "passed": true
+      },
+      {
+        "degree": 5,
+        "equation_count": 8,
+        "independent_ascent_count": 8,
+        "independent_tile_count": 8,
+        "machine_count": 8,
+        "passed": true
+      },
+      {
+        "degree": 6,
+        "equation_count": 13,
+        "independent_ascent_count": 13,
+        "independent_tile_count": 13,
+        "machine_count": 13,
+        "passed": true
+      }
+    ],
+    "source_review_sha256": "36e63f88850937d64cd44844a7887a0b66fb7524e845e00270bae5b4233cbb99",
+    "state_space": "finite_control_states"
+  },
+  "schema_version": 1,
+  "source_review_sha256": "69d94bb9978313a12e5fff4e9375498346b8ac04416c60ce43d28bda93a40db3",
+  "symbolic_backend": {
+    "implementation": "exact integer coefficient convolution and typed equation exporter",
+    "third_party_solver": "not integrated; SymPy absent and unnecessary for this bounded benchmark"
+  }
+}

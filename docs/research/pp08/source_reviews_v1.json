@@ -1,0 +1,80 @@
+{
+  "entities": [
+    {
+      "data": {
+        "authors": [
+          "Andrew Baxter",
+          "Lara Pudwell"
+        ],
+        "id": "W-PP-129",
+        "lead_id": "PP-129",
+        "pack_sha256": "d254e7db1b3ca4cea306d0a295db0128ec3dbdde426c3e36f97619bc971d7bd7",
+        "title": "Ascent Sequences Avoiding Pairs of Patterns",
+        "year": 2015
+      },
+      "kind": "Work"
+    },
+    {
+      "data": {
+        "content_sha256": null,
+        "id": "S-PP08-BP",
+        "inspection_scope": "Propositions 6 and 10 with displayed arguments; Section 3 Dyck-path definition and encoding discussion",
+        "inspection_status": "FULL_TEXT_INSPECTED",
+        "medium": "full_paper",
+        "retrieved_on": "2026-10-14",
+        "rights_note": "Linked source and brief original extraction; no full text redistributed",
+        "url": "https://arxiv.org/html/1406.4100v2",
+        "version": "v2, 2015-02-15"
+      },
+      "kind": "Source"
+    },
+    {
+      "data": {
+        "id": "L-PP08-Motzkin",
+        "label": "Section 2, Proposition 10 and proof",
+        "source_id": "S-PP08-BP"
+      },
+      "kind": "SourceLocation"
+    },
+    {
+      "data": {
+        "id": "C-PP08-Motzkin",
+        "location_id": "L-PP08-Motzkin",
+        "work_id": "W-PP-129"
+      },
+      "kind": "Citation"
+    },
+    {
+      "data": {
+        "id": "E-PP08-Motzkin",
+        "inspection_status": "CLAIM_VERIFIED",
+        "review_note": "Inspected statement and final-digit decomposition recurrence. Source review does not formalize the grammar/path bridge or alter the engine empty-word convention.",
+        "source_id": "S-PP08-BP"
+      },
+      "kind": "Evidence"
+    },
+    {
+      "data": {
+        "assumptions": [
+          "Ordinary zero-based ascent sequences, equality-sensitive classical subsequence patterns 000 and 101.",
+          "This benchmark uses nonempty n>=1; the auxiliary Motzkin recurrence/grammar includes an empty object at degree zero."
+        ],
+        "citation_ids": [
+          "C-PP08-Motzkin"
+        ],
+        "evidence_ids": [
+          "E-PP08-Motzkin"
+        ],
+        "family": "ordinary pair avoidance",
+        "id": "T-PP08-Motzkin",
+        "indexing": "degree n is word length; bridge comparison n>=1; source engine empty word excluded",
+        "pattern_semantics": "Relative order and equalities of selected entries; no consecutive constraint",
+        "proof_status": "PROVED_EXTERNAL",
+        "statement": "The number of ordinary ascent sequences avoiding 000 and 101 is the Motzkin number M_n. The displayed proof uses deletion of a singly occurring final digit, or splitting around two final-digit copies, giving the Motzkin recurrence."
+      },
+      "kind": "Theorem"
+    }
+  ],
+  "method_cards": [],
+  "schema_version": 1
+}

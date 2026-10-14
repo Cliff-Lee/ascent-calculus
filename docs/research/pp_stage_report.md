@@ -59,4 +59,5 @@ The stop decisions above describe the original PP00–01 execution. Later author
 - PP05: recursive specification adapter completed; see `pp05/STAGE_REPORT.md`.
 - PP06: generating-tree rule discovery completed; see `pp06/STAGE_REPORT.md`.
 - PP07: pattern transport and recursive bijection laboratory completed; see `pp07/STAGE_REPORT.md`.
-- PP08 has not begun. PP12 remains deferred until prior gates and design review.
+- PP08: language/automata and symbolic equation exporter completed; see `pp08/STAGE_REPORT.md`.
+- PP09 has not begun. PP12 remains deferred until prior gates and design review.
